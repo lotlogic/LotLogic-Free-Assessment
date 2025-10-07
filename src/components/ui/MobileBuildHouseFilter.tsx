@@ -1,19 +1,6 @@
 
 import { ArrowLeft, BedDouble, Bath, Car } from 'lucide-react';
 
-// interface FilterOption {
-//   id: string;
-//   label: string;
-//   value: string | number;
-// }
-
-// interface FilterCategory {
-//   id: string;
-//   label: string;
-//   icon: React.ComponentType<{ className?: string }>;
-//   options: FilterOption[];
-// }
-
 interface MobileBuildHouseFilterProps {
   isOpen: boolean;
   onClose: () => void;

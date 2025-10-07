@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 import type { ToastOptions } from 'react-toastify';
 import { Check, X, AlertTriangle } from 'lucide-react';
-import { getColorClass, colors } from '@/constants/content';
+import { colors } from '@/constants/content';
 import 'react-toastify/dist/ReactToastify.css';
 
 type ToastType = 'success' | 'error' | 'warning';
@@ -18,19 +18,40 @@ const getToastIcon = (type: ToastType) => {
   switch (type) {
     case 'success':
       return (
-        <div className={`${baseClasses} ${getColorClass('toast')}`}>
+        <div 
+          className={baseClasses}
+          style={{ 
+            backgroundColor: colors.success,
+            minWidth: '24px',
+            minHeight: '24px'
+          }}
+        >
           <Check className="w-4 h-4 text-white" strokeWidth={3} />
         </div>
       );
     case 'error':
       return (
-        <div className={`${baseClasses} ${getColorClass('error')}`}>
+        <div 
+          className={baseClasses}
+          style={{ 
+            backgroundColor: colors.error,
+            minWidth: '24px',
+            minHeight: '24px'
+          }}
+        >
           <X className="w-4 h-4 text-white" strokeWidth={3} />
         </div>
       );
     case 'warning':
       return (
-        <div className={`${baseClasses} ${getColorClass('warning')}`}>
+        <div 
+          className={baseClasses}
+          style={{ 
+            backgroundColor: colors.warning,
+            minWidth: '24px',
+            minHeight: '24px'
+          }}
+        >
           <AlertTriangle className="w-4 h-4 text-white" strokeWidth={3} />
         </div>
       );
@@ -44,15 +65,28 @@ export function showToast({
   type = 'success',
   options = {},
 }: ShowToastProps) {
-  const toastFn = toast[type] ?? toast.success;
+  // Get the appropriate toast function
+  const toastFn = type === 'error' ? toast.error : 
+                  type === 'warning' ? toast.warn : 
+                  toast.success;
+
+  // Get the appropriate border color based on type
+  const getBorderColor = (toastType: ToastType) => {
+    switch (toastType) {
+      case 'success': return colors.success;
+      case 'error': return colors.error;
+      case 'warning': return colors.warning;
+      default: return colors.toast;
+    }
+  };
 
   toastFn(
     <div className="flex items-center gap-3">
-      {getToastIcon(type)}
-      <span className={`${getColorClass('toast', 'text')} font-medium`}>{message}</span>
+      {getToastIcon(type) || <div className="w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center text-white text-xs">!</div>}
+      <span className="text-gray-800 font-medium">{message}</span>
     </div>,
     {
-      position: 'bottom-right',
+      position: options.position,
       autoClose: 3000,
       hideProgressBar: true,
       closeOnClick: true,
@@ -60,7 +94,7 @@ export function showToast({
       draggable: true,
       style: {
         backgroundColor: 'white',
-        border: `1px solid ${colors.toast}`,
+        border: `2px solid ${getBorderColor(type)}`,
         borderRadius: '12px',
         boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
       },

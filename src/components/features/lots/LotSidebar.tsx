@@ -107,39 +107,6 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
     setSelectedHouseDesignForModals(null);
   };
 
-  // const validateFilter = () => {
-  //   const errors: { min_size?: string; max_size?: string; bedroom?: string; bathroom?: string; car?: string } = {};
-
-  //   // House size validation
-  //   if (isNaN(min_size) || min_size < 0) {
-  //     errors.min_size = "Minimum size should be at greater than 0";
-  //   }
-
-  //   if (isNaN(max_size)) {
-  //     errors.max_size = "Maximum size cannot exceed 10000";
-  //   }
-
-  //   if (!isNaN(min_size) && !isNaN(max_size) && min_size > max_size) {
-  //     errors.min_size = "Min size cannot be greater than max size";
-  //     errors.max_size = "Max size must be greater than min size";
-  //   }
-
-  //   if (!bedroom.length) {
-  //     errors.bedroom = "Please choose one";
-  //   }
-  //   if (!bathroom.length) {
-  //     errors.bathroom = "Please choose one";
-  //   }
-  //   if (!car.length) {
-  //     errors.car = "Please choose one";
-  //   }
-
-  //   setShowErrors(true);
-  //   setFilterErrors(errors);
-
-  //   return Object.keys(errors).length === 0;
-  // };
-
   const handleBackClick = () => {
     if (showQuoteSidebar) {
       setShowQuoteSidebar(false);

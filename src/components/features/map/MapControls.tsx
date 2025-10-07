@@ -7,6 +7,7 @@ import { trackLotSelected } from '@/lib/analytics/mixpanel';
 import { useMobile } from '@/hooks/useMobile';
 import * as turf from '@turf/turf';
 import { setGlobalLotFrontageMidpoint } from './MapLayers';
+import { showToast } from '@/components/ui/Toast';
 
 // -----------------------------
 // Helper Functions
@@ -185,9 +186,20 @@ export function MapControls({
             setGlobalLotFrontageMidpoint(frontageMidpoint);
           } else {
             console.log("❌ Invalid LineString format in frontage data");
+            showToast({
+              message: "Invalid LineString format in frontage data",
+              type: 'error',
+              options: { autoClose: 4000 }
+            });
           }
         } catch (error) {
           console.log("❌ Error parsing frontage JSON:", error);
+          showToast({
+            message: "Error parsing frontage JSON",
+            type: 'error',
+            options: { autoClose: 4000 }
+          });
+
         }
       } else {
         // Fallback: Calculate lot frontage midpoint (midpoint of the longest side)
@@ -262,6 +274,12 @@ export function MapControls({
           });
         }
       } catch (error) {
+        console.error('Error during lot zoom:', error);
+        showToast({
+          message: "Failed to zoom to lot.",
+          type: 'error',
+          options: { autoClose: 4000 }
+        });
         // Fallback to center point zoom on error
         map.flyTo({ 
           center: e.lngLat, 

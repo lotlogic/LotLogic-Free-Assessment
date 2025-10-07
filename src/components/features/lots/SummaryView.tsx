@@ -65,45 +65,6 @@ export function SummaryView({ lot, zoningColor, zoningText }: SummaryViewProps) 
           <span>Townhouse</span>
         </div>
       </div>
-
-      {/* Planning Rules - Commented Out */}
-      {/* <div className="bg-white rounded-xl shadow border border-gray-100 p-4 mx-6 mb-4 flex flex-col">
-        <div className="flex items-center mb-3">
-          <div className="p-2 rounded-full" style={{ backgroundColor: '#EAEFEF' }}>
-            <Info className="h-4 w-4" style={{ color: '#2F5D62' }} />
-          </div>
-                      <span className="font-semibold text-gray-800 text-base ml-2">Planning Rules</span>
-        </div>
-        <div className="text-gray-700 text-base space-y-2">
-          <div className="flex justify-between">
-            <span className="text-gray-700 text-sm font-normal">Lot Id</span>
-            <span className={lot.planningId ? 'text-gray-500 text-sm font-normal' : faded}>{lot.planningId || '--'}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700 text-sm font-normal">Max Building Height</span>
-            <span className={lot.maxHeight ? 'text-gray-500 text-sm font-normal' : faded}>{lot.maxHeight ? `${lot.maxHeight} meters` : ''}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700 text-sm font-normal">Max Lot Size</span>
-            <span className={lot.maxSize ? 'text-gray-500 text-sm font-normal' : faded}>{lot.maxSize ? `${lot.maxSize}m²` : ''}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-gray-700 text-sm font-normal">Max FSR</span>
-            <span className={lot.maxFSR ? 'text-gray-500 text-sm font-normal' : faded}>{lot.maxFSR || '--'}</span>
-          </div>
-        </div>
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            onShowDetailedRules?.();
-          }}
-          className="block mt-4 font-medium hover:underline text-sm opacity-80"
-          style={{ color: '#2F5D62' }}
-        >
-          View detailed planning rules &rarr;
-        </a>
-      </div> */}
     </>
   );
 }

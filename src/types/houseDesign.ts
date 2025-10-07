@@ -1,15 +1,4 @@
 import { z } from "zod";
-
-// export interface FilterRowProps {
-//   icon: React.ReactNode;
-//   label: string;
-//   value: [number, number];
-//   setValue: (v: [number, number]) => void;
-//   minRange: number;
-//   maxRange: number;
-// }
-
-
 export interface HouseDesignImage {
   src: string;
   faced: string; 

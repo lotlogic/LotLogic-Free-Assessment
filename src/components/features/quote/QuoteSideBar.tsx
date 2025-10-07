@@ -5,6 +5,7 @@ import { PrivacyPolicyContent } from '@/components/ui/PrivacyPolicyContent';
 import { Sidebar } from "@/components/ui/Sidebar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from '@/components/ui/input';
+import { showToast } from '@/components/ui/Toast';
 import { colors, formatContent, getColorClass, getContent, quote } from "@/constants/content";
 import { convertBuildersToOptions, useBuilders } from '@/hooks/useBuilders';
 import { trackEnquirySubmitted, trackQuoteFormInteraction } from '@/lib/analytics/mixpanel';
@@ -152,7 +153,12 @@ export function GetYourQuoteSidebar({ open, onClose, onBack, selectedHouseDesign
                 
                 setErrors(fieldErrors);
             } else {
-                // console.error('Form submission error:', error);
+                console.error('Form submission error:', error);
+                showToast({
+                    message: "Failed to submit enquiry. Please try again.",
+                    type: 'error',
+                    options: { autoClose: 5000 }
+                });
                 // Show user-friendly error message
                 setErrors({
                     additionalComments: 'Failed to submit enquiry. Please try again.'
