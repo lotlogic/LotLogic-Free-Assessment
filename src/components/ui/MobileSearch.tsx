@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, X } from 'lucide-react';
 import axios from 'axios';
+import { showToast } from '@/components/ui/Toast';
 
 interface MobileSearchProps {
   isOpen: boolean;
@@ -59,6 +60,12 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
 
       setResults(response.data.features || []);
     } catch (error) {
+      console.error('Mobile search error:', error);
+      showToast({
+        message: "Search failed. Please try again.",
+        type: 'error',
+        options: { autoClose: 4000 }
+      });
       setResults([]);
     } finally {
       setIsLoading(false);
@@ -148,30 +155,6 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
           </div>
         )}
       </div>
-
-      {/* Recent Searches - Only show when no query and no results */}
-      {/* {!query && !isLoading && results.length === 0 && (
-        <div className="mt-3">
-          <h3 className="text-sm font-medium text-gray-900 mb-2">Recent Searches</h3>
-          <div className="space-y-1">
-            {['Rydalmere', '15 Bowden Street', 'Lot 205'].map((search, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setQuery(search);
-                  onSearch?.(search);
-                }}
-                className="w-full text-left p-2 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Search className="h-3 w-3 text-gray-400" />
-                  <span className="text-sm text-gray-700">{search}</span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }

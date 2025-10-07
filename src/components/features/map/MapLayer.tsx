@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback, Suspense, lazy } from 'react';
 import type { MapboxGeoJSONFeature } from 'mapbox-gl';
+import { showToast } from '@/components/ui/Toast';
 
 // Lazy load components
 // const LotSidebar = lazy(() => import("../lots/LotSidebar").then(module => ({ default: module.LotSidebar })));
@@ -235,15 +236,26 @@ export default function ZoneMap() {
       }
     };
 
-    const handleRecenter = () => {
-      if (mapRef && mapInitialView) {
-        mapRef.flyTo({
-          center: mapInitialView.center,
-          zoom: mapInitialView.zoom,
-          duration: 1000
-        });
-      }
-    };
+     const handleRecenter = () => {
+       if (mapRef && mapInitialView) {
+         mapRef.flyTo({
+           center: mapInitialView.center,
+           zoom: mapInitialView.zoom,
+           duration: 1000
+         });
+        //  showToast({
+        //    message: "Map recentered to initial view",
+        //    type: 'warning',
+        //    options: { autoClose: 2000 }
+        //  });
+       } else {
+         showToast({
+           message: "Unable to recenter map. Please refresh the page.",
+           type: 'error',
+           options: { autoClose: 4000 }
+         });
+       }
+     };
 
 
     // Only add event listeners once

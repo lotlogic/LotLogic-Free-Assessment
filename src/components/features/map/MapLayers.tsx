@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-// import { useMobile } from '@/hooks/useMobile';
 import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import { insetQuadPerSideLL, createSValueLabel, mapSValuesToSides, type Pt, type SetbackValues } from '@/lib/utils/geometry';
@@ -7,15 +6,7 @@ import type { LotProperties } from '@/types/lot';
 import { getImageUrlWithCorsProxy } from '@/lib/api/lotApi';
 import type { FloorPlan } from '@/types/houseDesign';
 import { useRotationStore } from '@/stores/rotationStore';
-// import { colors, getContent } from '@/constants/content';
-// import { useUIStore } from '@/stores/uiStore';
-// import { toast } from 'react-toastify';
-
-
-
-// -----------------------------
-// Types
-// -----------------------------
+import { showToast } from '@/components/ui/Toast';
 
 interface HouseBoundaryData {
   center: [number, number];
@@ -42,41 +33,6 @@ interface MapLayersProps {
   setSValuesMarkers: (markers: mapboxgl.Marker[]) => void;
 }
 
-// -----------------------------
-// Utility Functions
-// -----------------------------
-
-// Add marker for edge midpoint
-// const addEdgeMidpointMarker = (map: mapboxgl.Map, coordinates: [number, number], edgeLabel: string) => {
-//   // Remove existing edge midpoint marker if it exists
-//   const existingMarker = document.getElementById(`edge-midpoint-${edgeLabel}`);
-//   if (existingMarker) {
-//     existingMarker.remove();
-//   }
-
-//   // Create a custom marker element
-//   const markerEl = document.createElement('div');
-//   markerEl.id = `edge-midpoint-${edgeLabel}`;
-//   markerEl.style.width = '25px';
-//   markerEl.style.height = '25px';
-//   markerEl.style.borderRadius = '50%';
-//   markerEl.style.backgroundColor = '#00ff00';
-//   markerEl.style.border = '3px solid #ffffff';
-//   markerEl.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-//   markerEl.style.display = 'flex';
-//   markerEl.style.alignItems = 'center';
-//   markerEl.style.justifyContent = 'center';
-//   markerEl.style.fontSize = '12px';
-//   markerEl.style.fontWeight = 'bold';
-//   markerEl.style.color = '#ffffff';
-//   markerEl.textContent = edgeLabel;
-//   markerEl.title = `Edge ${edgeLabel} Midpoint`;
-
-//   // Create and add the marker
-//   new mapboxgl.Marker(markerEl)
-//     .setLngLat(coordinates)
-//     .addTo(map);
-// };
 
 // Calculate distances and compare, auto-rotate if needed
 const calculateAndCompareDistances = (_map: mapboxgl.Map, midpoint01: [number, number], midpoint23: [number, number]) => {
@@ -99,8 +55,6 @@ const calculateAndCompareDistances = (_map: mapboxgl.Map, midpoint01: [number, n
   const distance01 = turf.distance(turf.point(lotFrontageMidpoint), turf.point(midpoint01), { units: 'meters' });
   const distance23 = turf.distance(turf.point(lotFrontageMidpoint), turf.point(midpoint23), { units: 'meters' });
 
-  // console.log("📏 Distance from lot frontage to house edge 0-1:", distance01.toFixed(2), "meters");
-  // console.log("📏 Distance from lot frontage to house edge 2-3:", distance23.toFixed(2), "meters");
 
   // Check if 0-1 distance is greater than 2-3 distance
   if (distance01 > distance23) {
@@ -135,56 +89,10 @@ const showHouseBoundaryPoints = (map: mapboxgl.Map, coordinates: [number, number
       existingMarker.remove();
     }
   }
-
-  // Create markers for each point with labels - COMMENTED OUT (visual only)
-  // coordinates.forEach((coord, index) => {
-  //   // Create a custom marker element
-  //   const markerEl = document.createElement('div');
-  //   markerEl.id = `house-boundary-point-${index}`;
-  //   markerEl.style.width = '30px';
-  //   markerEl.style.height = '30px';
-  //   markerEl.style.borderRadius = '50%';
-  //   markerEl.style.backgroundColor = '#ff6b35';
-  //   markerEl.style.border = '3px solid #ffffff';
-  //   markerEl.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-  //   markerEl.style.display = 'flex';
-  //   markerEl.style.alignItems = 'center';
-  //   markerEl.style.justifyContent = 'center';
-  //   markerEl.style.fontSize = '14px';
-  //   markerEl.style.fontWeight = 'bold';
-  //   markerEl.style.color = '#ffffff';
-  //   markerEl.textContent = index.toString();
-  //   markerEl.title = `House Boundary Point ${index}`;
-
-  //   // Create and add the marker
-  //   new mapboxgl.Marker(markerEl)
-  //     .setLngLat(coord)
-  //     .addTo(map);
-  // });
-
-  // Log the coordinates for each point
-  // console.log("🏠 House Boundary Points:");
-  coordinates.forEach((_coord, _index) => {
-    // console.log(`  Point ${_index}: [${_coord[0]}, ${_coord[1]}]`);
-  });
-  
-  // Log the edges
-  // console.log("🏠 House Boundary Edges:");
-  // console.log(`  Edge 0-1: Point 0 to Point 1`);
-  // console.log(`  Edge 1-2: Point 1 to Point 2`);
-  // console.log(`  Edge 2-3: Point 2 to Point 3`);
-  // console.log(`  Edge 3-0: Point 3 to Point 0`);
   
   // Calculate and show midpoints for edges 0-1 and 2-3
   const midpoint01 = turf.midpoint(turf.point(coordinates[0]), turf.point(coordinates[1])).geometry.coordinates as [number, number];
   const midpoint23 = turf.midpoint(turf.point(coordinates[2]), turf.point(coordinates[3])).geometry.coordinates as [number, number];
-  
-  // console.log("🏠 Edge 0-1 Midpoint:", midpoint01);
-  // console.log("🏠 Edge 2-3 Midpoint:", midpoint23);
-  
-  // Add markers for the midpoints - COMMENTED OUT (visual only)
-  // addEdgeMidpointMarker(map, midpoint01, "0-1");
-  // addEdgeMidpointMarker(map, midpoint23, "2-3");
   
   // Calculate distances from lot frontage midpoint to house boundary edge midpoints
   calculateAndCompareDistances(map, midpoint01, midpoint23);
@@ -195,15 +103,11 @@ const calculateHouseBoundary = (
   selectedFloorPlan: FloorPlan,
   selectedLot: mapboxgl.MapboxGeoJSONFeature & { properties: LotProperties },
   innerCenter: any,
-  // innerArea: number,
-  // desired: number
 ): HouseBoundaryData | null => {
   if (!selectedFloorPlan.houseArea || selectedFloorPlan.houseArea <= 0) {
     return null;
   }
 
-  // const houseArea = selectedFloorPlan.houseArea;
-  // const isCompatible = houseArea <= desired;
   
   if (selectedFloorPlan.houseWidth && selectedFloorPlan.houseDepth) {
     const houseWidth = selectedFloorPlan.houseWidth;
@@ -238,15 +142,6 @@ const calculateHouseBoundary = (
       angle = turf.bearing(coordinates[3], coordinates[0]);
     }
     
-    // Convert meters to degrees (approximate conversion)
-    // const latToMeters = 111000;
-    // const lngToMeters = 111000 * Math.cos(innerCenter.geometry.coordinates[1] * Math.PI / 180);
-    
-    // const widthInDegrees = houseWidth / lngToMeters;
-    // console.log(widthInDegrees, "widthInDegrees");
-    // const depthInDegrees = houseDepth / latToMeters;
-    // console.log(depthInDegrees, "depthInDegrees");
-    // Replace the static conversion with Turf
 
     // Calculate the width and depth in degrees using Turf
     const centerPoint = innerCenter.geometry.coordinates;
@@ -259,18 +154,16 @@ const calculateHouseBoundary = (
 
     const widthInDegrees = houseWidth / lngToMeters;
     const depthInDegrees = houseDepth / latToMeters;
-    let scaleFactor = 1;
 
     
     return {
       center: innerCenter.geometry.coordinates,
       widthInDegrees: widthInDegrees,
       depthInDegrees: depthInDegrees,
-      houseWidth: houseWidth * scaleFactor,
-      houseDepth: houseDepth * scaleFactor,
+      houseWidth: houseWidth ,
+      houseDepth: houseDepth ,
       angle,
-      // isCompatible,
-      scaleFactor
+      scaleFactor: 1
     };
   }
   
@@ -291,16 +184,14 @@ export function MapLayers({
   setSValuesMarkers,
 }: MapLayersProps) {
   const markersRef = useRef<mapboxgl.Marker[]>([]);
+  // Track and manage concurrent floorplan renders so only the latest can affect loader state
+  const floorplanRunIdRef = useRef(0);
   
   // Manual rotation state from Zustand
   const { manualRotation, pendingRotation, setManualRotation, setPendingRotation, applyPendingRotation, setIsCalculating } = useRotationStore();
-  // const { hideRotationControls } = useUIStore();
   
   // Track previous FSR violation state to show toast only once
   const prevExceedsFSRRef = useRef(false);
-
-  // Responsive position for rotation panel using existing hook
-  // const isMobileView = useMobile();
 
   // Reset manual rotation when switching lots or floorplans
   useEffect(() => {
@@ -325,7 +216,6 @@ export function MapLayers({
   useEffect(() => {
     if (!map || !selectedFloorPlan) return;
     
-    // console.log("🎯 Rotation effect triggered - manualRotation:", manualRotation, "pendingRotation:", pendingRotation);
     
     const sourceId = 'floorplan-image';
     const layerId = 'floorplan-layer';
@@ -335,7 +225,15 @@ export function MapLayers({
     if (!map.getLayer(layerId)) {
       // console.log("❌ Floorplan layer not found, storing pending rotation:", manualRotation);
       setPendingRotation(manualRotation);
-      setIsCalculating(true);
+      // Avoid flashing the loader again on rapid re-entry
+      try {
+        const { isCalculating } = useRotationStore.getState();
+        if (!isCalculating) {
+          setIsCalculating(true);
+        }
+      } catch {
+        setIsCalculating(true);
+      }
       return;
     }
     
@@ -367,10 +265,6 @@ export function MapLayers({
         const rotated = turf.transformRotate(housePoly, rotationToApply, { pivot });
         const rCoordsFull = rotated.geometry.coordinates[0] as [number, number][];
         const rCoords = rCoordsFull.slice(0, 4);
-        
-        // console.log("🔄 Applying rotation:", rotationToApply, "° to floorplan coordinates");
-        // console.log("📍 Original coords:", houseBoundaryCoords);
-        // console.log("📍 Rotated coords:", rCoords);
         
         // Update coordinates for Mapbox
         const floorPlanCoordinates: [[number, number], [number, number], [number, number], [number, number]] = [
@@ -431,49 +325,8 @@ export function MapLayers({
             
             // Check if rotated floorplan exceeds FSR boundary
             const exceedsFSR = !turf.booleanWithin(rotated, fsrBoundary);
-            
-            // Check if rotated floorplan exceeds lot boundary (setback boundary)
-            // const lotBoundary = turf.polygon([innerLL]);
-            // const exceedsLot = !turf.booleanWithin(rotated, lotBoundary);
-            
-            // Console log boundary violations
-            // console.log(`🎯 Rotation: ${manualRotation}° | Exceeds FSR: ${exceedsFSR} | Exceeds Lot: ${exceedsLot}`);
-            
-            // Show toast when FSR is exceeded (only once per violation)
-            // COMMENTED OUT: Toast warning for FSR exceedance
-            /*
-            if (exceedsFSR && !prevExceedsFSRRef.current) {
-              toast.warning("⚠️ Outside FSR. Rotate or pick another design.", {
-                position: "bottom-right",
-                autoClose: 4000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-              });
-            }
-            */
-            
             // Update previous state
             prevExceedsFSRRef.current = exceedsFSR;
-            
-            // Show FSR boundary only when exceeded
-            if (exceedsFSR) {
-              // Show FSR boundary in red when exceeded
-              if (!map.getLayer('fsr-boundary-layer')) {
-                map.addLayer({
-                  id: 'fsr-boundary-layer',
-                  type: 'line',
-                  source: 'fsr-boundary-source',
-                  paint: { 'line-color': '#FF0000', 'line-width': 1.5, 'line-dasharray': [4, 4] }
-                });
-              }
-            } else {
-              // Remove FSR boundary layer if not exceeded
-              if (map.getLayer('fsr-boundary-layer')) {
-                map.removeLayer('fsr-boundary-layer');
-              }
-            }
           }
         }
       }
@@ -486,7 +339,6 @@ export function MapLayers({
     
     const layerId = 'floorplan-layer';
     if (map.getLayer(layerId)) {
-      // console.log("🔄 Layer now available, applying pending rotation:", pendingRotation);
       applyPendingRotation();
     }
   }, [map, selectedFloorPlan, pendingRotation, applyPendingRotation]);
@@ -495,9 +347,8 @@ export function MapLayers({
   useEffect(() => {
     if (!map || !selectedFloorPlan) return;
     
-    // console.log("🏗️ Floorplan overlay effect triggered - manualRotation:", manualRotation);
-    
-    // Show loader while calculating
+    // Start a new render run; only this run is allowed to clear the loader
+    const myRunId = ++floorplanRunIdRef.current;
     setIsCalculating(true);
     
     const sourceId = 'floorplan-image';
@@ -522,97 +373,15 @@ export function MapLayers({
         if (houseBoundaryData.data && typeof houseBoundaryData.data === 'object' && 'geometry' in houseBoundaryData.data) {
           const houseBoundaryCoords = (houseBoundaryData.data as any).geometry.coordinates[0];
           
-          // Mapbox image coordinates must be provided in this order:
-          // [top-left, top-right, bottom-right, bottom-left]. Our polygon
-          // coordinates are in ring order starting from bottom-left, so we
-          // reorder to avoid mirrored imagery.
-          // Debug: Log original coordinates
-          // console.log('Original houseBoundaryCoords:', houseBoundaryCoords);
-          // console.log('Index 0 (bottom-left):', houseBoundaryCoords[0]);
-          // console.log('Index 1 (bottom-right):', houseBoundaryCoords[1]);
-          // console.log('Index 2 (top-right):', houseBoundaryCoords[2]);
-          // console.log('Index 3 (top-left):', houseBoundaryCoords[3]);
-          // const floorPlanCoordinates: [[number, number], [number, number], [number, number], [number, number]] = [
-
-          //   houseBoundaryCoords[1],
-          //   houseBoundaryCoords[0], 
-          //   houseBoundaryCoords[3], 
-          //   houseBoundaryCoords[2]
-          //   // houseBoundaryCoords[2],
-          //   // houseBoundaryCoords[1], 
-          //   // houseBoundaryCoords[0], 
-          //   // houseBoundaryCoords[3]
-          //   // houseBoundaryCoords[3],
-          //   // houseBoundaryCoords[2], 
-          //   // houseBoundaryCoords[1], 
-          //   // houseBoundaryCoords[0]  
-          // ];
-          
-          // map.addSource(sourceId, { 
-          //   type: 'image', 
-          //   url: proxiedImageUrl, 
-          //   coordinates: floorPlanCoordinates 
-          // });
-
-          
           // Align the house front (assumed indices 0-3) to the lot front (indices 0-1),
           // then use the front edge as the bottom edge for Mapbox image ordering [TL, TR, BR, BL]
           try {
-            // const lotPoly = selectedLot?.geometry as GeoJSON.Polygon | undefined;
-            // console.log(lotPoly, "lotPoly");
-            // const lotCoords = lotPoly?.coordinates?.[0] as [number, number][] | undefined;
-            
-            // Determine lot frontage - use frontageCoordinate if available, otherwise fallback to first two coordinates
-            // let lotFrontA: [number, number] | undefined;
-            // let lotFrontB: [number, number] | undefined;
-            
-            // Check for explicit frontageCoordinate property (from backend)
-            // const frontageData = selectedLot?.properties?.frontageCoordinate;
-            // console.log("Raw frontageData from backend:", frontageData);
-            
-            // if (frontageData) {
-            //   let parsedFrontage: [number, number][] | null = null;
-              
-            //   // Handle JSON string format (like the one you provided)
-            //   if (typeof frontageData === 'string' && frontageData.startsWith('{"type":"LineString"')) {
-            //     try {
-            //       const parsed = JSON.parse(frontageData);
-            //       if (parsed.type === 'LineString' && parsed.coordinates) {
-            //         parsedFrontage = parsed.coordinates as [number, number][];
-            //         // console.log("Parsed JSON string frontage coordinates:", parsedFrontage);
-            //       }
-            //     } catch (e) {
-            //       console.error("Error parsing JSON frontageCoordinate:", e);
-            //     }
-            //   }
-            //   // Handle WKT string format
-            //   // else if (typeof frontageData === 'string' && frontageData.startsWith('LINESTRING')) {
-            //   //   parsedFrontage = parseWKTLineString(frontageData);
-            //   //   console.log("Parsed WKT frontage coordinates:", parsedFrontage);
-            //   // }
-            //   // Handle GeoJSON object format
-            //   else if (typeof frontageData === 'object' && frontageData.type === 'LineString' && frontageData.coordinates) {
-            //     parsedFrontage = frontageData.coordinates as [number, number][];
-            //     // console.log("Parsed GeoJSON frontage coordinates:", parsedFrontage);
-            //   }
-              
-            //   // if (parsedFrontage && parsedFrontage.length >= 2) {
-            //   //   lotFrontA = parsedFrontage[0];
-            //   //   lotFrontB = parsedFrontage[1];
-            //     // console.log("Using frontageCoordinate from backend:", lotFrontA, lotFrontB);
-            //   // }
-            // }
             
             // Manual rotation only - user controls the floorplan direction
             const delta = manualRotation;
-            // console.log("🎯 Applying rotation delta:", delta);
               
-              // const houseFrontA = bestEdge.coords[0] as [number, number];
-              // const houseFrontB = bestEdge.coords[1] as [number, number];
-              
-
               // Rotate house ring around its centroid
-              const closedRing: [number, number][] = [
+            const closedRing: [number, number][] = [
             houseBoundaryCoords[0],
             houseBoundaryCoords[1],  
             houseBoundaryCoords[2],
@@ -651,28 +420,16 @@ export function MapLayers({
               });
             // Floorplan will be shown regardless of frontage coordinate availability
           } catch (error) {
-            console.log("Error processing frontageCoordinate - floorplan not displayed:", error);
+            console.error("Error processing frontageCoordinate - floorplan not displayed:", error);
+            showToast({
+              message: "Failed to display floorplan. Please try selecting a different design.",
+              type: 'error',
+              options: { autoClose: 5000 }
+            });
             return; // Exit early, don't add the floorplan image
           }
         }
       }
-      // } else {
-      //   // Fallback to original coordinates
-      //   // Fallback assumes coordinates are provided in ring order starting
-      //   // from bottom-left. Reorder to the required Mapbox order.
-      //   const fp = selectedFloorPlan.coordinates;
-      //   const reordered: [[number, number], [number, number], [number, number], [number, number]] = [
-      //     fp[1], // top-left
-      //     fp[0], // top-right
-      //     fp[3], // bottom-right
-      //     fp[2]  // bottom-left
-      //   ];
-      //   map.addSource(sourceId, { 
-      //     type: 'image', 
-      //     url: proxiedImageUrl, 
-      //     coordinates: reordered 
-      //   });
-      // }
       
       map.addLayer({ 
         id: layerId, 
@@ -681,23 +438,30 @@ export function MapLayers({
         paint: { 'raster-opacity': 0.8 } 
       });
       
-      // console.log("✅ Floorplan layer created successfully");
       
       // Apply any pending rotation now that the layer exists
       if (pendingRotation !== null) {
-        // console.log("🔄 Applying pending rotation after layer creation:", pendingRotation);
         applyPendingRotation();
       }
       
-      // Hide loader when layer is ready
-      setIsCalculating(false);
+      // Hide loader when layer is ready (only if still latest run)
+      if (floorplanRunIdRef.current === myRunId) {
+        setIsCalculating(false);
+      }
     };
     
     img.onerror = () => {
-      // console.log("❌ Image failed to load");
+      console.error("Failed to load floorplan image");
+      showToast({
+        message: "Failed to load floorplan image. Please check your connection or try a different design.",
+        type: 'error',
+        options: { autoClose: 5000 }
+      });
       if (map.getLayer(layerId)) map.removeLayer(layerId);
       if (map.getSource(sourceId)) map.removeSource(sourceId);
-      setIsCalculating(false);
+      if (floorplanRunIdRef.current === myRunId) {
+        setIsCalculating(false);
+      }
     };
     
       img.src = proxiedImageUrl;
@@ -706,106 +470,28 @@ export function MapLayers({
     // Delay floorplan creation to allow rotation calculations to complete
     const timeoutId = setTimeout(() => {
       createFloorplan();
-    }, 500); // 500ms delay to allow rotation calculations
+    }, 300); 
+
+    // Safety: auto-clear loader if something hangs
+    const safetyId = setTimeout(() => {
+      if (floorplanRunIdRef.current === myRunId) {
+        setIsCalculating(false);
+      }
+    }, 10000);
 
     return () => {
       clearTimeout(timeoutId);
+      clearTimeout(safetyId);
       if (map) {
         if (map.getLayer(layerId)) map.removeLayer(layerId);
         if (map.getSource(sourceId)) map.removeSource(sourceId);
       }
+      // If this run is still the active one, clear the loader on cleanup
+      if (floorplanRunIdRef.current === myRunId) {
+        setIsCalculating(false);
+      }
     };
   }, [map, selectedFloorPlan, manualRotation]);
-
-
-  // Check FSR/Boundary exceedance on any relevant change, not only during rotation
-  // COMMENTED OUT: FSR boundary area detection and toast message functionality
-  /*
-  useEffect(() => {
-    if (!map || !selectedFloorPlan || !selectedLot) return;
-
-    // Use a small delay to ensure house boundary source is created by the S values effect
-    const timeoutId = setTimeout(() => {
-      const houseBoundarySource = map.getSource('house-area-boundary-source');
-      if (!houseBoundarySource || houseBoundarySource.type !== 'geojson') return;
-
-      const houseBoundaryData = (houseBoundarySource as mapboxgl.GeoJSONSource).serialize();
-      if (!houseBoundaryData.data || typeof houseBoundaryData.data !== 'object' || !('geometry' in houseBoundaryData.data)) return;
-
-      const houseBoundaryCoords = (houseBoundaryData.data as any).geometry.coordinates[0] as [number, number][];
-      if (!houseBoundaryCoords || houseBoundaryCoords.length < 4) return;
-
-      // Build rotated house polygon based on current manualRotation
-      const closedRing: [number, number][] = [
-        houseBoundaryCoords[0],
-        houseBoundaryCoords[1],
-        houseBoundaryCoords[2],
-        houseBoundaryCoords[3],
-        houseBoundaryCoords[0],
-      ];
-      const housePoly = turf.polygon([closedRing]);
-      const pivot = turf.centroid(housePoly).geometry.coordinates as [number, number];
-      const rotated = turf.transformRotate(housePoly, manualRotation, { pivot });
-
-      // Build setback and FSR boundary
-      const geometry = selectedLot.geometry as GeoJSON.Polygon;
-      const coordinates = geometry.coordinates[0] as [number, number][];
-      const innerLL = insetQuadPerSideLL(coordinates, {
-        front: setbackValues.front,
-        side: setbackValues.side,
-        rear: setbackValues.rear,
-      });
-      if (!innerLL || innerLL.length < 5) return;
-
-      const innerPoly = turf.polygon([innerLL]);
-      const innerArea = turf.area(innerPoly);
-      const desired = fsrBuildableArea ? Math.min(fsrBuildableArea, innerArea) : innerArea;
-      const scale = Math.sqrt(desired / innerArea);
-      const innerCenter = turf.center(innerPoly);
-      const fsrBoundary = turf.transformScale(innerPoly, scale, { origin: innerCenter });
-
-      // Ensure the FSR boundary source exists for rendering
-      if (!map.getSource('fsr-boundary-source')) {
-        map.addSource('fsr-boundary-source', { type: 'geojson', data: fsrBoundary });
-      } else {
-        (map.getSource('fsr-boundary-source') as mapboxgl.GeoJSONSource).setData(fsrBoundary as any);
-      }
-
-      // Evaluate exceedance
-      const exceedsFSR = !turf.booleanWithin(rotated, fsrBoundary);
-
-      // Toast once per violation state transition
-      if (exceedsFSR && !prevExceedsFSRRef.current) {
-        toast.warning("⚠️ Outside FSR. Rotate or pick another design.", {
-          position: "bottom-right",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
-      }
-      prevExceedsFSRRef.current = exceedsFSR;
-
-      // Toggle red FSR boundary layer visibility
-      if (exceedsFSR) {
-        if (!map.getLayer('fsr-boundary-layer')) {
-          map.addLayer({
-            id: 'fsr-boundary-layer',
-            type: 'line',
-            source: 'fsr-boundary-source',
-            paint: { 'line-color': '#FF0000', 'line-width': 1.5, 'line-dasharray': [4, 4] }
-          });
-        }
-      } else if (map.getLayer('fsr-boundary-layer')) {
-        map.removeLayer('fsr-boundary-layer');
-      }
-    }, 100); // Small delay to ensure house boundary source is ready
-
-    return () => clearTimeout(timeoutId);
-  }, [map, selectedLot, selectedFloorPlan, setbackValues, fsrBuildableArea, manualRotation]);
-  */
-
 
   // S values + Setbacks + FSR boundary
   useEffect(() => {
@@ -853,7 +539,7 @@ export function MapLayers({
       // newMarkers.push(centerMarker);
 
       // FSR boundary
-      const innerArea = turf.area(innerPoly);
+      let innerArea = turf.area(innerPoly);
       const desired = fsrBuildableArea ? Math.min(fsrBuildableArea, innerArea) : innerArea;
       const scale = Math.sqrt(desired / innerArea);
       const innerCenter = turf.center(innerPoly);
@@ -869,6 +555,24 @@ export function MapLayers({
       //   paint: { 'line-color': '#FF9800', 'line-width': 1.5, 'line-dasharray': [4, 4] }
       // });
 
+      // Log FSR area in square meters
+      // try {
+      //   const fsrAreaM2 = turf.area(fsrBoundary);
+      //   console.log('[FSR] Area (m²):', fsrAreaM2.toFixed(2));
+      // } catch {}
+
+      // Log FSR width and depth (meters) based on axis-aligned bbox
+      // try {
+      //   const bbox = turf.bbox(fsrBoundary) as [number, number, number, number];
+      //   const west  = turf.point([bbox[0], bbox[1]]);
+      //   const east  = turf.point([bbox[2], bbox[1]]);
+      //   const south = turf.point([bbox[0], bbox[1]]);
+      //   const north = turf.point([bbox[0], bbox[3]]);
+      //   const fsrWidthM = turf.distance(west, east, { units: 'meters' });
+      //   const fsrDepthM = turf.distance(south, north, { units: 'meters' });
+      //   console.log('[FSR] Width (m):', fsrWidthM.toFixed(2), 'Depth (m):', fsrDepthM.toFixed(2));
+      // } catch {}
+
       // FSR area label - only show when we have a valid FSR value
       if (fsrBuildableArea && !selectedFloorPlan && !showFloorPlanModal && !showFacadeModal) {
         const fsrAreaLabel = new mapboxgl.Marker({
@@ -883,12 +587,14 @@ export function MapLayers({
       // House Design Area Boundary
       if (selectedFloorPlan && selectedFloorPlan.houseArea && selectedFloorPlan.houseArea > 0) {
         const houseArea = selectedFloorPlan.houseArea;
+        const houseDesired = houseArea ? Math.min(houseArea, desired) : houseArea;
+        let scale = Math.sqrt(houseDesired / innerArea);
+        const innerCenter = turf.center(innerPoly);
         const boundaryData = calculateHouseBoundary(selectedFloorPlan, selectedLot, innerCenter);
         
         let houseBoundary;
         if (boundaryData) {
           const setbackCenter = turf.centroid(innerPoly);
-          
           const rectCoordinates = [
             [setbackCenter.geometry.coordinates[0] - boundaryData.widthInDegrees/2, setbackCenter.geometry.coordinates[1] - boundaryData.depthInDegrees/2],
             [setbackCenter.geometry.coordinates[0] + boundaryData.widthInDegrees/2, setbackCenter.geometry.coordinates[1] - boundaryData.depthInDegrees/2],
@@ -898,10 +604,30 @@ export function MapLayers({
           ];
           
           const rect = turf.polygon([rectCoordinates]);
-          houseBoundary = turf.transformRotate(rect, boundaryData.angle, { pivot: setbackCenter.geometry.coordinates });
+          const scaledRect = turf.transformScale(rect, scale, { origin: setbackCenter });
+          houseBoundary = turf.transformRotate(scaledRect, boundaryData.angle, { pivot: setbackCenter.geometry.coordinates });
         } else {
-          const houseScale = Math.sqrt(houseArea / innerArea);
-          houseBoundary = turf.transformScale(innerPoly, houseScale, { origin: innerCenter });
+          // const houseScale = Math.sqrt(houseArea / innerArea);
+          houseBoundary = turf.transformScale(innerPoly, scale, { origin: innerCenter });
+        }
+
+        // Ensure houseBoundary lies inside the FSR boundary by shrinking if needed
+        try {
+          if (!turf.booleanWithin(houseBoundary as any, fsrBoundary as any)) {
+            const pivotCenter = turf.centroid(houseBoundary as any).geometry.coordinates as [number, number];
+            let attempts = 0;
+            while (attempts < 80 && !turf.booleanWithin(houseBoundary as any, fsrBoundary as any)) {
+              houseBoundary = turf.transformScale(houseBoundary as any, 0.98, { origin: pivotCenter });
+              attempts++;
+            }
+          }
+        } catch (error) {
+          console.error("Error during house boundary scaling:", error);
+          showToast({
+            message: "Unable to properly scale house design. Using simplified layout.",
+            type: 'error',
+            options: { autoClose: 4000 }
+          });
         }
 
         if (map.getLayer('house-area-boundary-layer')) map.removeLayer('house-area-boundary-layer');
@@ -942,15 +668,10 @@ export function MapLayers({
       //   turf.distance(coordinates[3], coordinates[0], { units: 'meters' })
       // ];
     
-    // console.log('Coordinates:', coordinates);
-    // console.log('S-values from DB:', [s1, s2, s3, s4]);
-    // console.log('Actual distances:', actualDistances);
-    
     // Map s-values to the correct sides based on distance matching
     const sValues = [s1 ?? 0, s2 ?? 0, s3 ?? 0, s4 ?? 0];
     const mappedSValues = mapSValuesToSides(coordinates, sValues);
     
-    // console.log('Mapped s-values:', mappedSValues);
     
     const sides: Array<{ a: Pt; b: Pt; val: number | null | undefined; pos: 'top' | 'right' | 'bottom' | 'left' }> = [
       { a: coordinates[0], b: coordinates[1], val: mappedSValues.s1, pos: 'top' },
@@ -998,72 +719,6 @@ export function MapLayers({
       if (edgeMidpoint23) edgeMidpoint23.remove();
     };
   }, [map, selectedLot, setbackValues, fsrBuildableArea, selectedFloorPlan, showFloorPlanModal, showFacadeModal, setSValuesMarkers]);
-
-  // Rotation Controls UI - COMMENTED OUT (visual only)
-  // if (!selectedFloorPlan || hideRotationControls) return null;
-  
-  // return (
-  //   <>
-  //     <style>
-  //       {`
-  //         @keyframes spin {
-  //           0% { transform: rotate(0deg); }
-  //           100% { transform: rotate(360deg); }
-  //         }
-  //       `}
-  //     </style>
-  //     <div style={{
-  //     position: 'absolute',
-  //     top: isMobileView ? '10px' : '20px',
-  //     right: isMobileView ? '10px' : '70px',
-  //     background: 'white',
-  //     padding: '15px',
-  //     borderRadius: '8px',
-  //     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-  //     zIndex: 1000,
-  //     minWidth: '250px'
-  //   }}>
-  //     <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>{getContent('map.floorplanRotation', 'Floorplan Rotation')}</h4>
-      
-  //     <div>
-  //       <label style={{ fontSize: '12px', display: 'block', marginBottom: '5px' }}>
-  //         Rotation: {manualRotation.toFixed(0)}°
-  //       </label>
-  //       <input
-  //         type="range"
-  //         min="0"
-  //         max="360"
-  //         value={manualRotation}
-  //         onChange={(e) => setManualRotation(Number(e.target.value))}
-  //         style={{ width: '100%', marginBottom: '10px', accentColor: colors.primary }}
-  //       />
-        
-  //       <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
-  //         {[0, 90, 180, 270].map(angle => (
-  //           <button
-  //             key={angle}
-  //             onClick={() => {
-  //               setManualRotation(angle);
-  //             }}
-  //             style={{
-  //               padding: '4px 8px',
-  //               fontSize: '10px',
-  //               border: '1px solid #ccc',
-  //               borderRadius: '4px',
-  //               background: manualRotation === angle ? colors.primary : 'white',
-  //               color: manualRotation === angle ? 'white' : 'black',
-  //               cursor: 'pointer'
-  //             }}
-  //           >
-  //             {angle}°
-  //           </button>
-  //         ))}
-  //       </div>
-  //     </div>
-      
-  //   </div>
-  //   </>
-  // );
 
   return null; 
 }

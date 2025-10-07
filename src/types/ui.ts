@@ -1,5 +1,3 @@
-// UI component types and interfaces
-
 export interface Option {
   id: string;
   label: string;

@@ -4,6 +4,7 @@ import axios from 'axios';
 import type { SearchControlProps, SearchResult } from '@/types/ui';
 import { getColorClass } from '@/constants/content';
 import { trackSearch } from '@/lib/analytics/mixpanel';
+import { showToast } from '@/components/ui/Toast';
 
 export function SearchControl({ onResultSelect }: SearchControlProps) {
   const [query, setQuery] = useState('');
@@ -51,7 +52,12 @@ export function SearchControl({ onResultSelect }: SearchControlProps) {
 
       setResults(response.data.features || []);
     } catch (error) {
-      // console.error('Search error:', error);
+      console.error('Search error:', error);
+      showToast({
+        message: "Search failed. Please try again.",
+        type: 'error',
+        options: { autoClose: 4000 }
+      });
       setResults([]);
     } finally {
       setIsLoading(false);

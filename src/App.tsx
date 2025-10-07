@@ -82,14 +82,11 @@ function App() {
       // Close all panels when switching to other tabs
       setShowSearch(false);
       setShowSaved(false);
-    }
-    // Add other tab handlers as needed
+      }
   };
 
   const handleSearch = (_query: string) => {
-    // console.log('Search query:', _query);
     setShowSearch(false);
-    // Implement search functionality here
   };
 
 
@@ -138,15 +135,13 @@ function App() {
             open={showSaved}
             onClose={() => setShowSaved(false)}
             onViewDetails={(_property) => {
-              // console.log('Viewing property details:', _property);
-              // TODO: Implement property details view
               setShowSaved(false);
             }}
           />
         )}
 
         <ToastContainer
-          position="bottom-right"
+          position={isMobile ? "top-center" : "bottom-right"}
           autoClose={3000}
           hideProgressBar={true}
           newestOnTop={true}
