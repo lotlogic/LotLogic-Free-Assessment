@@ -22,6 +22,7 @@ import { useLots, convertLotsToGeoJSON } from "@/hooks/useLots";
 import { getImageUrl } from "@/lib/api/lotApi";
 import { useModalStore } from "@/stores/modalStore";
 import { useRotationStore } from "@/stores/rotationStore";
+import { useMobileNavigationStore } from '@/stores/mobileNavigationStore';
 import type { SetbackValues } from '@/lib/utils/geometry';
 import type { LotProperties } from "@/types/lot";
 import type { FloorPlan } from "@/types/houseDesign";
@@ -50,6 +51,9 @@ export default function ZoneMap() {
   
   // Rotation state from Zustand
   const { isCalculating } = useRotationStore();
+  
+  // Mobile navigation state from Zustand
+  const { closeAllPanels, setClearSelectedLotCallback } = useMobileNavigationStore();
 
 
 
@@ -121,6 +125,8 @@ export default function ZoneMap() {
 
   const handleViewDetails = (property: SavedProperty) => {
     setIsSavedSidebarOpen(false);
+    // Close mobile navigation panels when viewing lot details
+    closeAllPanels();
     const lotData = lotsData?.find(lot => lot.id?.toString() === property.lotId || lot.blockKey === property.lotId);
     if (!lotData) return;
 
@@ -190,6 +196,24 @@ export default function ZoneMap() {
 
   // Initialize map using custom hook
   const { map: mapRef, isLoading, initialView: mapInitialView, setInitialView } = useMapInitialization(mapContainer, estateLots);
+
+  // Register callback to clear selected lot when mobile navigation tabs are clicked
+  useEffect(() => {
+    const clearSelectedLot = () => {
+      setSelectedLot(null);
+      if (selectedIdRef.current && mapRef) {
+        mapRef.setFeatureState({ source: 'demo-lot-source', id: selectedIdRef.current }, { selected: false });
+        selectedIdRef.current = null;
+      }
+    };
+    
+    setClearSelectedLotCallback(clearSelectedLot);
+    
+    // Cleanup on unmount
+    return () => {
+      setClearSelectedLotCallback(null);
+    };
+  }, [setClearSelectedLotCallback, mapRef]);
 
   // Set initial view when lots data is available
   useEffect(() => {

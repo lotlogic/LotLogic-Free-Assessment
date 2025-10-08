@@ -41,6 +41,45 @@ export function useMapInitialization(
         promoteId: 'BLOCK_KEY',
       });
 
+      // Add pond source
+      const pondGeoJSON = {
+        type: 'FeatureCollection' as const,
+        features: [
+          {
+            type: 'Feature' as const,
+            properties: { name: 'Pond' },
+            geometry: {
+              type: 'Polygon' as const,
+              coordinates: [[
+                [148.9260719296633, -34.85187636224688],
+                [148.92625457288892, -34.851897651253836],
+                [148.9262976558718, -34.8519485518225],
+                [148.9262824915171, -34.85208533470767],
+                [148.9261476384239, -34.852122662010515],
+                [148.92606201741398, -34.852062499172504],
+                [148.92607164977716, -34.85187630149601]
+              ]]
+            }
+          }
+        ]
+      };
+
+      map.addSource('pond-source', {
+        type: 'geojson',
+        data: pondGeoJSON,
+      });
+
+      // Add pond layer (behind lots)
+      map.addLayer({
+        id: 'pond-layer',
+        type: 'fill',
+        source: 'pond-source',
+        paint: {
+          'fill-color': '#e2dfd8',
+          'fill-opacity': 1
+        }
+      });
+
       map.addLayer({
         id: 'demo-lot-layer',
         type: 'fill',

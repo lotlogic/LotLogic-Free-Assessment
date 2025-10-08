@@ -8,6 +8,7 @@ import { useMobile } from '@/hooks/useMobile';
 import * as turf from '@turf/turf';
 import { setGlobalLotFrontageMidpoint } from './MapLayers';
 import { showToast } from '@/components/ui/Toast';
+import { useMobileNavigationStore } from '@/stores/mobileNavigationStore';
 
 // -----------------------------
 // Helper Functions
@@ -63,6 +64,7 @@ export function MapControls({
   showFacadeModal
 }: MapControlsProps) {
   const isMobile = useMobile();
+  const { closeAllPanels } = useMobileNavigationStore();
   const handleResize = debounce(() => map?.resize(), 250);
   // const controlsAddedRef = useRef(false);
 
@@ -164,6 +166,9 @@ export function MapControls({
       selectedIdRef.current = id;
 
       setSelectedLot(f as MapboxGeoJSONFeature & { properties: LotProperties });
+      
+      // Close mobile navigation panels when lot is selected
+      closeAllPanels();
       
       // Calculate and log frontage midpoint
       const frontageData = (f.properties as Record<string, unknown>)?.frontageCoordinate;
