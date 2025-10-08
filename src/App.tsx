@@ -1,4 +1,4 @@
-import { useEffect, Suspense, lazy, useState } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -11,6 +11,7 @@ import { SavedPropertiesSidebar } from '@/components/features/map/SavedPropertie
 import { useMobile } from '@/hooks/useMobile'
 import { preloadCriticalComponents } from '@/utils/preload'
 import { trackEvent } from '@/lib/analytics/mixpanel'
+import { useMobileNavigationStore } from '@/stores/mobileNavigationStore'
 
 // Lazy load heavy components
 const ZoneMap = lazy(() => import('@/components/features/map/MapLayer'))
@@ -19,9 +20,15 @@ const queryClient = new QueryClient()
 
 function App() {
   const isMobile = useMobile();
-  const [activeTab, setActiveTab] = useState<'search' | 'saved' | 'recenter' | null>(null);
-  const [showSearch, setShowSearch] = useState(false);
-  const [showSaved, setShowSaved] = useState(false);
+  const { 
+    activeTab, 
+    toggleTab, 
+    closeAllPanels 
+  } = useMobileNavigationStore();
+  
+  // Compute visibility states from activeTab
+  const isSearchVisible = activeTab === 'search';
+  const isSavedVisible = activeTab === 'saved';
 
   // Initialize Mixpanel analytics
   useEffect(() => {
@@ -49,44 +56,18 @@ function App() {
 
 
   const handleTabChange = (tab: 'search' | 'saved' | 'recenter') => {
-    // If clicking the same tab that's already active, dehighlight it
-    if (activeTab === tab) {
-      setActiveTab(null);
-      setShowSearch(false);
-      setShowSaved(false);
-      return;
-    }
-    
-    // Otherwise, select the new tab
-    setActiveTab(tab);
-    
     // Track tab change
     trackEvent('Mobile Tab Changed', {
       tab: tab,
       timestamp: new Date().toISOString()
     });
     
-    // Handle tab-specific actions
-    if (tab === 'search') {
-      setShowSearch(true);
-      setShowSaved(false);
-    } else if (tab === 'saved') {
-      setShowSaved(true);
-      setShowSearch(false);
-    } else if (tab === 'recenter') {
-      // Dispatch recenter event for map
-      window.dispatchEvent(new CustomEvent('recenter-map'));
-      setShowSearch(false);
-      setShowSaved(false);
-    } else {
-      // Close all panels when switching to other tabs
-      setShowSearch(false);
-      setShowSaved(false);
-      }
+    // Use the consolidated toggle function
+    toggleTab(tab);
   };
 
   const handleSearch = (_query: string) => {
-    setShowSearch(false);
+    closeAllPanels();
   };
 
 
@@ -122,8 +103,8 @@ function App() {
         {/* Mobile Search - Only show when search tab is active */}
         {isMobile && (
           <MobileSearch
-            isOpen={showSearch}
-            onClose={() => setShowSearch(false)}
+            isOpen={isSearchVisible}
+            onClose={closeAllPanels}
             onSearch={handleSearch}
           />
         )}
@@ -132,10 +113,10 @@ function App() {
         {/* Mobile Saved Properties - Only show when saved tab is active */}
         {isMobile && (
           <SavedPropertiesSidebar
-            open={showSaved}
-            onClose={() => setShowSaved(false)}
+            open={isSavedVisible}
+            onClose={closeAllPanels}
             onViewDetails={(_property) => {
-              setShowSaved(false);
+              closeAllPanels();
             }}
           />
         )}
