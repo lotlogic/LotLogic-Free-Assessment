@@ -140,8 +140,9 @@ export const getImageUrlWithCorsProxy = (imagePath: string | null | undefined): 
   if (!imagePath) return '';
   
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    const proxyUrl = 'https://corsproxy.io/'; 
-    return `${proxyUrl}?${encodeURIComponent(imagePath)}`;
+    // const proxyUrl = 'https://corsproxy.io/'; 
+    // return `${proxyUrl}?${encodeURIComponent(imagePath)}`;
+    return imagePath;
   }
   
   return imagePath;
