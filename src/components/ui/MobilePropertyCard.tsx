@@ -1,4 +1,4 @@
-import { Bookmark, Home, Eye } from 'lucide-react';
+import { Bookmark, Eye, Home } from "lucide-react";
 
 interface MobilePropertyCardProps {
   lotId: string;
@@ -39,13 +39,15 @@ export function MobilePropertyCard({
   onViewDetails,
   onViewFloorPlan,
   onViewFacades,
-  className = ''
+  className = "",
 }: MobilePropertyCardProps) {
   return (
-    <div className={`
+    <div
+      className={`
       bg-white rounded-lg border border-gray-200 p-4 mb-3
       ${className}
-    `}>
+    `}
+    >
       {/* Property Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
@@ -58,13 +60,11 @@ export function MobilePropertyCard({
           <button
             onClick={onSave}
             className={`p-1 rounded-full transition-colors ${
-              isSaved 
-                ? 'text-gray-900' 
-                : 'text-gray-400 hover:text-gray-600'
+              isSaved ? "text-gray-900" : "text-gray-400 hover:text-gray-600"
             }`}
-            aria-label={isSaved ? 'Remove from saved' : 'Save property'}
+            aria-label={isSaved ? "Remove from saved" : "Save property"}
           >
-            <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+            <Bookmark className={`h-4 w-4 ${isSaved ? "fill-current" : ""}`} />
           </button>
         )}
       </div>
@@ -75,15 +75,15 @@ export function MobilePropertyCard({
           <Home className="h-3 w-3" />
           <span className="text-xs font-medium">{lotSize}</span>
         </div>
-        
+
         {/* Zoning Tag */}
         <span className="px-2 py-1 bg-pink-100 text-pink-800 text-xs font-medium rounded-full">
           {zoning}
         </span>
-        
+
         {/* Overlay Tags */}
         {overlays.map((overlay, index) => (
-          <span 
+          <span
             key={index}
             className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
           >
@@ -106,14 +106,14 @@ export function MobilePropertyCard({
                 />
               </div>
             )}
-            
+
             {/* Design Details */}
             <div className="flex-1 min-w-0">
               <h4 className="font-medium text-gray-900 text-sm truncate">
                 {designName}
               </h4>
               <p className="text-gray-600 text-xs mt-1">{designType}</p>
-              
+
               {/* Design Features */}
               <div className="flex items-center gap-3 mt-2">
                 {bedrooms && (
@@ -137,7 +137,7 @@ export function MobilePropertyCard({
               </div>
             </div>
           </div>
-          
+
           {/* Action Buttons */}
           <div className="flex gap-2 mt-3">
             {onViewFloorPlan && (
@@ -157,7 +157,7 @@ export function MobilePropertyCard({
               </button>
             )}
           </div>
-          
+
           {/* Enquire Button */}
           <button
             onClick={onViewDetails}

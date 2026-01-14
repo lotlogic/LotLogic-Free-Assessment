@@ -1,22 +1,50 @@
 import { Button } from "@/components/ui/Button";
 import { showToast } from "@/components/ui/Toast";
-import { colors, filter as filterContent, getColorClass, houseDesign, lotSidebar } from "@/constants/content";
+import {
+  colors,
+  filter as filterContent,
+  getColorClass,
+  houseDesign,
+  lotSidebar,
+} from "@/constants/content";
 import { useHouseDesigns } from "@/hooks/useHouseDesigns";
-import { trackHouseDesignInteraction, trackPropertySaved } from "@/lib/analytics/mixpanel";
+import {
+  trackHouseDesignInteraction,
+  trackPropertySaved,
+} from "@/lib/analytics/mixpanel";
 import type { HouseDesignFilterRequest } from "@/lib/api/lotApi";
 import { getImageUrl } from "@/lib/api/lotApi";
 import { useSavedPropertiesStore } from "@/stores/savedPropertiesStore";
-import type { HouseDesignItem, HouseDesignListProps } from "@/types/houseDesign";
-import { Bath, BedDouble, Bookmark, Car, Funnel, MailQuestionMark } from "lucide-react";
+import type {
+  HouseDesignItem,
+  HouseDesignListProps,
+} from "@/types/houseDesign";
+import {
+  Bath,
+  BedDouble,
+  Bookmark,
+  Car,
+  Funnel,
+  MailQuestionMark,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-
-
-export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEnquireNow, onViewFloorPlan, onViewFacades }: HouseDesignListProps) {
+export function HouseDesignList({
+  filter,
+  lot,
+  onShowFilter,
+  onDesignClick,
+  onEnquireNow,
+  onViewFloorPlan,
+  onViewFacades,
+}: HouseDesignListProps) {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [, setSelectedImageIdx] = useState(0);
-  const [showToastMessage, setShowToastMessage] = useState<{ message: string; type: 'success' | 'error' | 'warning' } | null>(null);
-  
+  const [showToastMessage, setShowToastMessage] = useState<{
+    message: string;
+    type: "success" | "error" | "warning";
+  } | null>(null);
+
   // Use Zustand store for saved properties
   const { isDesignSaved, toggleSaved } = useSavedPropertiesStore();
 
@@ -28,23 +56,22 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
     }
   }, [showToastMessage]);
 
-
   const apiFilters: HouseDesignFilterRequest = {
     bedroom: filter.bedroom,
     bathroom: filter.bathroom,
     car: filter.car,
-    min_size: filter.min_size && !isNaN(filter.min_size) ? filter.min_size : undefined,
-    max_size: filter.max_size && !isNaN(filter.max_size) ? filter.max_size : undefined,
+    min_size:
+      filter.min_size && !isNaN(filter.min_size) ? filter.min_size : undefined,
+    max_size:
+      filter.max_size && !isNaN(filter.max_size) ? filter.max_size : undefined,
   };
 
   // Fetch house designs from API
-  const { data: apiResponse, isLoading, error } = useHouseDesigns(
-    lot.lotId?.toString() || null,
-    apiFilters,
-    true
-  );
-
-  
+  const {
+    data: apiResponse,
+    isLoading,
+    error,
+  } = useHouseDesigns(lot.lotId?.toString() || null, apiFilters, true);
 
   // Safely extract house designs with fallback
   const houseDesigns = (apiResponse?.houseDesigns as HouseDesignItem[]) || [];
@@ -53,27 +80,32 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
 
   const handleStarClick = (event: React.MouseEvent, clickedHouseId: string) => {
     event.stopPropagation();
-    
-    const clickedHouse = (houseDesigns as HouseDesignItem[]).find(house => house.id === clickedHouseId);
+
+    const clickedHouse = (houseDesigns as HouseDesignItem[]).find(
+      (house) => house.id === clickedHouseId
+    );
     if (!clickedHouse) return;
-    
+
     const isCurrentlySaved = isDesignSaved(lot.lotId, clickedHouseId);
-    
+
     // Track property save/remove
-    trackPropertySaved(lot.lotId?.toString() || '', !isCurrentlySaved ? 'saved' : 'removed');
-    
+    trackPropertySaved(
+      lot.lotId?.toString() || "",
+      !isCurrentlySaved ? "saved" : "removed"
+    );
+
     // Toggle saved state using Zustand store
     toggleSaved({
-      id: lot.lotId?.toString() || '',
+      id: lot.lotId?.toString() || "",
       ...lot,
-      houseDesign: { ...clickedHouse, isFavorite: !isCurrentlySaved }
+      houseDesign: { ...clickedHouse, isFavorite: !isCurrentlySaved },
     });
-    
+
     // Show toast message when adding
     if (!isCurrentlySaved) {
       setShowToastMessage({
-        message: 'Design saved to your Shortlist',
-        type: 'success'
+        message: "Design saved to your Shortlist",
+        type: "success",
       });
     }
   };
@@ -97,17 +129,36 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
           <div className="text-center max-w-md">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                <svg
+                  className="w-8 h-8 text-red-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Unable to Load House Designs</h3>
-              <p className="text-gray-600 mb-4">We encountered an issue while loading the house designs for this lot.</p>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Unable to Load House Designs
+              </h3>
+              <p className="text-gray-600 mb-4">
+                We encountered an issue while loading the house designs for this
+                lot.
+              </p>
             </div>
             <div className="space-y-3">
               <Button
                 onClick={() => window.location.reload()}
-                className={`w-full ${getColorClass('primary')} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass('accent')} transition-colors`}
+                className={`w-full ${getColorClass(
+                  "primary"
+                )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
+                  "accent"
+                )} transition-colors`}
               >
                 Try Again
               </Button>
@@ -133,19 +184,36 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
           <div className="text-center max-w-md">
             <div className="mb-4">
               <div className="w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="w-8 h-8 text-blue-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No House Designs Found</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                No House Designs Found
+              </h3>
               <p className="text-gray-600 mb-4">
-                We couldn't find any house designs matching your current criteria. Try adjusting your filters to see more options.
+                We couldn't find any house designs matching your current
+                criteria. Try adjusting your filters to see more options.
               </p>
             </div>
             <div className="space-y-3">
               <Button
                 onClick={onShowFilter}
-                className={`w-full ${getColorClass('primary')} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass('accent')} transition-colors`}
+                className={`w-full ${getColorClass(
+                  "primary"
+                )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
+                  "accent"
+                )} transition-colors`}
               >
                 Adjust Filters
               </Button>
@@ -170,7 +238,10 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
       <div className="flex items-center justify-between mb-4">
         <div>
           <span className="text-xl font-bold">
-            <span className={`${getColorClass('primary', 'text')}`}>{filteredHouses.length}</span> {houseDesign.title}
+            <span className={`${getColorClass("primary", "text")}`}>
+              {filteredHouses.length}
+            </span>{" "}
+            {houseDesign.title}
           </span>
           {/* {(apiHouseDesigns as HouseDesignItem[])?.length > 0 && (
             <div className="text-xs text-green-600 mt-1">
@@ -191,12 +262,15 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
         {filteredHouses.map((house, idx) => {
           const isExpanded = expandedIdx === idx;
           const images = house.images;
-          
 
           return (
             <div
               key={house.id}
-              className={`rounded-2xl border border-gray-200 p-4 transition-all duration-300 ${isExpanded ? getColorClass('background.accent') : 'bg-white hover:shadow-md'}`}
+              className={`rounded-2xl border border-gray-200 p-4 transition-all duration-300 ${
+                isExpanded
+                  ? getColorClass("background.accent")
+                  : "bg-white hover:shadow-md"
+              }`}
               onClick={() => {
                 if (expandedIdx === idx) {
                   setExpandedIdx(null);
@@ -206,53 +280,73 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
                   setSelectedImageIdx(0);
                   const houseWithOverlayOnly = { ...house, overlayOnly: true };
                   onDesignClick(houseWithOverlayOnly);
-                  
+
                   // Track house design view
-                  trackHouseDesignInteraction('Viewed', {
+                  trackHouseDesignInteraction("Viewed", {
                     id: house.id,
                     title: house.title,
                     bedrooms: house.bedrooms,
                     bathrooms: house.bathrooms,
                     area: house.area,
-                    lotId: lot.lotId
+                    lotId: lot.lotId,
                   });
                 }
               }}
             >
               <div className="flex gap-4 items-start">
                 {/* Floor Plan Thumbnail on the left */}
-                <img 
-                  src={getImageUrl(house.floorPlanImage) || getImageUrl(images[0]?.src) || house.image} 
-                  alt="Floor Plan" 
-                  className="w-24 h-24 rounded-lg object-cover flex-shrink-0" 
+                <img
+                  src={
+                    getImageUrl(house.floorPlanImage) ||
+                    getImageUrl(images[0]?.src) ||
+                    house.image
+                  }
+                  alt="Floor Plan"
+                  className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
                 />
-                
+
                 {/* House Details and Buttons on the right */}
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start mb-1">
                     <div className="min-w-0 pr-2">
-                      <div className="font-bold text-lg mb-1 truncate">{house.title}</div>
+                      <div className="font-bold text-lg mb-1 truncate">
+                        {house.title}
+                      </div>
                       <div className="text-black text-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                        {lotSidebar.singleStorey} {houseDesign.area}: {house.area} {houseDesign.m2}
+                        {lotSidebar.singleStorey} {houseDesign.area}:{" "}
+                        {house.area} {houseDesign.m2}
                       </div>
                     </div>
                     <Bookmark
                       className={`h-6 w-6 cursor-pointer transition-colors duration-200 flex-shrink-0 ${
-                        isDesignSaved(lot.lotId, house.id) ? 'fill-current' : 'text-gray-400'
+                        isDesignSaved(lot.lotId, house.id)
+                          ? "fill-current"
+                          : "text-gray-400"
                       }`}
                       style={{
-                        color: isDesignSaved(lot.lotId, house.id) ? colors.primary : undefined,
+                        color: isDesignSaved(lot.lotId, house.id)
+                          ? colors.primary
+                          : undefined,
                       }}
                       onClick={(e) => handleStarClick(e, house.id)}
                       data-star-icon
                     />
                   </div>
-                  
+
                   {/* Specifications Icons */}
                   <div className="flex gap-4 mt-2 text-black text-sm font-medium bold flex-wrap">
-                    <span className="flex items-center gap-1"><BedDouble className="h-5 w-5 text-black" />{house.bedrooms}</span>
-                    <span className="flex items-center gap-1"><Bath className="h-5 w-5 text-black" />{house.bathrooms}</span>
-                    <span className="flex items-center gap-1"><Car className="h-5 w-5 text-black" />{house.cars}</span>
+                    <span className="flex items-center gap-1">
+                      <BedDouble className="h-5 w-5 text-black" />
+                      {house.bedrooms}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Bath className="h-5 w-5 text-black" />
+                      {house.bathrooms}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Car className="h-5 w-5 text-black" />
+                      {house.cars}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -260,75 +354,87 @@ export function HouseDesignList({ filter, lot, onShowFilter, onDesignClick, onEn
               {/* Expanded content for detailed view */}
               {isExpanded && (
                 <div className="mt-4 pt-1">
-                  
                   {/* Action Buttons for Expanded View */}
                   <div className="space-y-3">
                     {/* First Row: View Floor plan and View Facades */}
                     <div className="flex gap-3">
                       <Button
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
                           if (onViewFloorPlan) {
                             onViewFloorPlan(house);
                           }
-                          
+
                           // Track floor plan view
-                          trackHouseDesignInteraction('Floor Plan Viewed', {
+                          trackHouseDesignInteraction("Floor Plan Viewed", {
                             id: house.id,
                             title: house.title,
                             bedrooms: house.bedrooms,
                             bathrooms: house.bathrooms,
                             area: house.area,
-                            lotId: lot.lotId
+                            lotId: lot.lotId,
                           });
                         }}
-                        className={`${getColorClass('primary')} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass('accent')} transition-colors flex-1 cursor-pointer`}
+                        className={`${getColorClass(
+                          "primary"
+                        )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
+                          "accent"
+                        )} transition-colors flex-1 cursor-pointer`}
                       >
                         View Floor plan
                       </Button>
                       <Button
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
                           if (onViewFacades) {
                             onViewFacades(house);
                           }
-                          
+
                           // Track facades view
-                          trackHouseDesignInteraction('Facades Viewed', {
+                          trackHouseDesignInteraction("Facades Viewed", {
                             id: house.id,
                             title: house.title,
                             bedrooms: house.bedrooms,
                             bathrooms: house.bathrooms,
                             area: house.area,
-                            lotId: lot.lotId
+                            lotId: lot.lotId,
                           });
                         }}
-                        className={`${getColorClass('primary')} text-white py-3 px-4 rounded-lg font-medium hover:${getColorClass('accent')} transition-colors flex-1 cursor-pointer`}
+                        className={`${getColorClass(
+                          "primary"
+                        )} text-white py-3 px-4 rounded-lg font-medium hover:${getColorClass(
+                          "accent"
+                        )} transition-colors flex-1 cursor-pointer`}
                       >
                         View Facades
                       </Button>
                     </div>
-                    
+
                     {/* Second Row: Enquire Now */}
                     <Button
                       variant="outline"
-                      onClick={e => {
+                      onClick={(e) => {
                         e.stopPropagation();
                         if (onEnquireNow) {
                           onEnquireNow(house);
                         }
-                        
+
                         // Track enquiry initiation
-                        trackHouseDesignInteraction('Enquiry Initiated', {
+                        trackHouseDesignInteraction("Enquiry Initiated", {
                           id: house.id,
                           title: house.title,
                           bedrooms: house.bedrooms,
                           bathrooms: house.bathrooms,
                           area: house.area,
-                          lotId: lot.lotId
+                          lotId: lot.lotId,
                         });
                       }}
-                      className={`border border-gray-300 bg-white text-gray-700 py-3 px-4 rounded-lg font-medium hover:${getColorClass('primary')} hover:text-white hover:${getColorClass('primary', 'border')} transition-colors w-full flex items-center justify-center gap-2 cursor-pointer`}
+                      className={`border border-gray-300 bg-white text-gray-700 py-3 px-4 rounded-lg font-medium hover:${getColorClass(
+                        "primary"
+                      )} hover:text-white hover:${getColorClass(
+                        "primary",
+                        "border"
+                      )} transition-colors w-full flex items-center justify-center gap-2 cursor-pointer`}
                     >
                       <MailQuestionMark className="h-4 w-4" />
                       Get Cost Estimates

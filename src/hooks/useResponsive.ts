@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
 export interface ResponsiveState {
   isMobile: boolean;
@@ -38,10 +38,10 @@ export function useResponsive(): ResponsiveState {
     updateResponsiveState();
 
     // Add event listener
-    window.addEventListener('resize', updateResponsiveState);
+    window.addEventListener("resize", updateResponsiveState);
 
     // Cleanup
-    return () => window.removeEventListener('resize', updateResponsiveState);
+    return () => window.removeEventListener("resize", updateResponsiveState);
   }, []);
 
   return responsiveState;
@@ -54,9 +54,9 @@ export function useTouchDevice(): boolean {
   useEffect(() => {
     const checkTouchDevice = () => {
       setIsTouchDevice(
-        'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0 ||
-        (navigator as any).msMaxTouchPoints > 0
+        "ontouchstart" in window ||
+          navigator.maxTouchPoints > 0 ||
+          (navigator as any).msMaxTouchPoints > 0
       );
     };
 
@@ -67,23 +67,25 @@ export function useTouchDevice(): boolean {
 }
 
 // Hook for detecting device orientation
-export function useOrientation(): 'portrait' | 'landscape' {
-  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>('portrait');
+export function useOrientation(): "portrait" | "landscape" {
+  const [orientation, setOrientation] = useState<"portrait" | "landscape">(
+    "portrait"
+  );
 
   useEffect(() => {
     const updateOrientation = () => {
       setOrientation(
-        window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'
+        window.innerHeight > window.innerWidth ? "portrait" : "landscape"
       );
     };
 
     updateOrientation();
-    window.addEventListener('resize', updateOrientation);
-    window.addEventListener('orientationchange', updateOrientation);
+    window.addEventListener("resize", updateOrientation);
+    window.addEventListener("orientationchange", updateOrientation);
 
     return () => {
-      window.removeEventListener('resize', updateOrientation);
-      window.removeEventListener('orientationchange', updateOrientation);
+      window.removeEventListener("resize", updateOrientation);
+      window.removeEventListener("orientationchange", updateOrientation);
     };
   }, []);
 

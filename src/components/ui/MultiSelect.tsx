@@ -1,42 +1,47 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { ChevronDown, X } from 'lucide-react';
-import type { MultiSelectProps } from '@/types/ui';
-import { colors, getColorClass } from '@/constants/content';
+import { colors, getColorClass } from "@/constants/content";
+import type { MultiSelectProps } from "@/types/ui";
+import { ChevronDown, X } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
-export function MultiSelect({ 
-  options, 
-  selectedOptions, 
-  onSelectionChange, 
-  placeholder = "Choose options", 
+export function MultiSelect({
+  options,
+  selectedOptions,
+  onSelectionChange,
+  placeholder = "Choose options",
   label,
-  className = "" 
+  className = "",
 }: MultiSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleOptionToggle = (optionId: string) => {
     const newSelection = selectedOptions.includes(optionId)
-      ? selectedOptions.filter(id => id !== optionId)
+      ? selectedOptions.filter((id) => id !== optionId)
       : [...selectedOptions, optionId];
     onSelectionChange(newSelection);
   };
 
-
-  const selectedOptionsData = options.filter(option => selectedOptions.includes(option.id));
-  const displayText = selectedOptions.length > 0 
-    ? `${selectedOptions.length} Builders Selected` 
-    : placeholder;
+  const selectedOptionsData = options.filter((option) =>
+    selectedOptions.includes(option.id)
+  );
+  const displayText =
+    selectedOptions.length > 0
+      ? `${selectedOptions.length} Builders Selected`
+      : placeholder;
 
   return (
     <div className={`relative ${className}`}>
@@ -45,20 +50,20 @@ export function MultiSelect({
           {label}
         </label>
       )}
-      
+
       <div ref={dropdownRef} className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full p-3 border rounded-lg shadow-sm focus:${getColorClass('primary', 'ring')} focus:${getColorClass('primary', 'border')} appearance-none bg-white pr-8 text-left ${
-            isOpen 
-              ? getColorClass('primary', 'border')
-              : 'border-gray-300'
-          } ${
-            selectedOptions.length > 0 
-              ? 'text-gray-900' 
-              : 'text-gray-500'
-          }`}
+          className={`w-full p-3 border rounded-lg shadow-sm focus:${getColorClass(
+            "primary",
+            "ring"
+          )} focus:${getColorClass(
+            "primary",
+            "border"
+          )} appearance-none bg-white pr-8 text-left ${
+            isOpen ? getColorClass("primary", "border") : "border-gray-300"
+          } ${selectedOptions.length > 0 ? "text-gray-900" : "text-gray-500"}`}
         >
           {displayText}
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
@@ -81,9 +86,9 @@ export function MultiSelect({
                 {/* Logo/Icon */}
                 <div className="flex-shrink-0 mr-3">
                   {option.logo ? (
-                    <img 
-                      src={option.logo} 
-                      alt={`${option.label} logo`} 
+                    <img
+                      src={option.logo}
+                      alt={`${option.label} logo`}
                       width={24}
                       height={24}
                       className="rounded-full object-cover"
@@ -111,10 +116,12 @@ export function MultiSelect({
                     checked={selectedOptions.includes(option.id)}
                     onChange={() => handleOptionToggle(option.id)}
                     className="w-4 h-4 border-gray-300 rounded focus:ring-2"
-                    style={{
-                      '--tw-ring-color': colors.primary,
-                      color: colors.primary,
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        "--tw-ring-color": colors.primary,
+                        color: colors.primary,
+                      } as React.CSSProperties
+                    }
                   />
                 </div>
               </div>
@@ -126,13 +133,13 @@ export function MultiSelect({
         {selectedOptionsData.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-2">
             {selectedOptionsData.map((option) => (
-                <div
-                  key={option.id}
-                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm text-white"
-                  style={{
-                    backgroundColor: colors.primary
-                  }}
-                >
+              <div
+                key={option.id}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm text-white"
+                style={{
+                  backgroundColor: colors.primary,
+                }}
+              >
                 <span>{option.label}</span>
                 <button
                   type="button"
@@ -151,4 +158,4 @@ export function MultiSelect({
       </div>
     </div>
   );
-} 
+}

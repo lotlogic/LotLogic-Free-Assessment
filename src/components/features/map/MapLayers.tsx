@@ -1,12 +1,12 @@
-import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import * as turf from '@turf/turf';
-import { insetQuadPerSideLL, createSValueLabel, mapSValuesToSides, type Pt, type SetbackValues } from '@/lib/utils/geometry';
-import type { LotProperties } from '@/types/lot';
-import { getImageUrlWithCorsProxy } from '@/lib/api/lotApi';
-import type { FloorPlan } from '@/types/houseDesign';
-import { useRotationStore } from '@/stores/rotationStore';
 import { showToast } from '@/components/ui/Toast';
+import { getImageUrlWithCorsProxy } from '@/lib/api/lotApi';
+import { createSValueLabel, insetQuadPerSideLL, mapSValuesToSides, type Pt, type SetbackValues } from '@/lib/utils/geometry';
+import { useRotationStore } from '@/stores/rotationStore';
+import type { FloorPlan } from '@/types/houseDesign';
+import type { LotProperties } from '@/types/lot';
+import * as turf from '@turf/turf';
+import mapboxgl from 'mapbox-gl';
+import { useEffect, useRef } from 'react';
 
 interface HouseBoundaryData {
   center: [number, number];

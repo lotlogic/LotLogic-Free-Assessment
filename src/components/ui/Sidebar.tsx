@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { X, ChevronLeft } from "lucide-react";
-import clsx from "clsx";
-import { sidebar, getColorClass } from "@/constants/content";
+import { getColorClass, sidebar } from "@/constants/content";
 import { useMobile } from "@/hooks/useMobile";
-import { Drawer, IconButton, Box } from '@mui/material';
+import { Box, Drawer, IconButton } from "@mui/material";
+import clsx from "clsx";
+import { ChevronLeft, X } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
 
 export function Sidebar({
   open,
@@ -25,12 +25,12 @@ export function Sidebar({
   className?: string;
 }) {
   const isMobile = useMobile();
-  const [drawerHeight, setDrawerHeight] = useState<'50vh' | '100vh'>('50vh');
+  const [drawerHeight, setDrawerHeight] = useState<"50vh" | "100vh">("50vh");
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
-  const [startHeight, setStartHeight] = useState<'50vh' | '100vh'>('50vh');
+  const [startHeight, setStartHeight] = useState<"50vh" | "100vh">("50vh");
   const drawerRef = useRef<HTMLDivElement>(null);
-  
+
   if (!open) return null;
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -43,16 +43,16 @@ export function Sidebar({
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!isMobile || !isDragging) return;
     e.preventDefault();
-    
+
     const currentY = e.touches[0].clientY;
     const deltaY = startY - currentY;
     const threshold = 80; // pixels to trigger height change
-    
-    if (deltaY > threshold && startHeight === '50vh') {
-      setDrawerHeight('100vh');
-    } else if (deltaY < -threshold && startHeight === '100vh') {
-      setDrawerHeight('50vh');
-    } else if (deltaY < -threshold && startHeight === '50vh') {
+
+    if (deltaY > threshold && startHeight === "50vh") {
+      setDrawerHeight("100vh");
+    } else if (deltaY < -threshold && startHeight === "100vh") {
+      setDrawerHeight("50vh");
+    } else if (deltaY < -threshold && startHeight === "50vh") {
       // From half height, dragging down beyond threshold closes the drawer
       onClose();
     }
@@ -66,7 +66,7 @@ export function Sidebar({
   // Reset height when opening
   useEffect(() => {
     if (open && isMobile) {
-      setDrawerHeight('50vh');
+      setDrawerHeight("50vh");
     }
   }, [open, isMobile]);
 
@@ -81,30 +81,30 @@ export function Sidebar({
         PaperProps={{
           sx: {
             height: drawerHeight,
-            borderTopLeftRadius: '16px',
-            borderTopRightRadius: '16px',
-            transition: 'height 0.3s ease-in-out',
+            borderTopLeftRadius: "16px",
+            borderTopRightRadius: "16px",
+            transition: "height 0.3s ease-in-out",
             // Position above navbar for both heights
-            bottom: '4rem', // 4rem = 64px (navbar height)
+            bottom: "4rem", // 4rem = 64px (navbar height)
             // When expanded to 100vh, adjust height to fill remaining space
-            ...(drawerHeight === '100vh' && {
-              height: 'calc(100vh - 4rem)',
+            ...(drawerHeight === "100vh" && {
+              height: "calc(100vh - 4rem)",
             }),
             // Remove z-index behavior
-            position: 'fixed',
-            zIndex: 'auto'
-          }
+            position: "fixed",
+            zIndex: "auto",
+          },
         }}
         ModalProps={{
           keepMounted: true,
         }}
         BackdropProps={{
           sx: {
-            backgroundColor: 'transparent'
-          }
+            backgroundColor: "transparent",
+          },
         }}
       >
-        <Box 
+        <Box
           ref={drawerRef}
           className="h-full flex flex-col"
           onTouchStart={handleTouchStart}
@@ -112,9 +112,11 @@ export function Sidebar({
           onTouchEnd={handleTouchEnd}
         >
           {/* Drawer Handle */}
-          <Box 
+          <Box
             className="flex justify-center pt-2 pb-1 cursor-pointer"
-            onClick={() => setDrawerHeight(drawerHeight === '50vh' ? '100vh' : '50vh')}
+            onClick={() =>
+              setDrawerHeight(drawerHeight === "50vh" ? "100vh" : "50vh")
+            }
           >
             <Box className="w-12 h-1 bg-gray-300 rounded-full" />
           </Box>
@@ -130,12 +132,13 @@ export function Sidebar({
                 <ChevronLeft className="h-6 w-6" />
               </IconButton>
             )}
-            <Box className="flex-grow">
-              {headerContent}
-            </Box>
+            <Box className="flex-grow">{headerContent}</Box>
             <IconButton
               onClick={onClose}
-              className={`p-2 rounded-full hover:bg-gray-100 ${getColorClass('text.primary', 'text')} hover:text-gray-700`}
+              className={`p-2 rounded-full hover:bg-gray-100 ${getColorClass(
+                "text.primary",
+                "text"
+              )} hover:text-gray-700`}
               aria-label={sidebar.close}
             >
               <X className="h-6 w-6" />
@@ -143,9 +146,7 @@ export function Sidebar({
           </Box>
 
           {/* Content */}
-          <Box className="flex-grow overflow-y-auto min-h-0">
-            {children}
-          </Box>
+          <Box className="flex-grow overflow-y-auto min-h-0">{children}</Box>
         </Box>
       </Drawer>
     );
@@ -170,12 +171,13 @@ export function Sidebar({
             <ChevronLeft className="h-6 w-6" />
           </button>
         )}
-        <div className="flex-grow">
-          {headerContent}
-        </div>
+        <div className="flex-grow">{headerContent}</div>
         <button
           onClick={onClose}
-          className={`p-2 rounded-full hover:bg-gray-100 ${getColorClass('text.primary', 'text')} hover:text-gray-700 ml-auto`}
+          className={`p-2 rounded-full hover:bg-gray-100 ${getColorClass(
+            "text.primary",
+            "text"
+          )} hover:text-gray-700 ml-auto`}
           aria-label={sidebar.close}
         >
           <X className="h-6 w-6" />

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface SavedHouseData {
   id: string;
@@ -37,25 +37,27 @@ export const useSavedPropertiesStore = create<SavedPropertiesState>()(
   persist(
     (set, get) => ({
       savedProperties: [],
-      
+
       isDesignSaved: (lotId: string | number, houseId: string) => {
         const { savedProperties } = get();
         return savedProperties.some(
           (data) => data.lotId === lotId && data.houseDesign.id === houseId
         );
       },
-      
+
       addToSaved: (property: SavedHouseData) => {
         const { savedProperties } = get();
         const existingIndex = savedProperties.findIndex(
-          (data) => data.lotId === property.lotId && data.houseDesign.id === property.houseDesign.id
+          (data) =>
+            data.lotId === property.lotId &&
+            data.houseDesign.id === property.houseDesign.id
         );
-        
+
         if (existingIndex === -1) {
           set({ savedProperties: [...savedProperties, property] });
         }
       },
-      
+
       removeFromSaved: (lotId: string | number, houseId: string) => {
         const { savedProperties } = get();
         const newSavedProperties = savedProperties.filter(
@@ -63,24 +65,24 @@ export const useSavedPropertiesStore = create<SavedPropertiesState>()(
         );
         set({ savedProperties: newSavedProperties });
       },
-      
+
       toggleSaved: (property: SavedHouseData) => {
         const { isDesignSaved, addToSaved, removeFromSaved } = get();
         const isSaved = isDesignSaved(property.lotId, property.houseDesign.id);
-        
+
         if (isSaved) {
           removeFromSaved(property.lotId, property.houseDesign.id);
         } else {
           addToSaved(property);
         }
       },
-      
+
       clearAll: () => {
         set({ savedProperties: [] });
       },
     }),
     {
-      name: 'userFavorite', // localStorage key
+      name: "userFavorite", // localStorage key
     }
   )
 );

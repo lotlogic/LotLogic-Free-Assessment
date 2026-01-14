@@ -1,9 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
-import { lotApi, type HouseDesignFilterRequest, type HouseDesignItemResponse } from '../lib/api/lotApi';
-import type { HouseDesignItem } from '../types/houseDesign';
+import { useQuery } from "@tanstack/react-query";
+import {
+  lotApi,
+  type HouseDesignFilterRequest,
+  type HouseDesignItemResponse,
+} from "../lib/api/lotApi";
+import type { HouseDesignItem } from "../types/houseDesign";
 
 // Convert API response to frontend format
-const convertApiResponseToHouseDesign = (apiDesign: HouseDesignItemResponse): HouseDesignItem => {
+const convertApiResponseToHouseDesign = (
+  apiDesign: HouseDesignItemResponse
+): HouseDesignItem => {
   return {
     id: apiDesign.id,
     title: apiDesign.title,
@@ -27,28 +33,44 @@ export const useHouseDesigns = (
   enabled: boolean = true
 ) => {
   return useQuery({
-    queryKey: ['house-designs', lotId, JSON.stringify(filters)],
-    queryFn: async (): Promise<{ houseDesigns: HouseDesignItem[]; zoning: { fsr: number; frontSetback: number; rearSetback: number; sideSetback: number } }> => {
+    queryKey: ["house-designs", lotId, JSON.stringify(filters)],
+    queryFn: async (): Promise<{
+      houseDesigns: HouseDesignItem[];
+      zoning: {
+        fsr: number;
+        frontSetback: number;
+        rearSetback: number;
+        sideSetback: number;
+      };
+    }> => {
       if (!lotId) {
-        return { houseDesigns: [], zoning: { fsr: 300, frontSetback: 4, rearSetback: 3, sideSetback: 3 } };
+        return {
+          houseDesigns: [],
+          zoning: { fsr: 300, frontSetback: 4, rearSetback: 3, sideSetback: 3 },
+        };
       }
-      
+
       // If no filters, create empty filter object for API
       const filtersToSend = filters || {
         bedroom: [],
         bathroom: [],
         car: [],
       };
-      
+
       const apiResponse = await lotApi.filterHouseDesigns(lotId, filtersToSend);
-      
+
       // Handle case where apiResponse or houseDesigns might be undefined
       const houseDesigns = apiResponse?.houseDesigns || [];
-      const zoning = apiResponse?.zoning || { fsr: 300, frontSetback: 4, rearSetback: 3, sideSetback: 3 };
-      
+      const zoning = apiResponse?.zoning || {
+        fsr: 300,
+        frontSetback: 4,
+        rearSetback: 3,
+        sideSetback: 3,
+      };
+
       return {
         houseDesigns: houseDesigns.map(convertApiResponseToHouseDesign),
-        zoning: zoning
+        zoning: zoning,
       };
     },
     enabled: enabled && !!lotId,

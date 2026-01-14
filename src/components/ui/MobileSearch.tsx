@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
-import axios from 'axios';
-import { showToast } from '@/components/ui/Toast';
+import { showToast } from "@/components/ui/Toast";
+import axios from "axios";
+import { Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface MobileSearchProps {
   isOpen: boolean;
@@ -16,7 +16,7 @@ interface SearchResult {
 }
 
 export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -26,13 +26,16 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -51,20 +54,22 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
     try {
       const accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
       const response = await axios.get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery)}.json?` +
-        `access_token=${accessToken}&` +
-        `country=au&` +
-        `types=address,poi,neighborhood,place&` +
-        `limit=5`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          searchQuery
+        )}.json?` +
+          `access_token=${accessToken}&` +
+          `country=au&` +
+          `types=address,poi,neighborhood,place&` +
+          `limit=5`
       );
 
       setResults(response.data.features || []);
     } catch (error) {
-      console.error('Mobile search error:', error);
+      console.error("Mobile search error:", error);
       showToast({
         message: "Search failed. Please try again.",
-        type: 'error',
-        options: { autoClose: 4000 }
+        type: "error",
+        options: { autoClose: 4000 },
       });
       setResults([]);
     } finally {
@@ -82,16 +87,18 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
 
   const handleResultClick = (result: SearchResult) => {
     // Dispatch custom event for map to fly to coordinates
-    window.dispatchEvent(new CustomEvent('search-result-selected', {
-      detail: { coordinates: result.center }
-    }));
+    window.dispatchEvent(
+      new CustomEvent("search-result-selected", {
+        detail: { coordinates: result.center },
+      })
+    );
     setQuery(result.place_name);
     setIsDropdownOpen(false);
     onSearch?.(result.place_name);
   };
 
   const handleClear = () => {
-    setQuery('');
+    setQuery("");
     setResults([]);
     setIsDropdownOpen(false);
   };

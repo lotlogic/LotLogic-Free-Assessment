@@ -1,4 +1,4 @@
-import { Close, NavigateBefore, NavigateNext } from '@mui/icons-material';
+import { Close, NavigateBefore, NavigateNext } from "@mui/icons-material";
 import {
   Box,
   Dialog,
@@ -7,29 +7,32 @@ import {
   IconButton,
   Typography,
   useMediaQuery,
-  useTheme
-} from '@mui/material';
-import React, { useCallback, useMemo } from 'react';
+  useTheme,
+} from "@mui/material";
+import React, { useCallback, useMemo } from "react";
 
 // Common Dialog Title Component
-const ModalTitle: React.FC<{ title: string; onClose: () => void }> = ({ title, onClose }) => (
+const ModalTitle: React.FC<{ title: string; onClose: () => void }> = ({
+  title,
+  onClose,
+}) => (
   <DialogTitle
     sx={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      borderBottom: '1px solid #e5e7eb',
-      padding: '20px',
-      margin: 0
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      borderBottom: "1px solid #e5e7eb",
+      padding: "20px",
+      margin: 0,
     }}
   >
-    <Typography 
-      variant="h6" 
+    <Typography
+      variant="h6"
       component="h2"
       sx={{
-        fontSize: '18px',
+        fontSize: "18px",
         fontWeight: 600,
-        color: '#111827'
+        color: "#111827",
       }}
     >
       {title}
@@ -37,46 +40,46 @@ const ModalTitle: React.FC<{ title: string; onClose: () => void }> = ({ title, o
     <IconButton
       onClick={onClose}
       sx={{
-        color: '#6b7280',
-        padding: '8px',
-        borderRadius: '50%',
-        '&:hover': {
-          backgroundColor: '#f3f4f6',
-          color: '#374151'
-        }
+        color: "#6b7280",
+        padding: "8px",
+        borderRadius: "50%",
+        "&:hover": {
+          backgroundColor: "#f3f4f6",
+          color: "#374151",
+        },
       }}
     >
-      <Close sx={{ width: '24px', height: '24px' }} />
+      <Close sx={{ width: "24px", height: "24px" }} />
     </IconButton>
   </DialogTitle>
 );
 
 // Navigation Arrow Component
 const NavigationArrow: React.FC<{
-  direction: 'prev' | 'next';
+  direction: "prev" | "next";
   onClick: () => void;
   position: { left?: string; right?: string };
 }> = ({ direction, onClick, position }) => (
   <IconButton
     onClick={onClick}
     sx={{
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      color: 'white',
-      padding: '8px',
-      borderRadius: '50%',
-      '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.7)'
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      color: "white",
+      padding: "8px",
+      borderRadius: "50%",
+      "&:hover": {
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
       },
-      ...position
+      ...position,
     }}
   >
-    {direction === 'prev' ? (
-      <NavigateBefore sx={{ width: '24px', height: '24px' }} />
+    {direction === "prev" ? (
+      <NavigateBefore sx={{ width: "24px", height: "24px" }} />
     ) : (
-      <NavigateNext sx={{ width: '24px', height: '24px' }} />
+      <NavigateNext sx={{ width: "24px", height: "24px" }} />
     )}
   </IconButton>
 );
@@ -91,17 +94,17 @@ const Thumbnail: React.FC<{
   <Box
     onClick={onClick}
     sx={{
-      width: '64px',
-      height: '64px',
-      borderRadius: '4px',
-      overflow: 'hidden',
-      cursor: 'pointer',
-      border: isActive ? '2px solid #1976d2' : '2px solid transparent',
+      width: "64px",
+      height: "64px",
+      borderRadius: "4px",
+      overflow: "hidden",
+      cursor: "pointer",
+      border: isActive ? "2px solid #1976d2" : "2px solid transparent",
       flexShrink: 0,
-      position: 'relative',
-      '&:hover': {
-        borderColor: '#1976d2'
-      }
+      position: "relative",
+      "&:hover": {
+        borderColor: "#1976d2",
+      },
     }}
   >
     <img
@@ -109,9 +112,9 @@ const Thumbnail: React.FC<{
       alt={image.alt}
       loading="lazy"
       style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover'
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
       }}
     />
   </Box>
@@ -139,10 +142,10 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
   images,
   currentIndex,
   onIndexChange,
-  showThumbnails = true
+  showThumbnails = true,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handlePrevious = useCallback(() => {
     onIndexChange((currentIndex - 1 + images.length) % images.length);
@@ -155,19 +158,20 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
   const currentImage = images[currentIndex];
   const hasMultipleImages = images.length > 1;
 
-  const dialogPaperProps = useMemo(() => ({
-    sx: {
-      borderRadius: '16px',
-      maxHeight: isMobile ? '70vh' : '662px',
-      minHeight: isMobile ? 'auto' : '662px',
-      width: isMobile ? '92vw' : '956px',
-      margin: '16px',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-      overflow: 'hidden'
-    }
-  }), [isMobile]);
-
-
+  const dialogPaperProps = useMemo(
+    () => ({
+      sx: {
+        borderRadius: "16px",
+        maxHeight: isMobile ? "70vh" : "662px",
+        minHeight: isMobile ? "auto" : "662px",
+        width: isMobile ? "92vw" : "956px",
+        margin: "16px",
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        overflow: "hidden",
+      },
+    }),
+    [isMobile]
+  );
 
   return (
     <Dialog
@@ -179,25 +183,25 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
     >
       <ModalTitle title={title} onClose={onClose} />
 
-      <DialogContent 
-        sx={{ 
-          padding: '12px',
+      <DialogContent
+        sx={{
+          padding: "12px",
           flex: 1,
           margin: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          height: isMobile ? 'auto' : 'calc(100% - 80px)'
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          height: isMobile ? "auto" : "calc(100% - 80px)",
         }}
       >
         {images.length === 0 || !currentImage ? (
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: isMobile ? '50vh' : '630px'
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: isMobile ? "50vh" : "630px",
             }}
           >
             <Typography variant="body1" color="text.secondary">
@@ -207,22 +211,22 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
         ) : (
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              height: '100%',
-              gap: '12px'
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              gap: "12px",
             }}
           >
             {/* Main Image Container */}
             <Box
               sx={{
-                position: 'relative',
-                width: '100%',
-                height: isMobile ? '50vh' : '450px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0
+                position: "relative",
+                width: "100%",
+                height: isMobile ? "50vh" : "450px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
               }}
             >
               <img
@@ -230,39 +234,39 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
                 alt={currentImage.alt}
                 loading="eager"
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '100%',
-                  width: 'auto',
-                  height: 'auto',
-                  objectFit: 'contain',
-                  borderRadius: '8px'
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  width: "auto",
+                  height: "auto",
+                  objectFit: "contain",
+                  borderRadius: "8px",
                 }}
               />
-              
+
               {/* Image Label Overlay */}
               {currentImage.label && (
                 <Box
                   sx={{
-                    position: 'absolute',
-                    top: '16px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    backdropFilter: 'blur(10px)',
-                    color: '#1f2937',
-                    padding: '8px 16px',
-                    borderRadius: '20px',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    maxWidth: 'calc(100% - 32px)'
+                    position: "absolute",
+                    top: "16px",
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    backgroundColor: "rgba(255, 255, 255, 0.95)",
+                    backdropFilter: "blur(10px)",
+                    color: "#1f2937",
+                    padding: "8px 16px",
+                    borderRadius: "20px",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    maxWidth: "calc(100% - 32px)",
                   }}
                 >
-                  <Typography 
-                    variant="body2" 
+                  <Typography
+                    variant="body2"
                     sx={{
                       fontWeight: 600,
-                      fontSize: '14px',
-                      letterSpacing: '0.025em'
+                      fontSize: "14px",
+                      letterSpacing: "0.025em",
                     }}
                   >
                     {currentImage.label}
@@ -276,12 +280,12 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
                   <NavigationArrow
                     direction="prev"
                     onClick={handlePrevious}
-                    position={{ left: '8px' }}
+                    position={{ left: "8px" }}
                   />
                   <NavigationArrow
                     direction="next"
                     onClick={handleNext}
-                    position={{ right: '8px' }}
+                    position={{ right: "8px" }}
                   />
                 </>
               )}
@@ -291,10 +295,10 @@ export const ImageCarouselModal: React.FC<ImageCarouselModalProps> = ({
             {(showThumbnails || hasMultipleImages) && (
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  flexShrink: 0
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "8px",
+                  flexShrink: 0,
                 }}
               >
                 {images.map((image, index) => (
@@ -329,22 +333,25 @@ export const SingleImageModal: React.FC<SingleImageModalProps> = ({
   onClose,
   title,
   imageSrc,
-  imageAlt
+  imageAlt,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const dialogPaperProps = useMemo(() => ({
-    sx: {
-      borderRadius: '16px',
-      maxHeight: isMobile ? '70vh' : '662px',
-      minHeight: isMobile ? 'auto' : '662px',
-      width: isMobile ? '92vw' : '956px',
-      margin: '16px',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-      overflow: 'hidden'
-    }
-  }), [isMobile]);
+  const dialogPaperProps = useMemo(
+    () => ({
+      sx: {
+        borderRadius: "16px",
+        maxHeight: isMobile ? "70vh" : "662px",
+        minHeight: isMobile ? "auto" : "662px",
+        width: isMobile ? "92vw" : "956px",
+        margin: "16px",
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        overflow: "hidden",
+      },
+    }),
+    [isMobile]
+  );
 
   return (
     <Dialog
@@ -356,27 +363,27 @@ export const SingleImageModal: React.FC<SingleImageModalProps> = ({
     >
       <ModalTitle title={title} onClose={onClose} />
 
-      <DialogContent 
-        sx={{ 
-          padding: '12px',
+      <DialogContent
+        sx={{
+          padding: "12px",
           flex: 1,
           margin: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-          height: isMobile ? 'auto' : 'calc(100% - 80px)'
+          display: "flex",
+          flexDirection: "column",
+          overflow: "hidden",
+          height: isMobile ? "auto" : "calc(100% - 80px)",
         }}
       >
         {imageSrc ? (
           <Box
             sx={{
-              position: 'relative',
-              width: '100%',
-              height: isMobile ? '50vh' : '450px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0
+              position: "relative",
+              width: "100%",
+              height: isMobile ? "50vh" : "450px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
             }}
           >
             <img
@@ -384,23 +391,23 @@ export const SingleImageModal: React.FC<SingleImageModalProps> = ({
               alt={imageAlt}
               loading="eager"
               style={{
-                maxWidth: '100%',
-                maxHeight: '100%',
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain',
-                borderRadius: '8px'
+                maxWidth: "100%",
+                maxHeight: "100%",
+                width: "auto",
+                height: "auto",
+                objectFit: "contain",
+                borderRadius: "8px",
               }}
             />
           </Box>
         ) : (
           <Box
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: isMobile ? '50vh' : '450px'
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: isMobile ? "50vh" : "450px",
             }}
           >
             <Typography variant="body1" color="text.secondary">
@@ -425,21 +432,24 @@ export const TextModal: React.FC<TextModalProps> = ({
   open,
   onClose,
   title,
-  content
+  content,
 }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const dialogPaperProps = useMemo(() => ({
-    sx: {
-      borderRadius: '16px',
-      maxHeight: isMobile ? '70vh' : '80vh',
-      width: isMobile ? '92vw' : '720px',
-      margin: '16px',
-      boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-      overflow: 'hidden'
-    }
-  }), [isMobile]);
+  const dialogPaperProps = useMemo(
+    () => ({
+      sx: {
+        borderRadius: "16px",
+        maxHeight: isMobile ? "70vh" : "80vh",
+        width: isMobile ? "92vw" : "720px",
+        margin: "16px",
+        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        overflow: "hidden",
+      },
+    }),
+    [isMobile]
+  );
 
   return (
     <Dialog
@@ -453,8 +463,8 @@ export const TextModal: React.FC<TextModalProps> = ({
 
       <DialogContent
         sx={{
-          padding: '20px',
-          overflow: 'auto'
+          padding: "20px",
+          overflow: "auto",
         }}
       >
         {content}

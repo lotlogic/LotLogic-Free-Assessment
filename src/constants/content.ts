@@ -77,9 +77,11 @@ export const APP_CONTENT = {
     submitting: "Submitting...",
     thankYou: "Thank You!",
     enquirySubmitted: "Your enquiry has been successfully submitted.",
-    lotSecured: "Your lot has been successfully secured and is now reserved for your review.",
+    lotSecured:
+      "Your lot has been successfully secured and is now reserved for your review.",
     reserveYourLot: "Reserve Your Lot Today",
-    secureLotDescription: "Secure Lot {lotId} with a refundable deposit while you compare builder quotes",
+    secureLotDescription:
+      "Secure Lot {lotId} with a refundable deposit while you compare builder quotes",
     secureThisLot: "Secure this lot",
     mayBeLater: "Keep Exploring",
     deposit: "$1,000",
@@ -91,7 +93,8 @@ export const APP_CONTENT = {
     savedProperties: "Your Shortlist",
     savedPropertiesDescription: "List of properties that you've shortlisted.",
     noSavedProperties: "No saved properties",
-    noSavedPropertiesDescription: "Start exploring properties and save them to your shortlist.",
+    noSavedPropertiesDescription:
+      "Start exploring properties and save them to your shortlist.",
     viewDetails: "View Details",
     floorplanRotation: "Floorplan Rotation",
   },
@@ -256,22 +259,25 @@ export const APP_CONTENT = {
 
 // Helper function to get nested content with fallback
 export function getContent(path: string, fallback?: string): string {
-  const keys = path.split('.');
+  const keys = path.split(".");
   let current: unknown = APP_CONTENT;
-  
+
   for (const key of keys) {
-    if (current && typeof current === 'object' && key in current) {
+    if (current && typeof current === "object" && key in current) {
       current = (current as Record<string, unknown>)[key];
     } else {
       return fallback || path;
     }
   }
-  
-  return typeof current === 'string' ? current : fallback || path;
+
+  return typeof current === "string" ? current : fallback || path;
 }
 
 // Helper function to format content with variables
-export function formatContent(template: string, variables: Record<string, string | number>): string {
+export function formatContent(
+  template: string,
+  variables: Record<string, string | number>
+): string {
   return template.replace(/\{(\w+)\}/g, (match, key) => {
     return variables[key]?.toString() || match;
   });
@@ -281,10 +287,34 @@ export function formatContent(template: string, variables: Record<string, string
 export type ContentPath = keyof typeof APP_CONTENT;
 
 // Export individual sections for easier imports
-export const { app, brand, header, sidebar, lotSidebar, houseDesign, quote, map, filter, summary, validation, errors, success, loading, colors, typography, spacing, sizing, shadows, transitions } = APP_CONTENT;
+export const {
+  app,
+  brand,
+  header,
+  sidebar,
+  lotSidebar,
+  houseDesign,
+  quote,
+  map,
+  filter,
+  summary,
+  validation,
+  errors,
+  success,
+  loading,
+  colors,
+  typography,
+  spacing,
+  sizing,
+  shadows,
+  transitions,
+} = APP_CONTENT;
 
 // Utility function to get color values for Tailwind classes
-export function getColorClass(colorPath: string, type: 'bg' | 'text' | 'border' | 'ring' = 'bg'): string {
+export function getColorClass(
+  colorPath: string,
+  type: "bg" | "text" | "border" | "ring" = "bg"
+): string {
   const color = getContent(`colors.${colorPath}`);
   return `${type}-[${color}]`;
 }
@@ -292,4 +322,4 @@ export function getColorClass(colorPath: string, type: 'bg' | 'text' | 'border' 
 // Utility function to get sizing values
 export function getSizingClass(sizingPath: string): string {
   return getContent(`sizing.${sizingPath}`);
-} 
+}

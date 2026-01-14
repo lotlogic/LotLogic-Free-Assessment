@@ -1,32 +1,48 @@
-import { useEffect, useRef, useState, useCallback, Suspense, lazy } from 'react';
-import type { MapboxGeoJSONFeature } from 'mapbox-gl';
-import { showToast } from '@/components/ui/Toast';
+import { showToast } from "@/components/ui/Toast";
+import type { MapboxGeoJSONFeature } from "mapbox-gl";
+import {
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 // Lazy load components
 // const LotSidebar = lazy(() => import("../lots/LotSidebar").then(module => ({ default: module.LotSidebar })));
 import { LotSidebar } from "../lots/LotSidebar";
-const SearchControl = lazy(() => import("./SearchControl").then(module => ({ default: module.SearchControl })));
-const SavedButton = lazy(() => import("./SavedButton").then(module => ({ default: module.SavedButton })));
-const SavedPropertiesSidebar = lazy(() => import("./SavedPropertiesSidebar").then(module => ({ default: module.SavedPropertiesSidebar })));
+const SearchControl = lazy(() =>
+  import("./SearchControl").then((module) => ({
+    default: module.SearchControl,
+  }))
+);
+const SavedButton = lazy(() =>
+  import("./SavedButton").then((module) => ({ default: module.SavedButton }))
+);
+const SavedPropertiesSidebar = lazy(() =>
+  import("./SavedPropertiesSidebar").then((module) => ({
+    default: module.SavedPropertiesSidebar,
+  }))
+);
 
 // Import optimized components
-import { MapLayers, MapLoader } from './MapLayers';
-import { MapControls } from './MapControls';
-import { useMapInitialization } from '@/hooks/useMapInitialization';
-import { useMobile } from '@/hooks/useMobile';
+import { useMapInitialization } from "@/hooks/useMapInitialization";
+import { useMobile } from "@/hooks/useMobile";
+import { MapControls } from "./MapControls";
+import { MapLayers, MapLoader } from "./MapLayers";
 
-import '../map/MapControls.css';
 import { useLotDetails } from "@/hooks/useLotDetails";
-import type { SavedProperty } from "@/types/ui";
-import { useLots, convertLotsToGeoJSON } from "@/hooks/useLots";
+import { convertLotsToGeoJSON, useLots } from "@/hooks/useLots";
 import { getImageUrl } from "@/lib/api/lotApi";
+import type { SetbackValues } from "@/lib/utils/geometry";
+import { useMobileNavigationStore } from "@/stores/mobileNavigationStore";
 import { useModalStore } from "@/stores/modalStore";
 import { useRotationStore } from "@/stores/rotationStore";
-import { useMobileNavigationStore } from '@/stores/mobileNavigationStore';
-import type { SetbackValues } from '@/lib/utils/geometry';
-import type { LotProperties } from "@/types/lot";
 import type { FloorPlan } from "@/types/houseDesign";
-
+import type { LotProperties } from "@/types/lot";
+import type { SavedProperty } from "@/types/ui";
+import "../map/MapControls.css";
 
 export default function ZoneMap() {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -35,36 +51,45 @@ export default function ZoneMap() {
   const isMobile = useMobile();
   const eventListenersAddedRef = useRef<boolean>(false);
 
-  const [selectedLot, setSelectedLot] = useState<MapboxGeoJSONFeature & { properties: LotProperties } | null>(null);
-  const [selectedFloorPlan, setSelectedFloorPlan] = useState<FloorPlan | null>(null);
+  const [selectedLot, setSelectedLot] = useState<
+    (MapboxGeoJSONFeature & { properties: LotProperties }) | null
+  >(null);
+  const [selectedFloorPlan, setSelectedFloorPlan] = useState<FloorPlan | null>(
+    null
+  );
   const [sValuesMarkers, setSValuesMarkers] = useState<mapboxgl.Marker[]>([]);
 
   // Setbacks (m). Change front to 9 to see the front edge move 9m inward.
-
-  
 
   // FSR buildable area (m²) - calculated dynamically
   const [fsrBuildableArea, setFsrBuildableArea] = useState<number | null>(null);
 
   // Modal state from Zustand
   const { showFloorPlanModal, showFacadeModal } = useModalStore();
-  
+
   // Rotation state from Zustand
   const { isCalculating } = useRotationStore();
-  
+
   // Mobile navigation state from Zustand
-  const { closeAllPanels, setClearSelectedLotCallback } = useMobileNavigationStore();
-
-
+  const { closeAllPanels, setClearSelectedLotCallback } =
+    useMobileNavigationStore();
 
   // Data
-  const { data: lotsData, isLoading: isLoadingLots, error: lotsError } = useLots();
+  const {
+    data: lotsData,
+    isLoading: isLoadingLots,
+    error: lotsError,
+  } = useLots();
 
   //convert lotsData to geojson format for mapbox
-  const estateLots = lotsData ? convertLotsToGeoJSON(lotsData) : { type: 'FeatureCollection' as const, features: [] };
+  const estateLots = lotsData
+    ? convertLotsToGeoJSON(lotsData)
+    : { type: "FeatureCollection" as const, features: [] };
 
   // Keep sidebar open ref in sync
-  useEffect(() => { sidebarOpenRef.current = !!selectedLot; }, [selectedLot]);
+  useEffect(() => {
+    sidebarOpenRef.current = !!selectedLot;
+  }, [selectedLot]);
 
   // Clear floor plan when switching lots
   useEffect(() => {
@@ -74,9 +99,11 @@ export default function ZoneMap() {
   // Calculate FSR buildable area when lot is selected
   useEffect(() => {
     if (selectedLot) {
-      const lotSize = parseFloat(selectedLot.properties.BLOCK_DERIVED_AREA || '0');
-      const maxFSR = parseFloat(selectedLot.properties.maxFSR || '0.5');
-      
+      const lotSize = parseFloat(
+        selectedLot.properties.BLOCK_DERIVED_AREA || "0"
+      );
+      const maxFSR = parseFloat(selectedLot.properties.maxFSR || "0.5");
+
       if (lotSize > 0 && maxFSR > 0) {
         const calculatedFSR = lotSize * maxFSR;
         setFsrBuildableArea(calculatedFSR);
@@ -86,92 +113,130 @@ export default function ZoneMap() {
     } else {
       setFsrBuildableArea(null);
     }
-  }, [selectedLot?.properties?.ID, selectedLot?.properties?.BLOCK_DERIVED_AREA, selectedLot?.properties?.maxFSR]);
-
-
-
-
+  }, [
+    selectedLot?.properties?.ID,
+    selectedLot?.properties?.BLOCK_DERIVED_AREA,
+    selectedLot?.properties?.maxFSR,
+  ]);
 
   // Lot details for sidebar
   const lotId = selectedLot?.properties?.ID?.toString() || null;
   const { data: lotApiData } = useLotDetails(lotId);
-  const [setbackValues, setSetbackValues] = useState<SetbackValues>({ front: 4, side: 3, rear: 3 });
+  const [setbackValues, setSetbackValues] = useState<SetbackValues>({
+    front: 4,
+    side: 3,
+    rear: 3,
+  });
 
   // Handle zoning data updates from LotSidebar
-  const handleZoningDataUpdate = useCallback((zoning: { fsr: number; frontSetback: number; rearSetback: number; sideSetback: number }) => {
-    const { fsr, frontSetback, rearSetback, sideSetback } = zoning;
-    setFsrBuildableArea(fsr);
-    // Convert from meters to decimeters (API returns meters, system expects decimeters)
-    setSetbackValues({
-      front: frontSetback,
-      side: sideSetback,
-      rear: rearSetback 
-    });
-  }, []);
+  const handleZoningDataUpdate = useCallback(
+    (zoning: {
+      fsr: number;
+      frontSetback: number;
+      rearSetback: number;
+      sideSetback: number;
+    }) => {
+      const { fsr, frontSetback, rearSetback, sideSetback } = zoning;
+      setFsrBuildableArea(fsr);
+      // Convert from meters to decimeters (API returns meters, system expects decimeters)
+      setSetbackValues({
+        front: frontSetback,
+        side: sideSetback,
+        rear: rearSetback,
+      });
+    },
+    []
+  );
 
   // Update setback values when lot data is loaded (if it contains zoning setbacks)
   useEffect(() => {
     if (lotApiData?.zoningSetbacks) {
       // console.log('MapLayer: Updating setback values from lot API:', lotApiData.zoningSetbacks);
       setSetbackValues({
-        front: lotApiData.zoningSetbacks.frontSetback ,
-        side: lotApiData.zoningSetbacks.sideSetback ,
-        rear: lotApiData.zoningSetbacks.rearSetback
+        front: lotApiData.zoningSetbacks.frontSetback,
+        side: lotApiData.zoningSetbacks.sideSetback,
+        rear: lotApiData.zoningSetbacks.rearSetback,
       });
     }
   }, [lotApiData?.zoningSetbacks]);
-
-
 
   const handleViewDetails = (property: SavedProperty) => {
     setIsSavedSidebarOpen(false);
     // Close mobile navigation panels when viewing lot details
     closeAllPanels();
-    const lotData = lotsData?.find(lot => lot.id?.toString() === property.lotId || lot.blockKey === property.lotId);
+    const lotData = lotsData?.find(
+      (lot) =>
+        lot.id?.toString() === property.lotId || lot.blockKey === property.lotId
+    );
     if (!lotData) return;
 
     const lotFeature = {
-      type: 'Feature' as const,
+      type: "Feature" as const,
       geometry: lotData.geometry,
       properties: {
         BLOCK_KEY: property.lotId,
-        ID: typeof property.lotId === 'number' ? property.lotId : parseInt(property.lotId),
-        LOT_NUMBER: typeof property.lotId === 'number' ? property.lotId : parseInt(property.lotId),
+        ID:
+          typeof property.lotId === "number"
+            ? property.lotId
+            : parseInt(property.lotId),
+        LOT_NUMBER:
+          typeof property.lotId === "number"
+            ? property.lotId
+            : parseInt(property.lotId),
         databaseId: property.lotId,
         areaSqm: property.size,
-        lifecycleStage: 'available',
+        lifecycleStage: "available",
         ADDRESSES: property.address,
         DISTRICT_NAME: property.suburb,
         LAND_USE_POLICY_ZONES: property.zoning,
-        BLOCK_DERIVED_AREA: property.size?.toString() || '0',
-        STAGE: 'available',
+        BLOCK_DERIVED_AREA: property.size?.toString() || "0",
+        STAGE: "available",
         BLOCK_NUMBER: null,
         SECTION_NUMBER: null,
         DISTRICT_CODE: 1,
-        OBJECTID: typeof property.lotId === 'number' ? property.lotId : parseInt(property.lotId),
-        division: '',
-        estateId: '',
+        OBJECTID:
+          typeof property.lotId === "number"
+            ? property.lotId
+            : parseInt(property.lotId),
+        division: "",
+        estateId: "",
         isRed: true,
-      }
+      },
     } as unknown as MapboxGeoJSONFeature & { properties: LotProperties };
 
     setSelectedLot(lotFeature);
     if (!mapRef) return;
     if (selectedIdRef.current) {
-      mapRef.setFeatureState({ source: 'demo-lot-source', id: selectedIdRef.current }, { selected: false });
+      mapRef.setFeatureState(
+        { source: "demo-lot-source", id: selectedIdRef.current },
+        { selected: false }
+      );
     }
-    mapRef.setFeatureState({ source: 'demo-lot-source', id: property.lotId.toString() }, { selected: true });
+    mapRef.setFeatureState(
+      { source: "demo-lot-source", id: property.lotId.toString() },
+      { selected: true }
+    );
     selectedIdRef.current = property.lotId.toString();
 
     if (property.houseDesign.floorPlanImage) {
       const coordinates = lotData.geometry.coordinates[0] as [number, number][];
       if (coordinates?.length >= 4) {
-        const lotArea = typeof property.size === 'number' ? property.size : (property.size ? parseFloat(property.size) : 0);
-        const houseArea = property.houseDesign.area ? parseFloat(property.houseDesign.area) : 0;
-        const scaleFactor = lotArea > 0 && houseArea > 0 ? Math.sqrt(houseArea / lotArea) : 1;
-        const centerLng = coordinates.reduce((s, c) => s + c[0], 0) / coordinates.length;
-        const centerLat = coordinates.reduce((s, c) => s + c[1], 0) / coordinates.length;
-        const scaledCoordinates = coordinates.map(coord => {
+        const lotArea =
+          typeof property.size === "number"
+            ? property.size
+            : property.size
+            ? parseFloat(property.size)
+            : 0;
+        const houseArea = property.houseDesign.area
+          ? parseFloat(property.houseDesign.area)
+          : 0;
+        const scaleFactor =
+          lotArea > 0 && houseArea > 0 ? Math.sqrt(houseArea / lotArea) : 1;
+        const centerLng =
+          coordinates.reduce((s, c) => s + c[0], 0) / coordinates.length;
+        const centerLat =
+          coordinates.reduce((s, c) => s + c[1], 0) / coordinates.length;
+        const scaledCoordinates = coordinates.map((coord) => {
           const dLng = (coord[0] - centerLng) * scaleFactor;
           const dLat = (coord[1] - centerLat) * scaleFactor;
           return [centerLng + dLng, centerLat + dLat] as [number, number];
@@ -183,32 +248,47 @@ export default function ZoneMap() {
             scaledCoordinates[0],
             scaledCoordinates[1],
             scaledCoordinates[2],
-            scaledCoordinates[3]
-          ] as [[number, number], [number, number], [number, number], [number, number]],
-          houseArea: property.houseDesign.area ? parseFloat(property.houseDesign.area) : 150
+            scaledCoordinates[3],
+          ] as [
+            [number, number],
+            [number, number],
+            [number, number],
+            [number, number]
+          ],
+          houseArea: property.houseDesign.area
+            ? parseFloat(property.houseDesign.area)
+            : 150,
         });
       }
     }
   };
 
   // UI state
-    const [isSavedSidebarOpen, setIsSavedSidebarOpen] = useState(false);
+  const [isSavedSidebarOpen, setIsSavedSidebarOpen] = useState(false);
 
   // Initialize map using custom hook
-  const { map: mapRef, isLoading, initialView: mapInitialView, setInitialView } = useMapInitialization(mapContainer, estateLots);
+  const {
+    map: mapRef,
+    isLoading,
+    initialView: mapInitialView,
+    setInitialView,
+  } = useMapInitialization(mapContainer, estateLots);
 
   // Register callback to clear selected lot when mobile navigation tabs are clicked
   useEffect(() => {
     const clearSelectedLot = () => {
       setSelectedLot(null);
       if (selectedIdRef.current && mapRef) {
-        mapRef.setFeatureState({ source: 'demo-lot-source', id: selectedIdRef.current }, { selected: false });
+        mapRef.setFeatureState(
+          { source: "demo-lot-source", id: selectedIdRef.current },
+          { selected: false }
+        );
         selectedIdRef.current = null;
       }
     };
-    
+
     setClearSelectedLotCallback(clearSelectedLot);
-    
+
     // Cleanup on unmount
     return () => {
       setClearSelectedLotCallback(null);
@@ -218,15 +298,17 @@ export default function ZoneMap() {
   // Set initial view when lots data is available
   useEffect(() => {
     if (!mapRef || !lotsData || lotsData.length === 0) return;
-  
+
     const first = lotsData[0];
     const coords = first?.geometry?.coordinates?.[0];
     if (!coords?.length) return;
-    const avgLng = coords.reduce((s: number, c: number[]) => s + c[0], 0) / coords.length;
-    const avgLat = coords.reduce((s: number, c: number[]) => s + c[1], 0) / coords.length;
+    const avgLng =
+      coords.reduce((s: number, c: number[]) => s + c[0], 0) / coords.length;
+    const avgLat =
+      coords.reduce((s: number, c: number[]) => s + c[1], 0) / coords.length;
     const initialCenter: [number, number] = [avgLng, avgLat];
     const initialZoom = 16;
-    
+
     setInitialView({ center: initialCenter, zoom: initialZoom });
     mapRef.jumpTo({ center: initialCenter, zoom: initialZoom });
   }, [mapRef, lotsData, setInitialView]);
@@ -234,18 +316,24 @@ export default function ZoneMap() {
   // CLOSE
   const handleCloseSidebar = useCallback(() => {
     if (mapRef && selectedIdRef.current) {
-      mapRef.setFeatureState({ source: 'demo-lot-source', id: selectedIdRef.current }, { selected: false });
+      mapRef.setFeatureState(
+        { source: "demo-lot-source", id: selectedIdRef.current },
+        { selected: false }
+      );
       selectedIdRef.current = null;
     }
     setSelectedLot(null);
     setSelectedFloorPlan(null);
-    sValuesMarkers.forEach(m => m.remove());
+    sValuesMarkers.forEach((m) => m.remove());
     setSValuesMarkers([]);
   }, [sValuesMarkers, mapRef]);
 
-  const handleSearchResult = useCallback((coordinates: [number, number]) => {
-    if (mapRef) mapRef.flyTo({ center: coordinates, zoom: 15 });
-  }, [mapRef]);
+  const handleSearchResult = useCallback(
+    (coordinates: [number, number]) => {
+      if (mapRef) mapRef.flyTo({ center: coordinates, zoom: 15 });
+    },
+    [mapRef]
+  );
 
   // Add event listeners for mobile search and recenter
   useEffect(() => {
@@ -255,49 +343,54 @@ export default function ZoneMap() {
         mapRef.flyTo({
           center: coordinates,
           zoom: 16,
-          duration: 1000
+          duration: 1000,
         });
       }
     };
 
-     const handleRecenter = () => {
-       if (mapRef && mapInitialView) {
-         mapRef.flyTo({
-           center: mapInitialView.center,
-           zoom: mapInitialView.zoom,
-           duration: 1000
-         });
+    const handleRecenter = () => {
+      if (mapRef && mapInitialView) {
+        mapRef.flyTo({
+          center: mapInitialView.center,
+          zoom: mapInitialView.zoom,
+          duration: 1000,
+        });
         //  showToast({
         //    message: "Map recentered to initial view",
         //    type: 'warning',
         //    options: { autoClose: 2000 }
         //  });
-       } else {
-         showToast({
-           message: "Unable to recenter map. Please refresh the page.",
-           type: 'error',
-           options: { autoClose: 4000 }
-         });
-       }
-     };
-
+      } else {
+        showToast({
+          message: "Unable to recenter map. Please refresh the page.",
+          type: "error",
+          options: { autoClose: 4000 },
+        });
+      }
+    };
 
     // Only add event listeners once
     if (!eventListenersAddedRef.current) {
       // Only add mobile event listeners if on mobile
       if (isMobile) {
-        window.addEventListener('search-result-selected', handleMobileSearchResult as EventListener);
+        window.addEventListener(
+          "search-result-selected",
+          handleMobileSearchResult as EventListener
+        );
       }
-      window.addEventListener('recenter-map', handleRecenter);
-      
+      window.addEventListener("recenter-map", handleRecenter);
+
       eventListenersAddedRef.current = true;
     }
 
     return () => {
       if (isMobile) {
-        window.removeEventListener('search-result-selected', handleMobileSearchResult as EventListener);
+        window.removeEventListener(
+          "search-result-selected",
+          handleMobileSearchResult as EventListener
+        );
       }
-      window.removeEventListener('recenter-map', handleRecenter);
+      window.removeEventListener("recenter-map", handleRecenter);
       eventListenersAddedRef.current = false;
     };
   }, [mapRef, mapInitialView, isMobile]);
@@ -320,21 +413,29 @@ export default function ZoneMap() {
       {!isMobile && (
         <>
           <div className="absolute top-4 right-5 z-10">
-            <Suspense fallback={<div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>}>
+            <Suspense
+              fallback={
+                <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+              }
+            >
               <SearchControl onResultSelect={handleSearchResult} />
             </Suspense>
           </div>
 
-
           <div className="absolute top-45 right-5 z-10">
-            <Suspense fallback={<div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>}>
-              <SavedButton onClick={() => setIsSavedSidebarOpen(true)} isActive={isSavedSidebarOpen} />
+            <Suspense
+              fallback={
+                <div className="w-8 h-8 bg-gray-200 rounded animate-pulse"></div>
+              }
+            >
+              <SavedButton
+                onClick={() => setIsSavedSidebarOpen(true)}
+                isActive={isSavedSidebarOpen}
+              />
             </Suspense>
           </div>
         </>
       )}
-
-
 
       {/* Sidebars - only show on desktop since mobile uses bottom navigation */}
       {!isMobile && (
@@ -352,7 +453,11 @@ export default function ZoneMap() {
       <div ref={mapContainer} className="h-full w-full" />
 
       {/* Map Loader - shows over the entire map */}
-      <MapLoader isCalculating={isCalculating} map={mapRef} selectedLot={selectedLot} />
+      <MapLoader
+        isCalculating={isCalculating}
+        map={mapRef}
+        selectedLot={selectedLot}
+      />
 
       {/* Map Controls Component - only zoom controls, no duplicate functionality */}
       <MapControls
@@ -383,9 +488,11 @@ export default function ZoneMap() {
           open={!!selectedLot}
           onClose={handleCloseSidebar}
           lot={{
-            id: selectedLot.properties.ID?.toString() || selectedLot.properties.databaseId,
-            suburb: selectedLot.properties.DISTRICT_NAME || '',
-            address: selectedLot.properties.ADDRESSES || '',
+            id:
+              selectedLot.properties.ID?.toString() ||
+              selectedLot.properties.databaseId,
+            suburb: selectedLot.properties.DISTRICT_NAME || "",
+            address: selectedLot.properties.ADDRESSES || "",
             size: selectedLot.properties.BLOCK_DERIVED_AREA,
             type: selectedLot.properties.TYPE,
             zoning: selectedLot.properties.LAND_USE_POLICY_ZONES,

@@ -1,35 +1,48 @@
-import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/Button";
-import { ArrowRight } from 'lucide-react';
-import type { LotSidebarProps } from "@/types/lot";
-import { getZoningColor, hexToRgba } from "@/lib/utils/zoning";
+import {
+  ImageCarouselModal,
+  SingleImageModal,
+} from "@/components/ui/DynamicModal";
 import { FilterSectionWithSingleLineSliders } from "@/components/ui/HouseDesignFilter";
 import { Sidebar } from "@/components/ui/Sidebar";
-import { ImageCarouselModal, SingleImageModal } from "@/components/ui/DynamicModal";
-
-import { GetYourQuoteSidebar } from '../quote/QuoteSideBar';
-import type { DesignState, HouseDesignItem } from "@/types/houseDesign";
-import { useContent } from "@/hooks/useContent";
 import { getColorClass } from "@/constants/content";
-import { SummaryView } from "./SummaryView";
-import { HouseDesignList } from "../facades/HouseDesignList";
-import { Diamond } from "lucide-react";
-import { getImageUrl } from "@/lib/api/lotApi";
-import { useRotationStore } from "@/stores/rotationStore";
-import { useModalStore } from "@/stores/modalStore";
+import { useContent } from "@/hooks/useContent";
 import { useHouseDesigns } from "@/hooks/useHouseDesigns";
+import { getImageUrl } from "@/lib/api/lotApi";
+import { getZoningColor, hexToRgba } from "@/lib/utils/zoning";
+import { useModalStore } from "@/stores/modalStore";
+import { useRotationStore } from "@/stores/rotationStore";
+import type { DesignState, HouseDesignItem } from "@/types/houseDesign";
+import type { LotSidebarProps } from "@/types/lot";
+import { ArrowRight, Diamond } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { HouseDesignList } from "../facades/HouseDesignList";
+import { GetYourQuoteSidebar } from "../quote/QuoteSideBar";
+import { SummaryView } from "./SummaryView";
 
-export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, onZoningDataUpdate }: LotSidebarProps) {
+export function LotSidebar({
+  open,
+  onClose,
+  lot,
+  geometry,
+  onSelectFloorPlan,
+  onZoningDataUpdate,
+}: LotSidebarProps) {
   // Rotation store to ensure new selections start at 0°
   const { setManualRotation } = useRotationStore();
 
   const { lotSidebar } = useContent();
-  const { showFloorPlanModal, showFacadeModal, setShowFloorPlanModal, setShowFacadeModal } = useModalStore();
-
+  const {
+    showFloorPlanModal,
+    showFacadeModal,
+    setShowFloorPlanModal,
+    setShowFacadeModal,
+  } = useModalStore();
 
   const [showFilter, setShowFilter] = React.useState(false);
   const [showHouseDesigns, setShowHouseDesigns] = React.useState(false);
-  const [selectedHouseDesignForModals, setSelectedHouseDesignForModals] = React.useState<HouseDesignItem | null>(null);
+  const [selectedHouseDesignForModals, setSelectedHouseDesignForModals] =
+    React.useState<HouseDesignItem | null>(null);
 
   // Filter states
   const [bedroom, setBedroom] = React.useState<number[]>([]);
@@ -62,16 +75,20 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
     setMinSize(NaN);
     setMaxSize(NaN);
   }, [lot.id]);
-  
+
   // Only create filters object if any filters are actually set
-  const hasAnyFilters = bedroom.length > 0 || bathroom.length > 0 || car.length > 0 || 
-                       (!isNaN(min_size) && min_size > 0) || (!isNaN(max_size) && max_size > 0);
-  
+  const hasAnyFilters =
+    bedroom.length > 0 ||
+    bathroom.length > 0 ||
+    car.length > 0 ||
+    (!isNaN(min_size) && min_size > 0) ||
+    (!isNaN(max_size) && max_size > 0);
+
   const filtersToPass = React.useMemo(() => {
     if (!hasAnyFilters) {
       return null; // No filters set, API will return all designs
     }
-    
+
     return {
       bedroom: bedroom.length > 0 ? bedroom : [],
       bathroom: bathroom.length > 0 ? bathroom : [],
@@ -80,7 +97,11 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
       max_size: !isNaN(max_size) && max_size > 0 ? max_size : undefined,
     };
   }, [hasAnyFilters, bedroom, bathroom, car, min_size, max_size]);
-  const { data: houseDesignsData } = useHouseDesigns(lotId, filtersToPass, showHouseDesigns);
+  const { data: houseDesignsData } = useHouseDesigns(
+    lotId,
+    filtersToPass,
+    showHouseDesigns
+  );
 
   // Update MapLayer with zoning data when received from API
   useEffect(() => {
@@ -89,16 +110,17 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
     }
   }, [houseDesignsData?.zoning, onZoningDataUpdate]);
 
-
   const [showQuoteSidebar, setShowQuoteSidebar] = React.useState(false);
-  const [quoteDesign, setQuoteDesign] = React.useState<HouseDesignItem | null>(null);
+  const [quoteDesign, setQuoteDesign] = React.useState<HouseDesignItem | null>(
+    null
+  );
 
   const [currentModalFacadeIdx, setCurrentModalFacadeIdx] = useState(0);
 
   if (!open || !lot) return null;
 
   const zoningColor = getZoningColor(lot.zoning);
-  const zoningText = lot.zoning || '--';
+  const zoningText = lot.zoning || "--";
 
   const handleShowHouseDesign = () => {
     // Remove validation - allow API call with just lot ID since backend supports optional parameters
@@ -127,7 +149,13 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
   const handleDesignSelectedInList = (design: HouseDesignItem | null) => {
     setSelectedHouseDesignForModals(design);
 
-    if (design && onSelectFloorPlan && design.floorPlanImage && geometry && geometry.type === 'Polygon') {
+    if (
+      design &&
+      onSelectFloorPlan &&
+      design.floorPlanImage &&
+      geometry &&
+      geometry.type === "Polygon"
+    ) {
       // Reset rotation BEFORE selecting a new floorplan to avoid race conditions
       setManualRotation(0);
       const ring = geometry.coordinates[0];
@@ -136,25 +164,36 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
 
         // Calculate scaling factor based on FSR area ratio
         const lotArea = lot.size ? parseFloat(lot.size.toString()) : 0;
-        const scaleFactor = lotArea > 0 && houseArea > 0 ? Math.sqrt(houseArea / lotArea) : 1;
+        const scaleFactor =
+          lotArea > 0 && houseArea > 0 ? Math.sqrt(houseArea / lotArea) : 1;
 
         // Calculate center of the lot
-        const centerLng = ring.reduce((sum, coord) => sum + coord[0], 0) / ring.length;
-        const centerLat = ring.reduce((sum, coord) => sum + coord[1], 0) / ring.length;
+        const centerLng =
+          ring.reduce((sum, coord) => sum + coord[0], 0) / ring.length;
+        const centerLat =
+          ring.reduce((sum, coord) => sum + coord[1], 0) / ring.length;
 
         // Calculate scaled coordinates (smaller area within the lot)
-        const scaledCoordinates = ring.map(coord => {
+        const scaledCoordinates = ring.map((coord) => {
           const deltaLng = (coord[0] - centerLng) * scaleFactor;
           const deltaLat = (coord[1] - centerLat) * scaleFactor;
-          return [centerLng + deltaLng, centerLat + deltaLat] as [number, number];
+          return [centerLng + deltaLng, centerLat + deltaLat] as [
+            number,
+            number
+          ];
         });
 
         const coordinates = [
           scaledCoordinates[0],
           scaledCoordinates[1],
           scaledCoordinates[2],
-          scaledCoordinates[3]
-        ] as [[number, number], [number, number], [number, number], [number, number]];
+          scaledCoordinates[3],
+        ] as [
+          [number, number],
+          [number, number],
+          [number, number],
+          [number, number]
+        ];
 
         const floorPlanUrl = getImageUrl(design.floorPlanImage);
         onSelectFloorPlan({
@@ -162,7 +201,7 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
           coordinates,
           houseArea: houseArea,
           houseWidth: design.minLotWidth,
-          houseDepth: design.minLotDepth
+          houseDepth: design.minLotDepth,
         });
       }
     } else if (!design && onSelectFloorPlan) {
@@ -186,29 +225,50 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
     setShowQuoteSidebar(true);
   };
 
-
   const headerTitle = showHouseDesigns
     ? lotSidebar.houseDesigns
     : showFilter
-      ? "Build A House"
-      : lotSidebar.buildYourSite;
+    ? "Build A House"
+    : lotSidebar.buildYourSite;
 
   const showBackArrow = showFilter || showHouseDesigns || showQuoteSidebar;
 
   const headerContent = (
     <>
-      <h2 className={`text-2xl font-medium ${getColorClass('text.primary', 'text')}`}>
+      <h2
+        className={`text-2xl font-medium ${getColorClass(
+          "text.primary",
+          "text"
+        )}`}
+      >
         {headerTitle}
       </h2>
       {/* Lot details only shown when not in filter mode */}
       {!showFilter && (
         <div className="text-gray-600 mt-1 text-base font-normal">
-          {`Lot ID: ${lot.id || '--'}, ${lot.suburb?.toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) || '--'} | ${lot.address?.toLowerCase().replace(/\b\w/g, l => l.toUpperCase()) || '--'}`}
+          {`Lot ID: ${lot.id || "--"}, ${
+            lot.suburb
+              ?.toLowerCase()
+              .replace(/\b\w/g, (l) => l.toUpperCase()) || "--"
+          } | ${
+            lot.address
+              ?.toLowerCase()
+              .replace(/\b\w/g, (l) => l.toUpperCase()) || "--"
+          }`}
           {/* Chips only shown in house design section */}
           {showHouseDesigns && (
             <div className="mt-2 flex flex-nowrap items-center gap-2 text-xs font-normal overflow-x-auto">
-              {lot.size && <span className="px-2 py-1 bg-gray-100 rounded-md flex items-center text-gray-700 flex-shrink-0"><Diamond className="h-3 w-3 mr-1" />{lot.size}m²</span>}
-              {lot.type && <span className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 flex-shrink-0">{lot.type}</span>}
+              {lot.size && (
+                <span className="px-2 py-1 bg-gray-100 rounded-md flex items-center text-gray-700 flex-shrink-0">
+                  <Diamond className="h-3 w-3 mr-1" />
+                  {lot.size}m²
+                </span>
+              )}
+              {lot.type && (
+                <span className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 flex-shrink-0">
+                  {lot.type}
+                </span>
+              )}
               {lot.zoning && (
                 <span
                   className="px-2 py-1 rounded-full text-black font-medium flex-shrink-0"
@@ -217,15 +277,17 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
                   {zoningText}
                 </span>
               )}
-              {lot.overlays === 'Flood' && <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md flex-shrink-0">Flood</span>}
+              {lot.overlays === "Flood" && (
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md flex-shrink-0">
+                  Flood
+                </span>
+              )}
             </div>
           )}
         </div>
       )}
     </>
   );
-
-  
 
   return (
     <>
@@ -242,7 +304,14 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
           {showHouseDesigns ? (
             <HouseDesignList
               filter={{ bedroom, bathroom, car, min_size, max_size }}
-              lot={{ lotId: lot.id ?? '', suburb: lot.suburb ?? '', address: lot.address ?? '', size: lot.size ?? '', zoning: lot.zoning ?? '', overlays: lot.overlays ?? '' }}
+              lot={{
+                lotId: lot.id ?? "",
+                suburb: lot.suburb ?? "",
+                address: lot.address ?? "",
+                size: lot.size ?? "",
+                zoning: lot.zoning ?? "",
+                overlays: lot.overlays ?? "",
+              }}
               onShowFilter={() => {
                 setShowHouseDesigns(false);
                 setShowFilter(true);
@@ -293,7 +362,7 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
                 >
                   <span className="flex items-center justify-center gap-2">
                     {lotSidebar.showMeWhatICanBuild}
-                    <ArrowRight className='h-6 w-8' />
+                    <ArrowRight className="h-6 w-8" />
                   </span>
                 </Button>
               </div>
@@ -318,9 +387,9 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
             }}
             selectedHouseDesign={quoteDesign}
             lotDetails={{
-              id: String(lot.id || ''),
-              suburb: lot.suburb || '',
-              address: lot.address || '',
+              id: String(lot.id || ""),
+              suburb: lot.suburb || "",
+              address: lot.address || "",
             }}
           />
         </React.Suspense>
@@ -328,42 +397,54 @@ export function LotSidebar({ open, onClose, lot, geometry, onSelectFloorPlan, on
 
       {/* Floor Plan Modal */}
       <SingleImageModal
-        key={`floorplan-${lot.id}-${selectedHouseDesignForModals?.id ?? 'none'}`}
+        key={`floorplan-${lot.id}-${
+          selectedHouseDesignForModals?.id ?? "none"
+        }`}
         open={showFloorPlanModal && !!selectedHouseDesignForModals}
         onClose={() => setShowFloorPlanModal(false)}
-        title={`Lot ID: ${lot.id}, ${selectedHouseDesignForModals?.title || ''}`}
-        imageSrc={selectedHouseDesignForModals?.floorPlanImage ? getImageUrl(selectedHouseDesignForModals.floorPlanImage) : ''}
+        title={`Lot ID: ${lot.id}, ${
+          selectedHouseDesignForModals?.title || ""
+        }`}
+        imageSrc={
+          selectedHouseDesignForModals?.floorPlanImage
+            ? getImageUrl(selectedHouseDesignForModals.floorPlanImage)
+            : ""
+        }
         imageAlt="Floor Plan"
       />
-      
 
-        {/* Facade Modal */}
-        <ImageCarouselModal
-         key={`facades-${lot.id}-${selectedHouseDesignForModals?.id ?? 'none'}`}
-         open={showFacadeModal && !!selectedHouseDesignForModals}
-         onClose={() => { setShowFacadeModal(false); setCurrentModalFacadeIdx(0); }}
-         title={`${selectedHouseDesignForModals?.title || ''} - Facades`}
-         images={(() => {
-           const imgs = (selectedHouseDesignForModals?.images || []).map((img, index) => ({
-             src: getImageUrl(img.src),
-             alt: `Facade ${index + 1}`,
-             label: img.faced || `Facade ${index + 1}`
-           }));
-           if (imgs.length === 0 && selectedHouseDesignForModals?.image) {
-             return [{
-               src: getImageUrl(selectedHouseDesignForModals.image),
-               alt: 'Facade 1',
-               label: 'Facade'
-             }];
-           }
-           return imgs;
-         })()}
-         currentIndex={currentModalFacadeIdx}
-         onIndexChange={setCurrentModalFacadeIdx}
-         showThumbnails={true}
-       /> 
-
-
+      {/* Facade Modal */}
+      <ImageCarouselModal
+        key={`facades-${lot.id}-${selectedHouseDesignForModals?.id ?? "none"}`}
+        open={showFacadeModal && !!selectedHouseDesignForModals}
+        onClose={() => {
+          setShowFacadeModal(false);
+          setCurrentModalFacadeIdx(0);
+        }}
+        title={`${selectedHouseDesignForModals?.title || ""} - Facades`}
+        images={(() => {
+          const imgs = (selectedHouseDesignForModals?.images || []).map(
+            (img, index) => ({
+              src: getImageUrl(img.src),
+              alt: `Facade ${index + 1}`,
+              label: img.faced || `Facade ${index + 1}`,
+            })
+          );
+          if (imgs.length === 0 && selectedHouseDesignForModals?.image) {
+            return [
+              {
+                src: getImageUrl(selectedHouseDesignForModals.image),
+                alt: "Facade 1",
+                label: "Facade",
+              },
+            ];
+          }
+          return imgs;
+        })()}
+        currentIndex={currentModalFacadeIdx}
+        onIndexChange={setCurrentModalFacadeIdx}
+        showThumbnails={true}
+      />
     </>
   );
 }

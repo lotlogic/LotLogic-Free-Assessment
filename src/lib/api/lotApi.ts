@@ -1,5 +1,5 @@
 // API service for lot-related operations
-import axios from 'axios';
+import axios from "axios";
 
 export interface DatabaseLot {
   id: string;
@@ -15,11 +15,11 @@ export interface DatabaseLot {
   estateId: string | null;
   overlays: string[];
   geojson: {
-    type: 'Feature';
+    type: "Feature";
     geometry: GeoJSON.Polygon;
     properties: Array<Record<string, number>>;
-    width: number,
-    depth: number
+    width: number;
+    depth: number;
   };
   createdAt: string;
   updatedAt: string;
@@ -82,13 +82,13 @@ export interface HouseDesignItemResponse {
 }
 
 export interface HouseDesignFilterResponse {
-  houseDesigns: HouseDesignItemResponse[],
+  houseDesigns: HouseDesignItemResponse[];
   zoning: {
-    fsr: number,
-    frontSetback: number,
-    rearSetback: number,
-    sideSetback: number
-  }
+    fsr: number;
+    frontSetback: number;
+    rearSetback: number;
+    sideSetback: number;
+  };
 }
 
 export interface Builder {
@@ -106,54 +106,58 @@ const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL;
   }
-  
+
   // If running in Docker, use the service name
-  if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
-    return 'http://localhost:3000/api';
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname === "localhost"
+  ) {
+    return "http://localhost:3000/api";
   }
-  
+
   // For Docker container communication
-  return 'http://backend:3000/api';
+  return "http://backend:3000/api";
 };
 
 // Utility function to get the correct image URL
 // export const getImageUrl = (imagePath: string | null | undefined): string => {
 //   if (!imagePath) return '';
-  
+
 //   // If it's already a full URL, return as is
 //   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
 //     return imagePath;
 //   }
-  
+
 //   // If it's a relative path starting with /, prepend the API base URL
 //   if (imagePath.startsWith('/')) {
 //     return `${getApiBaseUrl()}${imagePath}`;
 //   }
-  
+
 //   // Otherwise, assume it's a relative path and prepend the API base URL with /
 //   return `${getApiBaseUrl()}/${imagePath}`;
 // };
 
-
 // Add this function to handle CORS proxy for images
-export const getImageUrlWithCorsProxy = (imagePath: string | null | undefined): string => {
-  if (!imagePath) return '';
-  
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+export const getImageUrlWithCorsProxy = (
+  imagePath: string | null | undefined
+): string => {
+  if (!imagePath) return "";
+
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
     return imagePath;
   }
-  
+
   return imagePath;
 };
 
 // Function for non-CORS issues
 export const getImageUrl = (imagePath: string | null | undefined): string => {
-  if (!imagePath) return '';
+  if (!imagePath) return "";
   // If it's already a full URL, return as-is
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
     return imagePath;
   }
-  
+
   return imagePath;
 };
 
@@ -171,12 +175,21 @@ export interface EnquiryRequest {
   hot_lead?: boolean;
 }
 
-export const submitEnquiry = async (enquiryData: EnquiryRequest): Promise<{ message: string }> => {
+export const submitEnquiry = async (
+  enquiryData: EnquiryRequest
+): Promise<{ message: string }> => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}/enquiry`, enquiryData);
+    const response = await axios.post(
+      `${getApiBaseUrl()}/enquiry`,
+      enquiryData
+    );
     return response.data;
   } catch (error) {
-    throw new Error(`Enquiry submission failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Enquiry submission failed: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
 };
 
@@ -213,24 +226,28 @@ export const lotApi = {
   // Calculate house designs for a specific lot
   async calculateDesignsOnLot(lotId: string): Promise<LotCalculationResponse> {
     try {
-      const response = await axios.get(`${getApiBaseUrl()}/design-on-lot/calculate?lotId=${lotId}`);
+      const response = await axios.get(
+        `${getApiBaseUrl()}/design-on-lot/calculate?lotId=${lotId}`
+      );
       return response.data;
     } catch (error) {
-      console.error('Error fetching lot calculations:', error);
+      console.error("Error fetching lot calculations:", error);
       throw error;
     }
   },
 
   // Get lot dimensions from the calculation response
-  async getLotDimensions(lotId: string): Promise<{ width: number; depth: number } | null> {
+  async getLotDimensions(
+    lotId: string
+  ): Promise<{ width: number; depth: number } | null> {
     try {
       const response = await this.calculateDesignsOnLot(lotId);
-      
+
       // Return dimensions from the first match if available
       if (response.matches && response.matches.length > 0) {
         return response.matches[0].lotDimensions;
       }
-      
+
       return null;
     } catch (error) {
       return null;
@@ -238,49 +255,54 @@ export const lotApi = {
   },
 
   // Filter house designs for a specific lot with user preferences
-    async filterHouseDesigns(lotId: string, filters: HouseDesignFilterRequest): Promise<HouseDesignFilterResponse> {
+  async filterHouseDesigns(
+    lotId: string,
+    filters: HouseDesignFilterRequest
+  ): Promise<HouseDesignFilterResponse> {
     try {
       // Convert filters to URL parameters for GET request
       const params = new URLSearchParams();
-      
+
       // Only add array parameters if they have values
       if (filters.bedroom && filters.bedroom.length > 0) {
-        params.append('bedroom', JSON.stringify(filters.bedroom));
+        params.append("bedroom", JSON.stringify(filters.bedroom));
       }
       if (filters.bathroom && filters.bathroom.length > 0) {
-        params.append('bathroom', JSON.stringify(filters.bathroom));
+        params.append("bathroom", JSON.stringify(filters.bathroom));
       }
       if (filters.car && filters.car.length > 0) {
-        params.append('car', JSON.stringify(filters.car));
-      }
-      
-      // Only add optional filters if they are provided
-      if (filters.min_size !== undefined) {
-        params.append('min_size', filters.min_size.toString());
-      }
-      if (filters.max_size !== undefined) {
-        params.append('max_size', filters.max_size.toString());
-      }
-      if (filters.rumpus !== undefined) {
-        params.append('rumpus', filters.rumpus.toString());
-      }
-      if (filters.alfresco !== undefined) {
-        params.append('alfresco', filters.alfresco.toString());
-      }
-      if (filters.pergola !== undefined) {
-        params.append('pergola', filters.pergola.toString());
+        params.append("car", JSON.stringify(filters.car));
       }
 
-      const response = await axios.get(`${getApiBaseUrl()}/house-design/${lotId}?${params.toString()}`);
-      
+      // Only add optional filters if they are provided
+      if (filters.min_size !== undefined) {
+        params.append("min_size", filters.min_size.toString());
+      }
+      if (filters.max_size !== undefined) {
+        params.append("max_size", filters.max_size.toString());
+      }
+      if (filters.rumpus !== undefined) {
+        params.append("rumpus", filters.rumpus.toString());
+      }
+      if (filters.alfresco !== undefined) {
+        params.append("alfresco", filters.alfresco.toString());
+      }
+      if (filters.pergola !== undefined) {
+        params.append("pergola", filters.pergola.toString());
+      }
+
+      const response = await axios.get(
+        `${getApiBaseUrl()}/house-design/${lotId}?${params.toString()}`
+      );
+
       // Handle 204 No Content as a successful response with no results
       if (response.status === 204) {
         return {
           houseDesigns: [],
-          zoning: { fsr: 300, frontSetback: 3, rearSetback: 3, sideSetback: 3 }
+          zoning: { fsr: 300, frontSetback: 3, rearSetback: 3, sideSetback: 3 },
         };
       }
-      
+
       return response.data;
     } catch (error) {
       throw error;
@@ -293,8 +315,7 @@ export const lotApi = {
       const response = await axios.get(`${getApiBaseUrl()}/builders`);
       return response.data;
     } catch (error) {
-   
       throw error;
     }
-  }
-}; 
+  },
+};

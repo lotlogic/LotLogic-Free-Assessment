@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { lotApi } from '../lib/api/lotApi';
+import { useQuery } from "@tanstack/react-query";
+import { lotApi } from "../lib/api/lotApi";
 
 export const useLotDetails = (lotId: string | null) => {
   return useQuery({
-    queryKey: ['lot-details', lotId],
+    queryKey: ["lot-details", lotId],
     queryFn: async () => {
       return await lotApi.getLotById(lotId!);
     },

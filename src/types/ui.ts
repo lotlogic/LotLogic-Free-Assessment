@@ -29,7 +29,6 @@ export interface LayersButtonProps {
   isActive?: boolean;
 }
 
-
 export interface SavedButtonProps {
   onClick: () => void;
   isActive?: boolean;
@@ -83,4 +82,4 @@ export interface LotData {
   type?: string;
   zoning?: string;
   overlays?: string;
-} 
+}

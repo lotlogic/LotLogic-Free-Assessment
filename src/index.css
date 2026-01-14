@@ -2,8 +2,8 @@
 @import "tw-animate-css";
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,opsz,wght@0,1..40,100..1000;1,1..40,100..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,opsz,wght@0,1..40,100..1000;1,1..40,100..1000&display=swap");
 
 @custom-variant dark (&:is(.dark *));
 
@@ -55,8 +55,8 @@
 
 /* CSS Variables for fonts */
 :root {
-  --font-dm-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-ibm-plex-serif: 'IBM Plex Serif', serif;
+  --font-dm-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-ibm-plex-serif: "IBM Plex Serif", serif;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -139,7 +139,12 @@
     margin: 0;
     padding: 0;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-ibm-plex-serif), serif;
   }
 }
@@ -155,7 +160,7 @@
 }
 
 .Toastify__toast--success {
-  background-color: #2F5D62;
+  background-color: #2f5d62;
 }
 
 .Toastify__toast--error {
@@ -183,51 +188,37 @@
 .animated-gradient-button {
   background: linear-gradient(
     to right,
-    #2F5D62, /* Dark Teal - From color from your design */
-    #2AA0AD, /* Lighter Teal - To color from your design */
-    #2F5D62  /* Dark Teal (repeat to make the loop smooth) */
+    #2f5d62,
+    /* Dark Teal - From color from your design */ #2aa0ad,
+    /* Lighter Teal - To color from your design */ #2f5d62
+      /* Dark Teal (repeat to make the loop smooth) */
   );
-  background-size: 200% auto; 
-  color: white; 
-  animation: gradient-animation 3s ease-in-out infinite; 
-  transition: background-position 0.3s ease; 
+  background-size: 200% auto;
+  color: white;
+  animation: gradient-animation 3s ease-in-out infinite;
+  transition: background-position 0.3s ease;
 }
 
 /* hover over the button */
 .animated-gradient-button:hover {
-  background: linear-gradient(
-    to right,
-    #234a4d, 
-    #218590, 
-    #234a4d
-  ) !important; 
-  background-size: 200% auto !important; 
-  background-position: 100% 50% !important; 
-  animation: none !important; 
+  background: linear-gradient(to right, #234a4d, #218590, #234a4d) !important;
+  background-size: 200% auto !important;
+  background-position: 100% 50% !important;
+  animation: none !important;
 }
 
 /* Overrides Tailwind's bg-[#2F5D62] class to ensure the gradient animation works even when Tailwind tries to set a solid background color*/
-.animated-gradient-button.bg-\[\#2F5D62\] { 
-    background: linear-gradient(
-      to right,
-      #2F5D62,
-      #2AA0AD,
-      #2F5D62
-    ) !important;
-    background-size: 200% auto !important;
-    animation: gradient-animation 3s ease-in-out infinite !important;
+.animated-gradient-button.bg-\[\#2F5D62\] {
+  background: linear-gradient(to right, #2f5d62, #2aa0ad, #2f5d62) !important;
+  background-size: 200% auto !important;
+  animation: gradient-animation 3s ease-in-out infinite !important;
 }
 
 /* Overrides Tailwind's hover:bg-[#1a3d42] class to ensure the hover gradient works instead of a solid color. */
 .animated-gradient-button.hover\:bg-\[\#1a3d42\]:hover {
-    background: linear-gradient(
-        to right,
-        #234a4d,
-        #218590,
-        #234a4d
-    ) !important;
-    background-position: 100% 50% !important;
-    animation: none !important;
+  background: linear-gradient(to right, #234a4d, #218590, #234a4d) !important;
+  background-position: 100% 50% !important;
+  animation: none !important;
 }
 
 /* Hide the default toast icon completely */
@@ -272,13 +263,13 @@
   .mapboxgl-ctrl-group:not(.mapboxgl-ctrl-zoom-mobile) {
     display: none !important;
   }
-  
+
   /* Ensure proper spacing for mobile viewports */
   .mapboxgl-ctrl-zoom-mobile {
     top: 16px !important;
     right: 16px !important;
   }
-  
+
   /* Adjust button sizes for better touch targets on mobile */
   .mapboxgl-ctrl-zoom-mobile button {
     width: 40px !important;

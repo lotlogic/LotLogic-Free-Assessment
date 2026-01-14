@@ -1,13 +1,18 @@
-import type { ReactNode } from 'react';
-import type { FloorPlan } from './houseDesign';
+import type { ReactNode } from "react";
+import type { FloorPlan } from "./houseDesign";
 
 export interface LotSidebarProps {
   open: boolean;
   onClose: () => void;
   lot: LotData;
-  geometry?: GeoJSON.Geometry; 
+  geometry?: GeoJSON.Geometry;
   onSelectFloorPlan?: (data: FloorPlan | null) => void;
-  onZoningDataUpdate?: (zoning: { fsr: number; frontSetback: number; rearSetback: number; sideSetback: number }) => void;
+  onZoningDataUpdate?: (zoning: {
+    fsr: number;
+    frontSetback: number;
+    rearSetback: number;
+    sideSetback: number;
+  }) => void;
   isLoadingApiData?: boolean;
   apiError?: Error | null;
 }
@@ -50,7 +55,7 @@ export type LotProperties = {
 };
 
 export type LotData = {
-  id?: string | number; 
+  id?: string | number;
   suburb?: string;
   address?: string;
   zoning?: string;

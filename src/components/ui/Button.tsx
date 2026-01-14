@@ -1,7 +1,7 @@
 // Button.tsx
-import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/lib/utils"; // use cn (clsx + tailwind-merge)
 import { colors } from "@/constants/content";
+import { cn } from "@/lib/utils"; // use cn (clsx + tailwind-merge)
+import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 const BRAND = {
   base: colors.primary,
@@ -33,7 +33,10 @@ export function Button({
   let style: React.CSSProperties | undefined = undefined;
 
   if (isPrimary) {
-    style = { backgroundColor: disabled || loading ? BRAND.disabled : BRAND.base, color: "#fff" };
+    style = {
+      backgroundColor: disabled || loading ? BRAND.disabled : BRAND.base,
+      color: "#fff",
+    };
   }
 
   if (isOutline) {
@@ -55,7 +58,8 @@ export function Button({
           "text-white": isPrimary,
           // keep outline neutral; let inline styles + your className control colors
           "bg-white": isOutline,
-          "bg-gray-100 text-gray-800 hover:bg-gray-200": variant === "secondary",
+          "bg-gray-100 text-gray-800 hover:bg-gray-200":
+            variant === "secondary",
           "bg-transparent": variant === "ghost",
           "opacity-70 cursor-not-allowed": loading || disabled,
         },

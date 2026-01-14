@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { APP_CONTENT, getContent, formatContent } from '../constants/content';
+import { useMemo } from "react";
+import { APP_CONTENT, formatContent, getContent } from "../constants/content";
 
 export function useContent() {
   const content = useMemo(() => {
@@ -24,7 +24,7 @@ export function useContent() {
       shadows: APP_CONTENT.shadows,
       transitions: APP_CONTENT.transitions,
       brand: APP_CONTENT.brand,
-      
+
       // Helper functions
       get: getContent,
       format: formatContent,
@@ -36,7 +36,10 @@ export function useContent() {
       },
 
       // Validation helpers
-      getValidation: (type: keyof typeof APP_CONTENT.validation, variables?: Record<string, string | number>) => {
+      getValidation: (
+        type: keyof typeof APP_CONTENT.validation,
+        variables?: Record<string, string | number>
+      ) => {
         const message = APP_CONTENT.validation[type];
         return variables ? formatContent(message, variables) : message;
       },
@@ -50,7 +53,7 @@ export function useContent() {
       getSuccess: (type: keyof typeof APP_CONTENT.success) => {
         return APP_CONTENT.success[type];
       },
-      
+
       // Loading helpers
       getLoading: (type: keyof typeof APP_CONTENT.loading) => {
         return APP_CONTENT.loading[type];
@@ -122,4 +125,4 @@ export function useThemeContent() {
     shadows: APP_CONTENT.shadows,
     transitions: APP_CONTENT.transitions,
   };
-} 
+}

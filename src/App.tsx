@@ -1,67 +1,62 @@
-import { useEffect, Suspense, lazy } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import './index.css'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Suspense, lazy, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./index.css";
 
-import Header from '@/components/layouts/Header'
-import MobileBottomNav from '@/components/layouts/MobileBottomNav'
-import MobileSearch from '@/components/ui/MobileSearch'
-import { SavedPropertiesSidebar } from '@/components/features/map/SavedPropertiesSidebar'
-import { useMobile } from '@/hooks/useMobile'
-import { preloadCriticalComponents } from '@/utils/preload'
-import { trackEvent } from '@/lib/analytics/mixpanel'
-import { useMobileNavigationStore } from '@/stores/mobileNavigationStore'
+import { SavedPropertiesSidebar } from "@/components/features/map/SavedPropertiesSidebar";
+import Header from "@/components/layouts/Header";
+import MobileBottomNav from "@/components/layouts/MobileBottomNav";
+import MobileSearch from "@/components/ui/MobileSearch";
+import { useMobile } from "@/hooks/useMobile";
+import { trackEvent } from "@/lib/analytics/mixpanel";
+import { useMobileNavigationStore } from "@/stores/mobileNavigationStore";
+import { preloadCriticalComponents } from "@/utils/preload";
 
 // Lazy load heavy components
-const ZoneMap = lazy(() => import('@/components/features/map/MapLayer'))
+const ZoneMap = lazy(() => import("@/components/features/map/MapLayer"));
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 function App() {
   const isMobile = useMobile();
-  const { 
-    activeTab, 
-    toggleTab, 
-    closeAllPanels 
-  } = useMobileNavigationStore();
-  
+  const { activeTab, toggleTab, closeAllPanels } = useMobileNavigationStore();
+
   // Compute visibility states from activeTab
-  const isSearchVisible = activeTab === 'search';
-  const isSavedVisible = activeTab === 'saved';
+  const isSearchVisible = activeTab === "search";
+  const isSavedVisible = activeTab === "saved";
 
   // Initialize Mixpanel analytics
   useEffect(() => {
     // Track app load
-    trackEvent('App Loaded', {
+    trackEvent("App Loaded", {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
-      platform: 'web',
-      version: '1.0.0'
+      platform: "web",
+      version: "1.0.0",
     });
   }, []);
 
   // Preload critical components after initial render
   useEffect(() => {
     const { preloadSidebar, preloadSearch } = preloadCriticalComponents();
-    
+
     // Preload sidebar and search components after a short delay
     const timer = setTimeout(() => {
       preloadSidebar();
       preloadSearch();
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
-
-  const handleTabChange = (tab: 'search' | 'saved' | 'recenter') => {
+  const handleTabChange = (tab: "search" | "saved" | "recenter") => {
     // Track tab change
-    trackEvent('Mobile Tab Changed', {
+    trackEvent("Mobile Tab Changed", {
       tab: tab,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     // Use the consolidated toggle function
     toggleTab(tab);
   };
@@ -70,8 +65,6 @@ function App() {
     closeAllPanels();
   };
 
-
-  
   return (
     <QueryClientProvider client={queryClient}>
       <div className="h-screen w-screen flex flex-col overflow-hidden">
@@ -79,22 +72,24 @@ function App() {
         {!isMobile && <Header />}
 
         {/* Main Content */}
-        <div className={`flex-1 relative ${isMobile ? 'pb-16' : ''}`}>
-          <Suspense fallback={
-            <div className="flex items-center justify-center h-full bg-gray-50">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-gray-600">Loading map...</p>
+        <div className={`flex-1 relative ${isMobile ? "pb-16" : ""}`}>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-full bg-gray-50">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                  <p className="text-gray-600">Loading map...</p>
+                </div>
               </div>
-            </div>
-          }>
+            }
+          >
             <ZoneMap />
           </Suspense>
         </div>
 
         {/* Mobile Bottom Navigation */}
         {isMobile && (
-          <MobileBottomNav 
+          <MobileBottomNav
             activeTab={activeTab}
             onTabChange={handleTabChange}
           />
@@ -108,7 +103,6 @@ function App() {
             onSearch={handleSearch}
           />
         )}
-
 
         {/* Mobile Saved Properties - Only show when saved tab is active */}
         {isMobile && (
@@ -137,7 +131,7 @@ function App() {
         />
       </div>
     </QueryClientProvider>
-  )
+  );
 }
 
-export default App 
+export default App;
