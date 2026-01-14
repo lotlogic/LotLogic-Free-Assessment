@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { lotApi } from "../lib/api/lotApi";
 
-export function useLotCalculation(lotId: string | null) {
+export const useLotCalculation = (lotId: string | null) => {
   return useQuery({
     queryKey: ["lot-calculation", lotId],
     queryFn: () => lotApi.calculateDesignsOnLot(lotId!),
@@ -13,9 +13,9 @@ export function useLotCalculation(lotId: string | null) {
     refetchOnWindowFocus: false,
     refetchOnMount: true,
   });
-}
+};
 
-export function useLotDimensions(lotId: string | null) {
+export const useLotDimensions = (lotId: string | null) => {
   const { data, isLoading, error } = useLotCalculation(lotId);
 
   return {
@@ -25,10 +25,10 @@ export function useLotDimensions(lotId: string | null) {
     isLoading,
     error,
   };
-}
+};
 
 // Hook for prefetching lot calculations
-export function usePrefetchLotCalculation() {
+export const usePrefetchLotCalculation = () => {
   const queryClient = useQueryClient();
 
   const prefetchLotCalculation = (lotId: string) => {
@@ -40,4 +40,4 @@ export function usePrefetchLotCalculation() {
   };
 
   return { prefetchLotCalculation };
-}
+};

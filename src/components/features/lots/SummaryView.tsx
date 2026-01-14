@@ -10,11 +10,11 @@ interface SummaryViewProps {
   onShowDetailedRules?: () => void;
 }
 
-export function SummaryView({
+export const SummaryView = ({
   lot,
   zoningColor,
   zoningText,
-}: SummaryViewProps) {
+}: SummaryViewProps) => {
   return (
     <>
       <div className="mx-4 sm:mx-6 my-3 sm:my-4">
@@ -89,4 +89,5 @@ export function SummaryView({
       </div>
     </>
   );
-}
+};
+export default SummaryView;

@@ -13,7 +13,7 @@ interface BottomSheetProps {
   className?: string;
 }
 
-export function BottomSheet({
+export const BottomSheet = ({
   isOpen,
   onClose,
   title,
@@ -22,7 +22,7 @@ export function BottomSheet({
   maxHeight = "80vh",
   showDragHandle = true,
   className = "",
-}: BottomSheetProps) {
+}: BottomSheetProps) => {
   const { isMobile } = useResponsive();
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
@@ -142,4 +142,6 @@ export function BottomSheet({
       </div>
     </>
   );
-}
+};
+
+export default BottomSheet;

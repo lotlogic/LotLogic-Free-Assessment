@@ -21,7 +21,7 @@ interface MobilePropertyCardProps {
   className?: string;
 }
 
-export function MobilePropertyCard({
+export const MobilePropertyCard = ({
   lotId,
   address,
   suburb,
@@ -40,7 +40,7 @@ export function MobilePropertyCard({
   onViewFloorPlan,
   onViewFacades,
   className = "",
-}: MobilePropertyCardProps) {
+}: MobilePropertyCardProps) => {
   return (
     <div
       className={`
@@ -181,4 +181,6 @@ export function MobilePropertyCard({
       )}
     </div>
   );
-}
+};
+
+export default MobilePropertyCard;

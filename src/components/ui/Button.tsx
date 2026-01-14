@@ -17,7 +17,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: ReactNode;
 };
 
-export function Button({
+export const Button = ({
   variant = "primary",
   loading = false,
   leftIcon,
@@ -26,7 +26,7 @@ export function Button({
   children,
   disabled,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   const isPrimary = variant === "primary";
   const isOutline = variant === "outline";
 
@@ -102,4 +102,6 @@ export function Button({
       )}
     </button>
   );
-}
+};
+
+export default Button;

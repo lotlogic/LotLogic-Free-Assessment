@@ -26,7 +26,7 @@ interface QuoteFormData {
   termsAccepted: boolean;
 }
 
-export function MobileQuoteForm({
+export const MobileQuoteForm = ({
   isOpen,
   onClose,
   onBack,
@@ -34,7 +34,7 @@ export function MobileQuoteForm({
   selectedLot,
   selectedDesign,
   className = "",
-}: MobileQuoteFormProps) {
+}: MobileQuoteFormProps) => {
   const [formData, setFormData] = useState<QuoteFormData>({
     builders: [],
     additionalComments: "",
@@ -239,4 +239,6 @@ export function MobileQuoteForm({
       />
     </div>
   );
-}
+};
+
+export default MobileQuoteForm;

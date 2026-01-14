@@ -11,20 +11,27 @@ const convertApiResponseToHouseDesign = (
   apiDesign: HouseDesignItemResponse
 ): HouseDesignItem => {
   return {
-    id: apiDesign.id,
-    title: apiDesign.title,
+    ...apiDesign,
     area: apiDesign.area.toString(),
-    minLotWidth: apiDesign.minLotWidth,
-    minLotDepth: apiDesign.minLotDepth,
-    image: apiDesign.image,
-    images: apiDesign.images,
-    bedrooms: apiDesign.bedrooms,
-    bathrooms: apiDesign.bathrooms,
-    cars: apiDesign.cars,
     storeys: 1, // Default to 1 storey
-    isFavorite: apiDesign.isFavorite,
     floorPlanImage: apiDesign.floorPlanImage || undefined,
   };
+
+  // return {
+  //   id: apiDesign.id,
+  //   title: apiDesign.title,
+  //   area: apiDesign.area.toString(),
+  //   minLotWidth: apiDesign.minLotWidth,
+  //   minLotDepth: apiDesign.minLotDepth,
+  //   image: apiDesign.image,
+  //   images: apiDesign.images,
+  //   bedrooms: apiDesign.bedrooms,
+  //   bathrooms: apiDesign.bathrooms,
+  //   cars: apiDesign.cars,
+  //   storeys: 1, // Default to 1 storey
+  //   isFavorite: apiDesign.isFavorite,
+  //   floorPlanImage: apiDesign.floorPlanImage || undefined,
+  // };
 };
 
 export const useHouseDesigns = (

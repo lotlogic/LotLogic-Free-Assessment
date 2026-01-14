@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { ChevronLeft, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-export function Sidebar({
+export const Sidebar = ({
   open,
   onClose,
   onBack,
@@ -23,7 +23,7 @@ export function Sidebar({
   children: React.ReactNode;
   widthClass?: string;
   className?: string;
-}) {
+}) => {
   const isMobile = useMobile();
   const [drawerHeight, setDrawerHeight] = useState<"50vh" | "100vh">("50vh");
   const [isDragging, setIsDragging] = useState(false);
@@ -186,4 +186,6 @@ export function Sidebar({
       <div className="flex-grow overflow-y-auto min-h-0">{children}</div>
     </aside>
   );
-}
+};
+
+export default Sidebar;

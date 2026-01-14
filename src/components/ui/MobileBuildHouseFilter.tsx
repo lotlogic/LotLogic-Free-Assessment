@@ -10,7 +10,7 @@ interface MobileBuildHouseFilterProps {
   className?: string;
 }
 
-export function MobileBuildHouseFilter({
+export const MobileBuildHouseFilter = ({
   isOpen,
   onClose,
   onBack,
@@ -18,7 +18,7 @@ export function MobileBuildHouseFilter({
   onFilterChange,
   onApplyFilters,
   className = "",
-}: MobileBuildHouseFilterProps) {
+}: MobileBuildHouseFilterProps) => {
   const handleOptionToggle = (categoryId: string, value: string | number) => {
     const currentValues = selectedFilters[categoryId] || [];
     const newValues = currentValues.includes(value)
@@ -202,4 +202,6 @@ export function MobileBuildHouseFilter({
       </div>
     </div>
   );
-}
+};
+
+export default MobileBuildHouseFilter;

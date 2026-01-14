@@ -27,13 +27,10 @@ const SavedPropertiesSidebar = lazy(() =>
 );
 
 // Import optimized components
-import { useMapInitialization } from "@/hooks/useMapInitialization";
-import { useMobile } from "@/hooks/useMobile";
-import { MapControls } from "./MapControls";
-import { MapLayers, MapLoader } from "./MapLayers";
-
 import { useLotDetails } from "@/hooks/useLotDetails";
 import { convertLotsToGeoJSON, useLots } from "@/hooks/useLots";
+import { useMapInitialization } from "@/hooks/useMapInitialization";
+import { useMobile } from "@/hooks/useMobile";
 import { getImageUrl } from "@/lib/api/lotApi";
 import type { SetbackValues } from "@/lib/utils/geometry";
 import { useMobileNavigationStore } from "@/stores/mobileNavigationStore";
@@ -43,8 +40,10 @@ import type { FloorPlan } from "@/types/houseDesign";
 import type { LotProperties } from "@/types/lot";
 import type { SavedProperty } from "@/types/ui";
 import "../map/MapControls.css";
+import { MapControls } from "./MapControls";
+import { MapLayers, MapLoader } from "./MapLayers";
 
-export default function ZoneMap() {
+export const ZoneMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const selectedIdRef = useRef<string | null>(null);
   const sidebarOpenRef = useRef<boolean>(false);
@@ -527,4 +526,6 @@ export default function ZoneMap() {
       )}
     </div>
   );
-}
+};
+
+export default ZoneMap;

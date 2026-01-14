@@ -1,4 +1,4 @@
-import { showToast } from "@/components/ui/Toast";
+import showToast from "@/components/ui/Toast";
 import axios from "axios";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -15,7 +15,7 @@ interface SearchResult {
   center: [number, number];
 }
 
-export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
+export const MobileSearch = ({ isOpen, onSearch }: MobileSearchProps) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -164,4 +164,6 @@ export default function MobileSearch({ isOpen, onSearch }: MobileSearchProps) {
       </div>
     </div>
   );
-}
+};
+
+export default MobileSearch;

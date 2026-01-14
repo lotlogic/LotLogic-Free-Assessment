@@ -14,7 +14,7 @@ interface MobileSuccessScreenProps {
   className?: string;
 }
 
-export function MobileSuccessScreen({
+export const MobileSuccessScreen = ({
   isOpen,
   onClose,
   onBack,
@@ -26,7 +26,7 @@ export function MobileSuccessScreen({
   onSecureLot,
   onKeepExploring,
   className = "",
-}: MobileSuccessScreenProps) {
+}: MobileSuccessScreenProps) => {
   if (!isOpen) return null;
 
   return (
@@ -107,4 +107,6 @@ export function MobileSuccessScreen({
       </div>
     </div>
   );
-}
+};
+
+export default MobileSuccessScreen;

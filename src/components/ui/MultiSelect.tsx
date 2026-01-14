@@ -3,14 +3,14 @@ import type { MultiSelectProps } from "@/types/ui";
 import { ChevronDown, X } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
-export function MultiSelect({
+export const MultiSelect = ({
   options,
   selectedOptions,
   onSelectionChange,
   placeholder = "Choose options",
   label,
   className = "",
-}: MultiSelectProps) {
+}: MultiSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -158,4 +158,6 @@ export function MultiSelect({
       </div>
     </div>
   );
-}
+};
+
+export default MultiSelect;

@@ -7,11 +7,12 @@ import { useSavedPropertiesStore } from "@/stores/savedPropertiesStore";
 import type { SavedPropertiesSidebarProps } from "@/types/ui";
 import { Bath, BedDouble, Bookmark, Car, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-export function SavedPropertiesSidebar({
+
+export const SavedPropertiesSidebar = ({
   open,
   onClose,
 }: // onViewDetails
-Omit<SavedPropertiesSidebarProps, "savedProperties">) {
+Omit<SavedPropertiesSidebarProps, "savedProperties">) => {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
   const isMobile = useMobile();
@@ -416,4 +417,6 @@ Omit<SavedPropertiesSidebarProps, "savedProperties">) {
       </div>
     </div>
   );
-}
+};
+
+export default SavedPropertiesSidebar;

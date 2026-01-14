@@ -1,4 +1,4 @@
-import { showToast } from "@/components/ui/Toast";
+import showToast from "@/components/ui/Toast";
 import { useMobile } from "@/hooks/useMobile";
 import { trackLotSelected } from "@/lib/analytics/mixpanel";
 import { debounce } from "@/lib/utils/geometry";
@@ -54,7 +54,7 @@ interface MapControlsProps {
 // -----------------------------
 // Component
 // -----------------------------
-export function MapControls({
+export const MapControls = ({
   map,
   setSelectedLot,
   selectedIdRef,
@@ -62,7 +62,7 @@ export function MapControls({
   initialView,
   showFloorPlanModal,
   showFacadeModal,
-}: MapControlsProps) {
+}: MapControlsProps) => {
   const isMobile = useMobile();
   const { closeAllPanels } = useMobileNavigationStore();
   const handleResize = debounce(() => map?.resize(), 250);
@@ -353,4 +353,6 @@ export function MapControls({
   }, [map, selectedIdRef, sidebarOpenRef, setSelectedLot]);
 
   return null; // This component doesn't render anything
-}
+};
+
+export default MapControls;

@@ -61,11 +61,11 @@ const getToastIcon = (type: ToastType) => {
   }
 };
 
-export function showToast({
+export const showToast = ({
   message,
   type = "success",
   options = {},
-}: ShowToastProps) {
+}: ShowToastProps) => {
   // Get the appropriate toast function
   const toastFn =
     type === "error"
@@ -113,4 +113,6 @@ export function showToast({
       ...options,
     }
   );
-}
+};
+
+export default showToast;

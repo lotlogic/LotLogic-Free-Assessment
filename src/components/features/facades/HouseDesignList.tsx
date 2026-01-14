@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/Button";
-import { showToast } from "@/components/ui/Toast";
+import Button from "@/components/ui/Button";
+import showToast from "@/components/ui/Toast";
 import {
   colors,
   filter as filterContent,
@@ -29,7 +29,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-export function HouseDesignList({
+export const HouseDesignList = ({
   filter,
   lot,
   onShowFilter,
@@ -37,7 +37,7 @@ export function HouseDesignList({
   onEnquireNow,
   onViewFloorPlan,
   onViewFacades,
-}: HouseDesignListProps) {
+}: HouseDesignListProps) => {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
   const [, setSelectedImageIdx] = useState(0);
   const [showToastMessage, setShowToastMessage] = useState<{
@@ -448,4 +448,6 @@ export function HouseDesignList({
       </div>
     </div>
   );
-}
+};
+
+export default HouseDesignList;

@@ -5,10 +5,10 @@ interface MobileBottomNavProps {
   onTabChange?: (tab: "search" | "saved" | "recenter") => void;
 }
 
-export default function MobileBottomNav({
+export const MobileBottomNav = ({
   activeTab = null,
   onTabChange,
-}: MobileBottomNavProps) {
+}: MobileBottomNavProps) => {
   const tabs = [
     { id: "search", icon: Search, label: "Search" },
     { id: "saved", icon: Bookmark, label: "Saved" },
@@ -51,4 +51,6 @@ export default function MobileBottomNav({
       </div>
     </nav>
   );
-}
+};
+
+export default MobileBottomNav;

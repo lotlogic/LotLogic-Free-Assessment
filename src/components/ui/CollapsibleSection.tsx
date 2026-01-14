@@ -2,11 +2,11 @@ import type { CollapsibleSectionProps } from "@/types/lot";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
-export function CollapsibleSection({
+export const CollapsibleSection = ({
   title,
   children,
   initialOpen = true,
-}: CollapsibleSectionProps) {
+}: CollapsibleSectionProps) => {
   const [isOpen, setIsOpen] = useState(initialOpen);
   return (
     <div className="border-b border-gray-100 py-4 mx-6">
@@ -24,4 +24,6 @@ export function CollapsibleSection({
       {isOpen && <div className="mt-2 text-sm text-gray-700">{children}</div>}
     </div>
   );
-}
+};
+
+export default CollapsibleSection;

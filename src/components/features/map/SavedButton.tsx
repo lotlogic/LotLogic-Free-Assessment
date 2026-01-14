@@ -3,7 +3,10 @@ import type { SavedButtonProps } from "@/types/ui";
 import { Bookmark } from "lucide-react";
 import React from "react";
 
-export function SavedButton({ onClick, isActive = false }: SavedButtonProps) {
+export const SavedButton = ({
+  onClick,
+  isActive = false,
+}: SavedButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -22,4 +25,6 @@ export function SavedButton({ onClick, isActive = false }: SavedButtonProps) {
       <Bookmark className="w-5 h-5" />
     </button>
   );
-}
+};
+
+export default SavedButton;

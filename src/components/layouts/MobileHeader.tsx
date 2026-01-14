@@ -1,6 +1,6 @@
 import { brand, colors } from "@/constants/content";
 
-export default function MobileHeader() {
+export const MobileHeader = () => {
   const handleLogoClick = () => {
     window.location.href = "/";
   };
@@ -22,4 +22,6 @@ export default function MobileHeader() {
       </div>
     </header>
   );
-}
+};
+
+export default MobileHeader;

@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/Checkbox";
+import Button from "@/components/ui/Button";
+import Checkbox from "@/components/ui/Checkbox";
 import { TextModal } from "@/components/ui/DynamicModal";
-import { Input } from "@/components/ui/Input";
-import { MultiSelect } from "@/components/ui/MultiSelect";
-import { PrivacyPolicyContent } from "@/components/ui/PrivacyPolicyContent";
-import { Sidebar } from "@/components/ui/Sidebar";
-import { showToast } from "@/components/ui/Toast";
+import Input from "@/components/ui/Input";
+import MultiSelect from "@/components/ui/MultiSelect";
+import PrivacyPolicyContent from "@/components/ui/PrivacyPolicyContent";
+import Sidebar from "@/components/ui/Sidebar";
+import showToast from "@/components/ui/Toast";
 import {
   colors,
   formatContent,
@@ -27,13 +27,13 @@ import type {
 import { quoteFormSchema } from "@/types/houseDesign";
 import React, { useState } from "react";
 
-export function GetYourQuoteSidebar({
+export const GetYourQuoteSidebar = ({
   open,
   onClose,
   onBack,
   selectedHouseDesign,
   lotDetails,
-}: GetYourQuoteSidebarProps) {
+}: GetYourQuoteSidebarProps) => {
   const [selectedBuilders, setSelectedBuilders] = useState<string[]>([]);
   const [showThankYou, setShowThankYou] = useState(false);
   const [lotSecured, setLotSecured] = useState(false);
@@ -656,4 +656,6 @@ export function GetYourQuoteSidebar({
       />
     </>
   );
-}
+};
+
+export default GetYourQuoteSidebar;

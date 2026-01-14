@@ -6,7 +6,7 @@ import axios from "axios";
 import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export function SearchControl({ onResultSelect }: SearchControlProps) {
+export const SearchControl = ({ onResultSelect }: SearchControlProps) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -188,4 +188,6 @@ export function SearchControl({ onResultSelect }: SearchControlProps) {
       )}
     </div>
   );
-}
+};
+
+export default SearchControl;

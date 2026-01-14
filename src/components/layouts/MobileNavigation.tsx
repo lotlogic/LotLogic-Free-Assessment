@@ -6,7 +6,10 @@ interface MobileNavigationProps {
   onClose: () => void;
 }
 
-export function MobileNavigation({ isOpen, onClose }: MobileNavigationProps) {
+export const MobileNavigation = ({
+  isOpen,
+  onClose,
+}: MobileNavigationProps) => {
   const navigationItems = [
     { icon: Map, label: "Map", href: "/" },
     { icon: Home, label: "House Designs", href: "/designs" },
@@ -81,4 +84,6 @@ export function MobileNavigation({ isOpen, onClose }: MobileNavigationProps) {
       </div>
     </>
   );
-}
+};
+
+export default MobileNavigation;

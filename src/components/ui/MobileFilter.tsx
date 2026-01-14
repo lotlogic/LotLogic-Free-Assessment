@@ -33,7 +33,7 @@ interface MobileFilterProps {
   className?: string;
 }
 
-export function MobileFilter({
+export const MobileFilter = ({
   isOpen,
   onClose,
   onBack,
@@ -43,7 +43,7 @@ export function MobileFilter({
   onFilterChange,
   onApplyFilters,
   className = "",
-}: MobileFilterProps) {
+}: MobileFilterProps) => {
   // const { isMobile } = useResponsive();
 
   const handleOptionToggle = (categoryId: string, value: string | number) => {
@@ -141,7 +141,9 @@ export function MobileFilter({
       </div>
     </div>
   );
-}
+};
+
+export default MobileFilter;
 
 // Predefined filter categories for house designs
 export const HOUSE_DESIGN_FILTERS: FilterCategory[] = [

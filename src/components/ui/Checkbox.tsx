@@ -6,10 +6,10 @@ import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
 import * as React from "react";
 
-function Checkbox({
+export const Checkbox = ({
   className,
   ...props
-}: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
+}: React.ComponentProps<typeof CheckboxPrimitive.Root>) => {
   return (
     <CheckboxPrimitive.Root
       {...props}
@@ -28,6 +28,6 @@ function Checkbox({
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
-}
+};
 
-export { Checkbox };
+export default Checkbox;

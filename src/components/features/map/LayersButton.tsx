@@ -3,7 +3,10 @@ import type { LayersButtonProps } from "@/types/ui";
 import { Layers } from "lucide-react";
 import React from "react";
 
-export function LayersButton({ onClick, isActive = false }: LayersButtonProps) {
+export const LayersButton = ({
+  onClick,
+  isActive = false,
+}: LayersButtonProps) => {
   return (
     <button
       onClick={onClick}
@@ -22,4 +25,6 @@ export function LayersButton({ onClick, isActive = false }: LayersButtonProps) {
       <Layers className="w-5 h-5" />
     </button>
   );
-}
+};
+
+export default LayersButton;

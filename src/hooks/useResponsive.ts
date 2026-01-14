@@ -9,7 +9,7 @@ export interface ResponsiveState {
   screenHeight: number;
 }
 
-export function useResponsive(): ResponsiveState {
+export const useResponsive = (): ResponsiveState => {
   const [responsiveState, setResponsiveState] = useState<ResponsiveState>({
     isMobile: false,
     isTablet: false,
@@ -45,10 +45,10 @@ export function useResponsive(): ResponsiveState {
   }, []);
 
   return responsiveState;
-}
+};
 
 // Hook for detecting if device supports touch
-export function useTouchDevice(): boolean {
+export const useTouchDevice = (): boolean => {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   useEffect(() => {
@@ -64,10 +64,10 @@ export function useTouchDevice(): boolean {
   }, []);
 
   return isTouchDevice;
-}
+};
 
 // Hook for detecting device orientation
-export function useOrientation(): "portrait" | "landscape" {
+export const useOrientation = (): "portrait" | "landscape" => {
   const [orientation, setOrientation] = useState<"portrait" | "landscape">(
     "portrait"
   );
@@ -90,4 +90,4 @@ export function useOrientation(): "portrait" | "landscape" {
   }, []);
 
   return orientation;
-}
+};

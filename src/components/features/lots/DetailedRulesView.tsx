@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/Button";
-import { CollapsibleSection } from "@/components/ui/CollapsibleSection";
+import Button from "@/components/ui/Button";
+import CollapsibleSection from "@/components/ui/CollapsibleSection";
 import { getColorClass } from "@/constants/content";
 import type { LotData } from "@/types/lot";
 import { Home } from "lucide-react";
@@ -8,7 +8,7 @@ interface DetailedRulesViewProps {
   lot: LotData;
 }
 
-export function DetailedRulesView({ lot }: DetailedRulesViewProps) {
+export const DetailedRulesView = ({ lot }: DetailedRulesViewProps) => {
   return (
     <>
       {/* Site Planning Rules Section */}
@@ -100,4 +100,6 @@ export function DetailedRulesView({ lot }: DetailedRulesViewProps) {
       </CollapsibleSection>
     </>
   );
-}
+};
+
+export default DetailedRulesView;

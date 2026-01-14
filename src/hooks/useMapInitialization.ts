@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from "react";
 // -----------------------------
 // Hook
 // -----------------------------
-export function useMapInitialization(
+export const useMapInitialization = (
   mapContainer: React.RefObject<HTMLDivElement | null>,
   estateLots: GeoJSON.FeatureCollection
-) {
+) => {
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const dataRef = useRef<GeoJSON.FeatureCollection>({
     type: "FeatureCollection",
@@ -177,4 +177,4 @@ export function useMapInitialization(
     initialView,
     setInitialView,
   };
-}
+};

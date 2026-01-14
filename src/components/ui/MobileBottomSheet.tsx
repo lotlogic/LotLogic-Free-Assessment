@@ -10,14 +10,14 @@ interface MobileBottomSheetProps {
   className?: string;
 }
 
-export function MobileBottomSheet({
+export const MobileBottomSheet = ({
   isOpen,
   onClose,
   title,
   subtitle,
   children,
   className = "",
-}: MobileBottomSheetProps) {
+}: MobileBottomSheetProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
@@ -129,4 +129,6 @@ export function MobileBottomSheet({
       </div>
     </>
   );
-}
+};
+
+export default MobileBottomSheet;

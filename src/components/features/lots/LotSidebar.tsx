@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/Button";
+import Button from "@/components/ui/Button";
 import {
   ImageCarouselModal,
   SingleImageModal,
 } from "@/components/ui/DynamicModal";
 import { FilterSectionWithSingleLineSliders } from "@/components/ui/HouseDesignFilter";
-import { Sidebar } from "@/components/ui/Sidebar";
+import Sidebar from "@/components/ui/Sidebar";
 import { getColorClass } from "@/constants/content";
 import { useContent } from "@/hooks/useContent";
 import { useHouseDesigns } from "@/hooks/useHouseDesigns";
@@ -20,14 +20,14 @@ import { HouseDesignList } from "../facades/HouseDesignList";
 import { GetYourQuoteSidebar } from "../quote/QuoteSideBar";
 import { SummaryView } from "./SummaryView";
 
-export function LotSidebar({
+export const LotSidebar = ({
   open,
   onClose,
   lot,
   geometry,
   onSelectFloorPlan,
   onZoningDataUpdate,
-}: LotSidebarProps) {
+}: LotSidebarProps) => {
   // Rotation store to ensure new selections start at 0°
   const { setManualRotation } = useRotationStore();
 
@@ -447,4 +447,6 @@ export function LotSidebar({
       />
     </>
   );
-}
+};
+
+export default LotSidebar;

@@ -1,4 +1,4 @@
-export function PrivacyPolicyContent() {
+export const PrivacyPolicyContent = () => {
   return (
     <div className="prose prose-sm max-w-none text-gray-800 leading-7">
       <h3 className="text-lg font-semibold mt-0 mb-3">
@@ -298,6 +298,6 @@ export function PrivacyPolicyContent() {
       </p>
     </div>
   );
-}
+};
 
 export default PrivacyPolicyContent;

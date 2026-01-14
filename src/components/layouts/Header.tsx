@@ -1,6 +1,6 @@
 import { brand, colors } from "@/constants/content";
 
-export default function Header() {
+export const Header = () => {
   const handleLogoClick = () => {
     window.location.href = "/";
   };
@@ -21,4 +21,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;
