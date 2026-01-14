@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/Button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/Checkbox_1";
 import { TextModal } from "@/components/ui/DynamicModal";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/Input_1";
 import { MultiSelect } from "@/components/ui/MultiSelect";
 import { PrivacyPolicyContent } from "@/components/ui/PrivacyPolicyContent";
 import { Sidebar } from "@/components/ui/Sidebar";

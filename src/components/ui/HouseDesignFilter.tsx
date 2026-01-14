@@ -13,8 +13,8 @@ import type {
 import { Bath, BedDouble, Building2, Car } from "lucide-react";
 import React from "react";
 import { Button } from "./Button";
-import { Checkbox } from "./checkbox";
-import { Input } from "./input";
+import { Checkbox } from "./Checkbox_1";
+import { Input } from "./Input_1";
 
 const FilterRow = React.memo(
   ({
