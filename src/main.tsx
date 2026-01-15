@@ -2,11 +2,11 @@ import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { APP_CONTENT } from "@/constants/content.ts";
 import { initializeMixpanel } from "@/lib/analytics/mixpanel.ts";
 import { getCurrentBrand } from "@/lib/api/lotApi.ts";
-import "mapbox-gl/dist/mapbox-gl.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import "./index.css";
+import "./styles/App.scss";
+import "./styles/tailwind.css";
 
 function setFavicon(url: string) {
   let link = document.querySelector(

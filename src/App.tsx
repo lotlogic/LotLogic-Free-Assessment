@@ -2,8 +2,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense, lazy, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./index.css";
-
 import { SavedPropertiesSidebar } from "@/components/features/map/SavedPropertiesSidebar";
 import Header from "@/components/layouts/Header";
 import MobileBottomNav from "@/components/layouts/MobileBottomNav";

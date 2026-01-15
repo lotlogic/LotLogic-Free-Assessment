@@ -1,0 +1,49 @@
+/****************************************************
+
+	Core Styles
+
+****************************************************/
+
+/****************************************************
+	Google Fonts
+****************************************************/
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+/****************************************************
+	Layout Styles
+****************************************************/
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: var(--foreground);
+  background-color: var(--background);
+  margin: 0;
+  padding: 0;
+}
+
+/****************************************************
+	Generic Styles
+****************************************************/
+.preload * {
+  transition: none !important;
+  animation-duration: 0s !important;
+}
+
+svg {
+  pointer-events: none;
+}
+
+button {
+  cursor: pointer;
+
+  &:disabled {
+    cursor: auto;
+  }
+}
+
+/****************************************************
+	Typography
+****************************************************/
