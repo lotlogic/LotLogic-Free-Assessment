@@ -19,11 +19,10 @@ export const DetailedRulesView = ({ lot }: DetailedRulesViewProps) => {
       {/* Property Type Section */}
       <CollapsibleSection title="Property Type">
         <Button
+          label="House"
           leftIcon={<Home className="h-4 w-4" />}
           className="px-4 py-2 rounded-lg text-sm text-gray-700 border-gray-200 hover:bg-gray-100"
-        >
-          House
-        </Button>
+        />
       </CollapsibleSection>
 
       {/* Max Building Height Section */}

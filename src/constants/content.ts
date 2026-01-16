@@ -9,7 +9,7 @@ export const APP_CONTENT = {
 
   // Brand assets
   brand: {
-    logo: "/images/logo.png",
+    logo: "/images/logos/logo.png",
     favicon: "/images/logo.png",
     logoAlt: "LotLogic Logo",
     title: "LOTLOGIC",

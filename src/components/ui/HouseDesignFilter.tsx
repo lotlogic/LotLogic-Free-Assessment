@@ -244,7 +244,7 @@ export const FilterSectionWithSingleLineSliders = React.memo(
         {" "}
         {/* Added px-6 here */}
         {/* Scrollable Content */}
-        <div className="flex-grow overflow-y-auto py-6">
+        <div className="grow overflow-y-auto py-6">
           {FILTER_CONFIGS.map(({ icon, label, key }) => {
             const IconComponent = {
               BedDouble: BedDouble,
@@ -285,6 +285,7 @@ export const FilterSectionWithSingleLineSliders = React.memo(
         {/* Sticky Footer with "Show House Design" button */}
         <div className="sticky bottom-0 bg-white pt-4 border-t border-gray-100 pb-6">
           <Button
+            label="Show House Design"
             className={`w-full ${getColorClass(
               "primary"
             )} text-white text-lg py-3 rounded-lg font-medium`}
@@ -300,9 +301,7 @@ export const FilterSectionWithSingleLineSliders = React.memo(
               });
               onShowHouseDesign();
             }}
-          >
-            Show House Design
-          </Button>
+          />
         </div>
       </div>
     );

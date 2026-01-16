@@ -259,26 +259,26 @@ export const LotSidebar = ({
           {showHouseDesigns && (
             <div className="mt-2 flex flex-nowrap items-center gap-2 text-xs font-normal overflow-x-auto">
               {lot.size && (
-                <span className="px-2 py-1 bg-gray-100 rounded-md flex items-center text-gray-700 flex-shrink-0">
+                <span className="px-2 py-1 bg-gray-100 rounded-md flex items-center text-gray-700 shrink-0">
                   <Diamond className="h-3 w-3 mr-1" />
                   {lot.size}m²
                 </span>
               )}
               {lot.type && (
-                <span className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 flex-shrink-0">
+                <span className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 shrink-0">
                   {lot.type}
                 </span>
               )}
               {lot.zoning && (
                 <span
-                  className="px-2 py-1 rounded-full text-black font-medium flex-shrink-0"
+                  className="px-2 py-1 rounded-full text-black font-medium shrink-0"
                   style={{ backgroundColor: hexToRgba(zoningColor, 0.3) }}
                 >
                   {zoningText}
                 </span>
               )}
               {lot.overlays === "Flood" && (
-                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md flex-shrink-0">
+                <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-md shrink-0">
                   Flood
                 </span>
               )}
@@ -357,14 +357,11 @@ export const LotSidebar = ({
                 </div>
 
                 <Button
+                  label={lotSidebar.showMeWhatICanBuild}
+                  rightIcon={<ArrowRight className="h-6 w-8" />}
                   className="w-full text-base py-4 rounded-xl font-semibold animated-gradient-button transition-all duration-300 shadow-md cursor-pointer"
                   onClick={() => setShowFilter(true)}
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    {lotSidebar.showMeWhatICanBuild}
-                    <ArrowRight className="h-6 w-8" />
-                  </span>
-                </Button>
+                />
               </div>
             </div>
           )}

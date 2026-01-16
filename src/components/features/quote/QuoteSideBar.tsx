@@ -364,6 +364,7 @@ export const GetYourQuoteSidebar = ({
               </div>
               <div className="flex flex-col gap-3 pt-2">
                 <Button
+                  label={quote.secureThisLot}
                   onClick={async () => {
                     // Mark lot as secured in UI
                     setLotSecured(true);
@@ -393,16 +394,13 @@ export const GetYourQuoteSidebar = ({
                   )} text-white py-3 px-6 rounded-lg font-medium hover:${getColorClass(
                     "accent"
                   )} transition-colors`}
-                >
-                  {quote.secureThisLot}
-                </Button>
+                />
                 <Button
+                  label={quote.mayBeLater}
                   variant="outline"
                   onClick={onClose}
                   className="border border-gray-300 bg-white text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-                >
-                  {quote.mayBeLater}
-                </Button>
+                />
               </div>
             </div>
           </div>
@@ -636,14 +634,13 @@ export const GetYourQuoteSidebar = ({
             {/* Submit Button */}
             <div className="sticky bottom-0 bg-white border-t border-gray-200 p-6">
               <Button
+                label={isSubmitting ? quote.submitting : "Enquire Now"}
                 type="submit"
                 className={`w-full text-lg py-3 rounded-lg ${getColorClass(
                   "primary"
                 )} text-white disabled:opacity-50 disabled:cursor-not-allowed`}
                 disabled={isSubmitting || !agreeToTerms}
-              >
-                {isSubmitting ? quote.submitting : "Enquire Now"}
-              </Button>
+              />
             </div>
           </form>
         )}

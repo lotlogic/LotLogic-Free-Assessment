@@ -7,11 +7,14 @@
   /* fonts */
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
   /* radius */
+  /* 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  */
   /* colors */
+  /*
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -43,13 +46,19 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  */
+  --color-lot-green: #2d8b85;
+  --color-primary: #2d8b85;
+  --color-primary-hover: #1a3d42;
+  --color-secondary: #eaefef;
 }
 
 /* CSS Variables for fonts */
 :root {
   /* radius */
-  --radius: 0.625rem;
+  /* --radius: 0.625rem; */
   /* colors */
+  /*
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -81,10 +90,12 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  */
 }
 
 .dark {
   /* colors */
+  /*
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -116,4 +127,5 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  */
 }

@@ -153,22 +153,20 @@ export const HouseDesignList = ({
             </div>
             <div className="space-y-3">
               <Button
+                label="Try Again"
                 onClick={() => window.location.reload()}
                 className={`w-full ${getColorClass(
                   "primary"
                 )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
                   "accent"
                 )} transition-colors`}
-              >
-                Try Again
-              </Button>
+              />
               <Button
+                label="Adjust Filters"
                 variant="outline"
                 onClick={onShowFilter}
                 className="w-full border border-gray-300 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-              >
-                Adjust Filters
-              </Button>
+              />
             </div>
           </div>
         </div>
@@ -208,15 +206,14 @@ export const HouseDesignList = ({
             </div>
             <div className="space-y-3">
               <Button
+                label="Adjust Filters"
                 onClick={onShowFilter}
                 className={`w-full ${getColorClass(
                   "primary"
                 )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
                   "accent"
                 )} transition-colors`}
-              >
-                Adjust Filters
-              </Button>
+              />
               <div className="text-sm text-gray-500">
                 <p className="mb-2">Try these suggestions:</p>
                 <ul className="text-left space-y-1">
@@ -250,13 +247,12 @@ export const HouseDesignList = ({
           )} */}
         </div>
         <Button
+          label={filterContent.title}
+          leftIcon={<Funnel className="h-4 w-4" />}
           variant="outline"
           className="border border-gray-300 rounded-lg px-3 py-1 flex items-center gap-2"
           onClick={onShowFilter}
-        >
-          <Funnel className="h-4 w-4" />
-          <span>{filterContent.title}</span>
-        </Button>
+        />
       </div>
       <div className="space-y-6">
         {filteredHouses.map((house, idx) => {
@@ -302,7 +298,7 @@ export const HouseDesignList = ({
                     house.image
                   }
                   alt="Floor Plan"
-                  className="w-24 h-24 rounded-lg object-cover flex-shrink-0"
+                  className="w-24 h-24 rounded-lg object-cover shrink-0"
                 />
 
                 {/* House Details and Buttons on the right */}
@@ -318,7 +314,7 @@ export const HouseDesignList = ({
                       </div>
                     </div>
                     <Bookmark
-                      className={`h-6 w-6 cursor-pointer transition-colors duration-200 flex-shrink-0 ${
+                      className={`h-6 w-6 cursor-pointer transition-colors duration-200 shrink-0 ${
                         isDesignSaved(lot.lotId, house.id)
                           ? "fill-current"
                           : "text-gray-400"
@@ -359,6 +355,7 @@ export const HouseDesignList = ({
                     {/* First Row: View Floor plan and View Facades */}
                     <div className="flex gap-3">
                       <Button
+                        label="View Floor plan"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onViewFloorPlan) {
@@ -380,10 +377,9 @@ export const HouseDesignList = ({
                         )} text-white py-2 px-4 rounded-lg font-medium hover:${getColorClass(
                           "accent"
                         )} transition-colors flex-1 cursor-pointer`}
-                      >
-                        View Floor plan
-                      </Button>
+                      />
                       <Button
+                        label="View Facades"
                         onClick={(e) => {
                           e.stopPropagation();
                           if (onViewFacades) {
@@ -405,13 +401,13 @@ export const HouseDesignList = ({
                         )} text-white py-3 px-4 rounded-lg font-medium hover:${getColorClass(
                           "accent"
                         )} transition-colors flex-1 cursor-pointer`}
-                      >
-                        View Facades
-                      </Button>
+                      />
                     </div>
 
                     {/* Second Row: Enquire Now */}
                     <Button
+                      label="Get Cost Estimates"
+                      leftIcon={<MailQuestionMark className="h-4 w-4" />}
                       variant="outline"
                       onClick={(e) => {
                         e.stopPropagation();
@@ -435,10 +431,7 @@ export const HouseDesignList = ({
                         "primary",
                         "border"
                       )} transition-colors w-full flex items-center justify-center gap-2 cursor-pointer`}
-                    >
-                      <MailQuestionMark className="h-4 w-4" />
-                      Get Cost Estimates
-                    </Button>
+                    />
                   </div>
                 </div>
               )}

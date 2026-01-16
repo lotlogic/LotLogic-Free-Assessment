@@ -40,10 +40,6 @@ button {
   cursor: pointer;
 
   &:disabled {
-    cursor: auto;
+    cursor: auto !important;
   }
 }
-
-/****************************************************
-	Typography
-****************************************************/
