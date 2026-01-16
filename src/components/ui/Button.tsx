@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { ComponentProps, ReactNode } from "react";
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
 
-export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type ButtonProps = ComponentProps<"button"> & {
   label: string;
   variant?: ButtonVariant;
   leftIcon?: ReactNode;

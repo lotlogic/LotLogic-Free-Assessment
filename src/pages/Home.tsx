@@ -1,10 +1,23 @@
 import Header from "@/components/layouts/Header";
+import AddressInput from "@/components/ui/AddressInput";
 import Button from "@/components/ui/Button";
 import Heading from "@/components/ui/Heading";
-import { cn } from "@/lib/utils";
-import { Search } from "lucide-react";
+import { useState } from "react";
 
 export const HomePage = () => {
+  const [address, setAddress] = useState<string | null | undefined>();
+
+  const onPlaceSelect = (place: google.maps.places.Place | null) => {
+    if (place) {
+      const address = place.formattedAddress;
+      setAddress(address);
+    }
+  };
+
+  const onSearch = () => {
+    console.log("Handle search for: ", address);
+  };
+
   return (
     <>
       <Header />
@@ -19,39 +32,31 @@ export const HomePage = () => {
               Fast, plain-English results for RZ1 and RZ2 residential land.
             </Heading>
 
-            <div className="flex flex-col md:flex-row gap-4 w-full max-w-lg md:max-w-3xl mt-10 mx-auto">
-              <div className="relative grow">
-                <label className="block">
-                  <span className="input__label sr-only">
-                    Enter your ACT address
-                  </span>
-                  <span className="relative flex items-center">
-                    <Search className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
-                    <input
-                      type="search"
-                      name="search"
-                      className={cn(
-                        "w-full px-4 py-3 pl-12",
-                        "bg-white placeholder-gray-500",
-                        "border border-gray-300 rounded-md",
-                        "outline-primary-hover outline-offset-2",
-                        "focus-visible:outline-2 focus-visible:border-transparent"
-                      )}
-                      placeholder="Enter your ACT address"
-                    />
-                  </span>
+            <div className="flex flex-col md:flex-row gap-4 w-full max-w-lg md:max-w-3xl mt-10 md:mt-20 mx-auto">
+              <div className="grow">
+                <label>
+                  <span className="sr-only">Enter your ACT address</span>
+                  <AddressInput
+                    name="search"
+                    placeholder="Enter your ACT address"
+                    onPlaceSelect={onPlaceSelect}
+                  />
                 </label>
               </div>
-              <Button label="Check my block" />
+              <Button
+                label="Check my block"
+                disabled={!address}
+                onClick={onSearch}
+              />
             </div>
 
             <ul className="flex flex-wrap justify-center gap-x-10 gap-y-2 mt-10">
               <li className="flex items-start gap-2">
-                <span className="block min-w-2 h-2 bg-gray-700 rounded-full mt-2.5" />
+                <span className="block min-w-1.5 h-1.5 bg-gray-700 rounded-full mt-2.5" />
                 Based on new Territory Plan rules
               </li>
               <li className="flex items-start gap-2">
-                <span className="block min-w-2 h-2 bg-gray-700 rounded-full mt-2.5" />
+                <span className="block min-w-1.5 h-1.5 bg-gray-700 rounded-full mt-2.5" />
                 Free assessment
               </li>
             </ul>

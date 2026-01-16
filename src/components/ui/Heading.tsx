@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
-import type { HTMLAttributes, JSX } from "react";
+import type { ComponentProps } from "react";
 
 export type HeadingSize = "h0" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 export type HeadingTag = Exclude<HeadingSize, "h0"> | "p" | "span" | "div";
 
-export type TypeHeading = HTMLAttributes<"h1" | "p" | "span" | "div"> & {
+export type TypeHeading = ComponentProps<"h1" | "p" | "span" | "div"> & {
   size?: HeadingSize;
   tag?: HeadingTag;
   text?: string;
@@ -20,8 +20,6 @@ export const Heading = ({
   className,
   children,
 }: TypeHeading) => {
-  const TagName = tag as keyof JSX.IntrinsicElements;
-
   const getHeadingClass = (size: string) => {
     const sizeClasses: Record<string, string> = {
       h1: "text-4xl font-bold mb-4 text-balanced",
@@ -40,7 +38,17 @@ export const Heading = ({
     className,
   ]);
 
-  return <TagName className={classes}>{children ? children : text}</TagName>;
+  const content = children ? children : text;
+
+  if (tag === "h1") return <h1 className={classes}>{content}</h1>;
+  if (tag === "h2") return <h2 className={classes}>{content}</h2>;
+  if (tag === "h3") return <h3 className={classes}>{content}</h3>;
+  if (tag === "h4") return <h4 className={classes}>{content}</h4>;
+  if (tag === "h5") return <h5 className={classes}>{content}</h5>;
+  if (tag === "h6") return <h6 className={classes}>{content}</h6>;
+  if (tag === "div") return <div className={classes}>{content}</div>;
+  if (tag === "span") return <span className={classes}>{content}</span>;
+  return <p className={classes}>{content}</p>;
 };
 
 export default Heading;
