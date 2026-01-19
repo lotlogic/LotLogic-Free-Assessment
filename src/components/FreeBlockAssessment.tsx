@@ -1,10 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AddressInput from "./ui/AddressInput";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 
 export const FreeBlockAssessment = () => {
   const [address, setAddress] = useState<string | null | undefined>();
+
+  const navigate = useNavigate();
 
   const onPlaceSelect = (place: google.maps.places.Place | null) => {
     if (place) {
@@ -15,6 +18,7 @@ export const FreeBlockAssessment = () => {
 
   const onSearch = () => {
     console.log("Handle search for: ", address);
+    navigate("/assessment?address=" + address);
   };
 
   return (
