@@ -51,6 +51,10 @@
   --color-primary: #2d8b85;
   --color-primary-hover: #1a3d42;
   --color-secondary: #eaefef;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
 }
 
 /* CSS Variables for fonts */

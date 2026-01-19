@@ -1,4 +1,5 @@
 import { colors } from "@/constants/content";
+import { cn } from "@/lib/utils";
 import { AlertTriangle, Check, X } from "lucide-react";
 import type { ToastOptions } from "react-toastify";
 import { toast } from "react-toastify";
@@ -14,46 +15,25 @@ interface ShowToastProps {
 
 const getToastIcon = (type: ToastType) => {
   const baseClasses =
-    "w-6 h-6 p-1 rounded-full flex items-center justify-center";
+    "min-w-6 min-h-6 p-1 rounded-full flex items-center justify-center";
 
   switch (type) {
     case "success":
       return (
-        <div
-          className={baseClasses}
-          style={{
-            backgroundColor: colors.success,
-            minWidth: "24px",
-            minHeight: "24px",
-          }}
-        >
-          <Check className="w-4 h-4 text-white" strokeWidth={3} />
+        <div className={cn([baseClasses, "bg-success"])}>
+          <Check className="size-4 text-white" strokeWidth={3} />
         </div>
       );
     case "error":
       return (
-        <div
-          className={baseClasses}
-          style={{
-            backgroundColor: colors.error,
-            minWidth: "24px",
-            minHeight: "24px",
-          }}
-        >
-          <X className="w-4 h-4 text-white" strokeWidth={3} />
+        <div className={cn([baseClasses, "bg-error"])}>
+          <X className="size-4 text-white" strokeWidth={3} />
         </div>
       );
     case "warning":
       return (
-        <div
-          className={baseClasses}
-          style={{
-            backgroundColor: colors.warning,
-            minWidth: "24px",
-            minHeight: "24px",
-          }}
-        >
-          <AlertTriangle className="w-4 h-4 text-white" strokeWidth={3} />
+        <div className={cn([baseClasses, "bg-warning"])}>
+          <AlertTriangle className="size-4 text-white" strokeWidth={3} />
         </div>
       );
     default:
