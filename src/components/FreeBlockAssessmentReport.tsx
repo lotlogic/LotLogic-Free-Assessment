@@ -12,7 +12,7 @@ export const FreeBlockAssessmentReport = () => {
   const [data, setData] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
-  const [gated, setGated] = useState(true);
+  const [isGated, setIsGated] = useState(true);
 
   const [searchParams] = useSearchParams();
 
@@ -81,7 +81,7 @@ export const FreeBlockAssessmentReport = () => {
     // ...do stuff here
 
     // show content
-    setGated(false);
+    setIsGated(false);
   };
 
   if (isLoading) return null;
@@ -121,9 +121,9 @@ export const FreeBlockAssessmentReport = () => {
         Your block assessment
       </Heading>
       <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
-        {gated && <GatedContentForm onSubmit={handleGatedContent} />}
+        {isGated && <GatedContentForm onSubmit={handleGatedContent} />}
 
-        <div className={cn(["bg-white p-10 md:px-16", { "blur-xs": gated }])}>
+        <div className={cn(["bg-white p-10 md:px-16", { "blur-xs": isGated }])}>
           <Heading tag="h2" size="h2" className="">
             {data?.formattedAddress.replace(", Australia", "")}
           </Heading>
