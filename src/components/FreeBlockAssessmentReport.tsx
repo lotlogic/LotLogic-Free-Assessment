@@ -1,16 +1,20 @@
 import type { GeoApi } from "@/@types/api";
 import { cn } from "@/lib/utils";
 import { toTitleCase } from "@/utils/text";
+import { Check, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
+import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 
 export const FreeBlockAssessmentReport = () => {
-  const [searchParams] = useSearchParams();
-
   const [data, setData] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
+  const [gated, setGated] = useState(true);
+
+  const [searchParams] = useSearchParams();
 
   // fetch API data
   useEffect(() => {
@@ -69,13 +73,57 @@ export const FreeBlockAssessmentReport = () => {
     ? new Date(import.meta.env.VITE_COMMENCEMENT_DATE)
     : undefined;
 
-  return (
-    <section className="mt-12">
-      <div className="">
+  // handle gated form
+  const handleGatedContent = (data: any) => {
+    console.log("onSubmit: ", data);
+
+    // handle email queue
+    // ...do stuff here
+
+    // show content
+    setGated(false);
+  };
+
+  if (isLoading) return null;
+
+  if (error)
+    return (
+      <section className="mt-12">
         <Heading tag="h1" size="h1">
           Your block assessment
         </Heading>
-        <div className="max-w-260 bg-white p-10 md:px-16 mt-10 mx-auto rounded-md shadow-lg">
+        <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
+          <div className={cn(["bg-white p-10 md:px-16"])}>
+            <div className="grid place-items-center min-h-100 text-xl">
+              <div className="grid place-items-center min-h-100 text-xl">
+                <div className="text-center">
+                  <p>
+                    Unfortunately there was a error fetching this block
+                    assessment.
+                  </p>
+                  <p className="mt-4 text-base">
+                    Error:{" "}
+                    {error
+                      ?.replace("(did you import the GeoJSON datasets?)", "")
+                      .trim()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+
+  return (
+    <section className="mt-12">
+      <Heading tag="h1" size="h1">
+        Your block assessment
+      </Heading>
+      <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
+        {gated && <GatedContentForm onSubmit={handleGatedContent} />}
+
+        <div className={cn(["bg-white p-10 md:px-16", { "blur-xs": gated }])}>
           <Heading tag="h2" size="h2" className="">
             {data?.formattedAddress.replace(", Australia", "")}
           </Heading>
@@ -103,29 +151,6 @@ export const FreeBlockAssessmentReport = () => {
                 })
                 .replace(/\//g, " ")}
             </p>
-          )}
-
-          {isLoading && (
-            <div className="grid place-items-center min-h-100 text-xl">
-              <p>Loading...</p>
-            </div>
-          )}
-
-          {error && (
-            <div className="grid place-items-center min-h-100 text-xl">
-              <div className="text-center">
-                <p>
-                  Unfortunately there was a error fetching this block
-                  assessment.
-                </p>
-                <p className="mt-4 text-base">
-                  Error:{" "}
-                  {error
-                    ?.replace("(did you import the GeoJSON datasets?)", "")
-                    .trim()}
-                </p>
-              </div>
-            </div>
           )}
 
           {!isLoading && !error && (
@@ -163,11 +188,15 @@ export const FreeBlockAssessmentReport = () => {
                           className={cn([
                             "absolute top-2 left-0.5 size-3",
                             "bg-gray-300 rounded-full",
-                            { "bg-success": rule[1][0].confidence === "High" },
+                            {
+                              "bg-success": rule[1][0].confidence === "High",
+                            },
                             {
                               "bg-warning": rule[1][0].confidence === "Medium",
                             },
-                            { "bg-error": rule[1][0].confidence === "Low" },
+                            {
+                              "bg-error": rule[1][0].confidence === "Low",
+                            },
                           ])}
                         ></div>
                         <strong className="[&:first-letter]:capitalize [&+p]:mt-1">
@@ -228,3 +257,115 @@ export const FreeBlockAssessmentReport = () => {
 };
 
 export default FreeBlockAssessmentReport;
+
+type GatedContentProps = {
+  onSubmit: (data: any) => void;
+};
+
+const GatedContentForm = (props: GatedContentProps) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  return (
+    <div
+      className={cn([
+        "absolute top-20 left-1/2 -translate-x-1/2",
+        "w-full max-w-130",
+        "text-center bg-white",
+        "px-10 py-12 border border-gray-300 rounded-md shadow-lg z-1",
+      ])}
+    >
+      <Heading tag="h2" size="h2">
+        Your LotCheck report is ready
+      </Heading>
+
+      <Heading tag="p" size="h4">
+        Enter your email to view your development assessment.
+      </Heading>
+
+      <p className="pt-2">
+        We'll also send you a copy and notify you if ACT planning rules change
+        for your property.
+      </p>
+      <form
+        onSubmit={handleSubmit(props.onSubmit)}
+        className="flex flex-col gap-4 w-full max-w-91 mx-auto mt-6"
+        noValidate
+      >
+        <div>
+          <label>
+            <span className="sr-only">Enter your email address</span>
+            <span className="relative">
+              <Mail className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
+              <input
+                type="email"
+                {...register("email", {
+                  required: "Email Address is required",
+                })}
+                aria-invalid={errors.email ? "true" : "false"}
+                placeholder="Enter your email address"
+                className={cn(
+                  "w-full px-4 py-3 pl-12",
+                  "bg-white placeholder-gray-500",
+                  "border border-gray-300 rounded-md",
+                  "focus-visible:border-transparent"
+                )}
+              />
+            </span>
+          </label>
+          {errors.email && (
+            <p className="text-xs text-error pl-1 mt-1" role="alert">
+              {errors.email.message as string}
+            </p>
+          )}
+        </div>
+        <div>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="checkbox"
+              {...register("terms", {
+                required: "This field is required",
+              })}
+              aria-invalid={errors.terms ? "true" : "false"}
+              className={cn(
+                "peer",
+                "relative",
+                "appearance-none",
+                "shrink-0",
+                "size-4.5",
+                "mt-0.5",
+                "border border-gray-300 rounded-sm",
+                "focus-visible:border-transparent"
+              )}
+              required
+            />
+            <Check
+              className={cn([
+                "absolute size-4 p-px mt-0.75 ml-px",
+                "hidden outline-none",
+                "peer-checked:block",
+              ])}
+            />
+            <span className="text-sm text-left">
+              I agree to LotCheck's Privacy Policy and to receive occasional
+              updates (you can unsubscribe anytime)
+            </span>
+          </label>
+          {errors.terms && (
+            <p className="text-xs text-error pl-1 mt-1" role="alert">
+              {errors.terms.message as string}
+            </p>
+          )}
+        </div>
+        <Button className="mt-4" label="View my report" type="submit" />
+      </form>
+      <small className="block text-xs mt-6 text-balance">
+        We require an email to prevent automated scraping and ensure you receive
+        rule updates.
+      </small>
+    </div>
+  );
+};
