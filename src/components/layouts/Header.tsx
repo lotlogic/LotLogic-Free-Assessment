@@ -1,14 +1,19 @@
-import { brand, colors } from "@/constants/content";
-import { cn } from "@/lib/utils";
+import { classList } from "@/utils/tailwind";
 import { Link } from "react-router-dom";
 
 export const Header = () => {
+  const nav = [
+    // { label: "About", url: "/about" },
+    // { label: "FAQ", url: "/faq" },
+    { label: "Privacy", url: "/privacy" },
+  ];
+
   return (
     <>
       <header className="fixed w-full top-0 bg-white z-10 shadow">
         <a
           href="#main-content"
-          className={cn(
+          className={classList(
             "sr-only",
             "focus:not-sr-only",
             "focus:absolute top-2 left-2",
@@ -16,7 +21,7 @@ export const Header = () => {
             "text-white",
             "px-4! py-2!",
             "rounded-md",
-            "z-50"
+            "z-50",
           )}
         >
           Skip to main content
@@ -29,39 +34,29 @@ export const Header = () => {
               aria-label="Meals on Wheels NSW - Go to homepage"
             >
               <img
-                src={brand.logo}
-                alt={brand.logoAlt}
+                src="/images/logos/logo.png"
+                alt="LotLogic logo"
                 width={40}
                 height={40}
               />
-              <span
-                className="ml-3 text-2xl font-bold tracking-tight"
-                style={{ color: colors.primary }}
-              >
-                {brand.title}
+              <span className="font-bold text-2xl  text-primary tracking-tight ml-3">
+                LOTLOGIC
               </span>
             </Link>
             <div>
               <nav className="hidden lg:block" role="menubar">
                 <ul className="relative flex items-center gap-6 xl:gap-8">
-                  <li>
-                    <Link
-                      to="/about"
-                      className="font-medium text-mow-navy hover:text-mow-teal transition-colors duration-200 rounded-md px-2 py-1"
-                      role="menuitem"
-                    >
-                      About
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/faq"
-                      className="font-medium text-mow-navy hover:text-mow-teal transition-colors duration-200 rounded-md px-2 py-1"
-                      role="menuitem"
-                    >
-                      FAQ
-                    </Link>
-                  </li>
+                  {nav.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        to={link.url}
+                        className="font-medium text-mow-navy hover:text-mow-teal transition-colors duration-200 rounded-md px-2 py-1"
+                        role="menuitem"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               </nav>
               <div className="flex items-center gap-4">
@@ -127,24 +122,17 @@ export const Header = () => {
                 </button>
               </div>
               <ul className="relative flex flex-col gap-6 xl:gap-8">
-                <li>
-                  <Link
-                    to="/about"
-                    className="font-medium text-mow-navy hover:bg-gray-100 transition-colors duration-200 rounded-md px-4 py-2"
-                    role="menuitem"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/faq"
-                    className="font-medium text-mow-navy hover:bg-gray-100 transition-colors duration-200 rounded-md px-4 py-2"
-                    role="menuitem"
-                  >
-                    FAQ
-                  </Link>
-                </li>
+                {nav.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      to={link.url}
+                      className="font-medium text-mow-navy hover:bg-gray-100 transition-colors duration-200 rounded-md px-4 py-2"
+                      role="menuitem"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="flex mb-6"></div>

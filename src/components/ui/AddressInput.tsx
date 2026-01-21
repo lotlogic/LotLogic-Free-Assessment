@@ -1,5 +1,5 @@
 import { useAutocompleteSuggestions } from "@/hooks/use-autocomplete-suggestions";
-import { cn } from "@/lib/utils";
+import { classList } from "@/utils/tailwind";
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { Search } from "lucide-react";
 import {
@@ -61,7 +61,7 @@ export const AddressInput = ({
       setShowListing(false);
       onPlaceSelect(place);
     },
-    [places, onPlaceSelect]
+    [places, onPlaceSelect],
   );
 
   return (
@@ -73,25 +73,25 @@ export const AddressInput = ({
         placeholder={placeholder}
         value={inputValue}
         onInput={(event) => handleInput(event)}
-        className={cn(
+        className={classList(
           "w-full px-4 py-3 pl-12",
           "bg-white placeholder-gray-500",
           "border border-gray-300 rounded-md",
           "outline-primary-hover outline-offset-2",
-          "focus-visible:outline-2 focus-visible:border-transparent"
+          "focus-visible:outline-2 focus-visible:border-transparent",
         )}
         autoComplete="off"
       />
 
       {showListing && suggestions.length > 0 && (
         <ul
-          className={cn(
+          className={classList(
             "absolute top-full left-0",
             "w-full bg-white",
             "mt-1",
             "border border-gray-300 rounded-md",
             "divide-y divide-gray-300",
-            "overflow-hidden"
+            "overflow-hidden",
           )}
         >
           {suggestions.map((suggestion, index) => {

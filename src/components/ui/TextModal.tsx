@@ -7,12 +7,13 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
+  type DialogProps,
 } from "@mui/material";
 import { useMemo } from "react";
 
 type TextModalProps = {
   open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   title?: string;
   children: React.ReactNode;
 };
@@ -37,19 +38,26 @@ export const TextModal: React.FC<TextModalProps> = ({
         overflow: "hidden",
       },
     }),
-    [isMobile]
+    [isMobile],
   );
+
+  const handleClose: DialogProps["onClose"] = (event, reason) => {
+    if (!onClose) {
+      if (event && (reason === "backdropClick" || reason === "escapeKeyDown"))
+        return;
+    } else onClose();
+  };
 
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth="md"
       fullWidth
       slotProps={{
         paper: dialogPaperProps,
         backdrop: () => ({
-          backgroundColor: "rgba(0, 0, 0, 0.3)",
+          backgroundColor: "rgba(0, 0, 0, 0.2)",
         }),
       }}
     >
@@ -88,23 +96,25 @@ export const TextModal: React.FC<TextModalProps> = ({
         {children}
       </DialogContent>
 
-      <IconButton
-        onClick={onClose}
-        sx={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-          color: "#6b7280",
-          padding: "8px",
-          borderRadius: "50%",
-          "&:hover": {
-            backgroundColor: "#f3f4f6",
-            color: "#374151",
-          },
-        }}
-      >
-        <Close width={24} height={24} />
-      </IconButton>
+      {!!onClose && (
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            top: 10,
+            right: 10,
+            color: "#6b7280",
+            padding: "8px",
+            borderRadius: "50%",
+            "&:hover": {
+              backgroundColor: "#f3f4f6",
+              color: "#374151",
+            },
+          }}
+        >
+          <Close width={24} height={24} />
+        </IconButton>
+      )}
     </Dialog>
   );
 };

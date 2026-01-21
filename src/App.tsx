@@ -4,6 +4,7 @@ import AboutPage from "./pages/AboutPage";
 import AssessmentPage from "./pages/AssessmentPage";
 import FaqPage from "./pages/FaqPage";
 import HomePage from "./pages/Home";
+import PrivacyPage from "./pages/PrivacyPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/assessment" element={<AssessmentPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
       </Router>
     </APIProvider>

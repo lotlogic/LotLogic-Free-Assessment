@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { classList } from "@/utils/tailwind";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,10 +6,12 @@ import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
 
-export const PaidAssessmentCta = () => {
+type Props = {
+  showButton?: boolean;
+};
+
+export const FloatingPaymentCta = (props: Props) => {
   const [modalIsOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
 
   const {
     register,
@@ -17,16 +19,24 @@ export const PaidAssessmentCta = () => {
     formState: { errors },
   } = useForm();
 
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
+
   const handleForm = () => {
-    console.log("Handle paid assessment fom submit");
+    console.log("Handle paid assessment form submit");
   };
 
   return (
     <div className="fixed bottom-3 right-2">
       <Button
         label="Purchase full report"
-        className="px-6 py-4 shadow-lg"
+        className={classList([
+          "px-6 py-4 shadow-lg",
+          "translate-y-full opacity-0 transition-all duration-300",
+          "data-show:translate-y-0 data-show:opacity-100",
+        ])}
         onClick={openModal}
+        data-show={props.showButton}
       />
 
       <TextModal open={modalIsOpen} onClose={closeModal}>
@@ -59,11 +69,11 @@ export const PaidAssessmentCta = () => {
                   })}
                   aria-invalid={errors.email ? "true" : "false"}
                   placeholder="Enter your email address"
-                  className={cn(
+                  className={classList(
                     "w-full px-4 py-3 pl-12",
                     "bg-white placeholder-gray-500",
                     "border border-gray-300 rounded-md",
-                    "focus-visible:border-transparent"
+                    "focus-visible:border-transparent",
                   )}
                 />
               </span>
@@ -81,4 +91,4 @@ export const PaidAssessmentCta = () => {
   );
 };
 
-export default PaidAssessmentCta;
+export default FloatingPaymentCta;

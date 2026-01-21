@@ -1,5 +1,11 @@
+/****************************************************
+
+    Tailwind Variables and Plugins
+
+****************************************************/
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -9,6 +15,7 @@
 
   /* colors */
   --color-lot-green: #2d8b85;
+
   --color-primary: #2d8b85;
   --color-primary-hover: #1a3d42;
   --color-secondary: #eaefef;

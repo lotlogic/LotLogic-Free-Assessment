@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { classList } from "@/utils/tailwind";
 import type { ComponentProps } from "react";
 
 export type HeadingSize = "h0" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
@@ -22,19 +22,19 @@ export const Heading = ({
 }: TypeHeading) => {
   const getHeadingClass = (size: string) => {
     const sizeClasses: Record<string, string> = {
-      h1: "text-4xl font-bold mb-4 text-balanced",
-      h2: "text-3xl font-bold mb-4",
-      h3: "text-2xl font-bold mb-4",
-      h4: "text-xl font-normal mb-2",
-      h5: "text-lg font-semibold mb-2",
-      h6: "text-md font-semibold mb-2",
+      h1: "text-4xl font-bold mt-6 mb-4",
+      h2: "text-3xl font-bold mt-6 mb-4",
+      h3: "text-2xl font-bold mt-6 mb-4",
+      h4: "text-xl font-normal mt-6 mb-2",
+      h5: "text-lg font-semibold mt-6 mb-2",
+      h6: "text-md font-semibold mt-6 mb-2",
     };
     return sizeClasses[size] || "text-md font-normal";
   };
 
-  const classes = cn([
+  const classes = classList([
     getHeadingClass(size),
-    "last:mb-0 text-balance",
+    "last:mb-0 first:mt-0 text-balance",
     className,
   ]);
 

@@ -1,4 +1,4 @@
-import FreeBlockAssessment from "@/components/FreeBlockAssessment";
+import AssessmentForm from "@/components/AssessmentForm";
 import Header from "@/components/layouts/Header";
 
 export const HomePage = () => {
@@ -6,7 +6,7 @@ export const HomePage = () => {
     <>
       <Header />
       <main>
-        <FreeBlockAssessment />
+        <AssessmentForm />
       </main>
     </>
   );

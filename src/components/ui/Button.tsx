@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { classList } from "@/utils/tailwind";
 import type { ComponentProps, ReactNode } from "react";
 
 export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
@@ -89,14 +89,18 @@ export const Button = (props: ButtonProps) => {
 
   return (
     <button
-      className={cn(...baseClasses, ...buttonClasses[variant], className)}
+      className={classList(
+        ...baseClasses,
+        ...buttonClasses[variant],
+        className,
+      )}
       disabled={loading || disabled}
       data-loading={loading || undefined}
       {...rest}
     >
       {loading && (
         <span
-          className={cn([
+          className={classList([
             "absolute animate-spin size-5 border-2 border-white rounded-full",
             { "border-gray-800": variant === "secondary" },
             {
