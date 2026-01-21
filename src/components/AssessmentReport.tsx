@@ -1,37 +1,44 @@
 import type { GeoApi } from "@/@types/api";
 import { classList } from "@/utils/tailwind";
 import { toTitleCase } from "@/utils/text";
+import { useLocalStorage } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import FloatingPaymentCta from "./FloatingPaymentCta";
-import GatedContentForm from "./GatedContentForm";
+import GatedContentForm, {
+  type GatedContentFormValues,
+} from "./GatedContentForm";
 import Heading from "./ui/Heading";
 
+type ReportSaves = Record<string, { email: string; expiry: number }>;
+
+const geoApi = import.meta.env.VITE_API_URL + "/geo/act-zone?address=";
+
 export const FreeBlockAssessmentReport = () => {
-  const [data, setData] = useState<GeoApi>();
+  const [report, setReport] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
   const [isGated, setIsGated] = useState(true);
+  const [email, setEmail] = useState<string>();
 
   const [searchParams] = useSearchParams();
+  const [lsSaves, setLsSaves] = useLocalStorage<ReportSaves>("searches", {});
 
-  // fetch API data
+  /****************************************************
+    fetch API data
+  ****************************************************/
   useEffect(() => {
     const fetchData = async () => {
       try {
         const address = searchParams.get("address");
         if (!address) throw new Error("Missing query parameter - address");
 
-        const response = await fetch(
-          import.meta.env.VITE_API_URL +
-            "/geo/act-zone?address=" +
-            searchParams.get("address"),
-        );
+        const response = await fetch(geoApi + searchParams.get("address"));
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 
         const result = await response.json();
-        setData(result);
+        setReport(result);
       } catch (error: any) {
         setError(error.message);
       } finally {
@@ -42,10 +49,33 @@ export const FreeBlockAssessmentReport = () => {
     fetchData();
   }, []);
 
+  /****************************************************
+    show gated content if it is a saved search
+  ****************************************************/
+  useEffect(() => {
+    if (!!report && !!Object.keys(lsSaves).length) {
+      let newSaves = { ...lsSaves };
+
+      // clear expired saves
+      const time = new Date().getTime();
+      Object.entries(lsSaves).forEach(([key, value]) => {
+        console.log(`${key}: ${value}`);
+        if (value.expiry < time) delete newSaves[key];
+      });
+      setLsSaves(newSaves);
+
+      // check for current save
+      if (lsSaves[report.formattedAddress]) setIsGated(false);
+    }
+  }, [lsSaves, report]);
+
+  /****************************************************
+    page content
+  ****************************************************/
   // create zone text
   const zoneText = [
-    data?.zone.zoneCode,
-    toTitleCase(data?.zone.properties?.LAND_USE_POLICY_DESC),
+    report?.zone.zoneCode,
+    toTitleCase(report?.zone.properties?.LAND_USE_POLICY_DESC),
   ]
     .filter(Boolean)
     .join(" - ");
@@ -55,7 +85,7 @@ export const FreeBlockAssessmentReport = () => {
     string,
     { confidence?: string | null; explanation: string }[]
   > = {};
-  data?.lotCheckRules.matches.forEach((match) => {
+  report?.lotCheckRules.matches.forEach((match) => {
     if (match.pathway && match.explanationResolved) {
       rules[match.pathway] = rules[match.pathway] || [];
       rules[match.pathway].push({
@@ -72,15 +102,32 @@ export const FreeBlockAssessmentReport = () => {
     ? new Date(import.meta.env.VITE_COMMENCEMENT_DATE)
     : undefined;
 
-  // handle gated form
-  const handleGatedContent = (data: any) => {
-    console.log("onSubmit: ", data);
+  /****************************************************
+    handle form
+  ****************************************************/
+  const handleGatedContent = (formData: GatedContentFormValues) => {
+    console.log("onSubmit: ", formData);
 
     // handle email queue
     // ...do stuff here
 
-    // show content
-    setIsGated(false);
+    // save the search to localstorage
+    const address = report?.formattedAddress;
+    if (address) {
+      let newSaves = { ...lsSaves };
+      newSaves[address] = {
+        email: formData.email,
+        expiry: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+      };
+      console.log("newSaves: ", newSaves);
+      setLsSaves(newSaves);
+
+      // save email for payment form
+      setEmail(formData.email);
+
+      // show content
+      setIsGated(false);
+    }
   };
 
   if (isLoading) return null;
@@ -125,13 +172,13 @@ export const FreeBlockAssessmentReport = () => {
         <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
           <div className="bg-white p-10 md:px-16">
             <Heading tag="h2" size="h2" className="">
-              {data?.formattedAddress.replace(", Australia", "")}
+              {report?.formattedAddress.replace(", Australia", "")}
             </Heading>
 
             <div className="text-lg">
               {!!zoneText && <p>Zone: {zoneText}</p>}
-              {!!data?.lotCheckRules.blockAreaSqm && (
-                <p>Block size: {data?.lotCheckRules.blockAreaSqm} m&sup2;</p>
+              {!!report?.lotCheckRules.blockAreaSqm && (
+                <p>Block size: {report?.lotCheckRules.blockAreaSqm} m&sup2;</p>
               )}
             </div>
 
@@ -233,7 +280,7 @@ export const FreeBlockAssessmentReport = () => {
         RZ1/RZ2. This version assesses blank-site rules only.
       </section>
 
-      <FloatingPaymentCta showButton={!isGated || undefined} />
+      <FloatingPaymentCta showButton={!isGated || undefined} email={email} />
     </>
   );
 };

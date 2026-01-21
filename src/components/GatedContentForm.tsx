@@ -1,12 +1,21 @@
 import { classList } from "@/utils/tailwind";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Mail } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { z } from "zod";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
 
+const gatedContentFormSchema = z.object({
+  email: z.email({ message: "Invalid email format" }),
+  terms: z.literal(true),
+});
+
+export type GatedContentFormValues = z.infer<typeof gatedContentFormSchema>;
+
 type GatedContentProps = {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: GatedContentFormValues) => void;
 };
 
 const GatedContentForm = (props: GatedContentProps) => {
@@ -18,7 +27,13 @@ const GatedContentForm = (props: GatedContentProps) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<GatedContentFormValues>({
+    resolver: zodResolver(gatedContentFormSchema),
+  });
+
+  const onSubmit: SubmitHandler<GatedContentFormValues> = async (formData) => {
+    props.onSubmit(formData);
+  };
 
   return (
     <TextModal open={true}>
@@ -36,7 +51,7 @@ const GatedContentForm = (props: GatedContentProps) => {
           for your property.
         </p>
         <form
-          onSubmit={handleSubmit(props.onSubmit)}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 w-full max-w-91 mx-auto mt-6"
           noValidate
         >
@@ -47,9 +62,7 @@ const GatedContentForm = (props: GatedContentProps) => {
                 <Mail className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
                 <input
                   type="email"
-                  {...register("email", {
-                    required: "Email Address is required",
-                  })}
+                  {...register("email")}
                   aria-invalid={errors.email ? "true" : "false"}
                   placeholder="Enter your email address"
                   className={classList(
@@ -63,7 +76,7 @@ const GatedContentForm = (props: GatedContentProps) => {
             </label>
             {errors.email && (
               <p className="text-xs text-error pl-1 mt-1" role="alert">
-                {errors.email.message as string}
+                {errors.email.message}
               </p>
             )}
           </div>
@@ -71,9 +84,7 @@ const GatedContentForm = (props: GatedContentProps) => {
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
-                {...register("terms", {
-                  required: "This field is required",
-                })}
+                {...register("terms")}
                 aria-invalid={errors.terms ? "true" : "false"}
                 className={classList(
                   "peer",
@@ -99,7 +110,7 @@ const GatedContentForm = (props: GatedContentProps) => {
             </label>
             {errors.terms && (
               <p className="text-xs text-error pl-1 mt-1" role="alert">
-                {errors.terms.message as string}
+                {errors.terms.message}
               </p>
             )}
           </div>

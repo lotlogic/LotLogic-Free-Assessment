@@ -1,29 +1,39 @@
 import { classList } from "@/utils/tailwind";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { z } from "zod";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
 
+const paymentFormSchema = z.object({
+  email: z.email({ message: "Invalid email format" }),
+});
+
+export type PaymentFormValues = z.infer<typeof paymentFormSchema>;
+
 type Props = {
   showButton?: boolean;
+  email?: string;
 };
 
 export const FloatingPaymentCta = (props: Props) => {
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<PaymentFormValues>({
+    resolver: zodResolver(paymentFormSchema),
+  });
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-
-  const handleForm = () => {
-    console.log("Handle paid assessment form submit");
+  const onSubmit: SubmitHandler<PaymentFormValues> = async (formData) => {
+    console.log("Paid assessment form submit: ", formData);
   };
 
   return (
@@ -39,7 +49,7 @@ export const FloatingPaymentCta = (props: Props) => {
         data-show={props.showButton}
       />
 
-      <TextModal open={modalIsOpen} onClose={closeModal}>
+      <TextModal open={isOpen} onClose={closeModal}>
         <Heading tag="h2" size="h2">
           Want an assessment that considers your current house?
         </Heading>
@@ -53,7 +63,7 @@ export const FloatingPaymentCta = (props: Props) => {
         </Heading>
 
         <form
-          onSubmit={handleSubmit(handleForm)}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 w-full max-w-91 mx-auto mt-6"
           noValidate
         >
@@ -64,6 +74,7 @@ export const FloatingPaymentCta = (props: Props) => {
                 <Mail className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
                 <input
                   type="email"
+                  defaultValue={props.email}
                   {...register("email", {
                     required: "Email Address is required",
                   })}
@@ -84,7 +95,7 @@ export const FloatingPaymentCta = (props: Props) => {
               </p>
             )}
           </div>
-          <Button label="Purchase report" onClick={handleForm} />
+          <Button label="Purchase report" type="submit" />
         </form>
       </TextModal>
     </div>

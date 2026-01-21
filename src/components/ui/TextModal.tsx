@@ -57,7 +57,7 @@ export const TextModal: React.FC<TextModalProps> = ({
       slotProps={{
         paper: dialogPaperProps,
         backdrop: () => ({
-          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          sx: { backgroundColor: "rgba(0, 0, 0, 0.2)" },
         }),
       }}
     >
