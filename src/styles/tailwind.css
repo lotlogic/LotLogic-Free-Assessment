@@ -1,0 +1,33 @@
+/****************************************************
+
+    Tailwind Variables and Plugins
+
+****************************************************/
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* fonts */
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* colors */
+  --color-lot-green: #2d8b85;
+
+  --color-primary: #2d8b85;
+  --color-primary-hover: #1a3d42;
+  --color-secondary: #eaefef;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+/* CSS Variables for fonts */
+:root {
+}
+
+.dark {
+}
