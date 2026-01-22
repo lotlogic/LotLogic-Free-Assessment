@@ -5,6 +5,7 @@ import AssessmentPage from "./pages/AssessmentPage";
 import FaqPage from "./pages/FaqPage";
 import HomePage from "./pages/Home";
 import PrivacyPage from "./pages/PrivacyPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

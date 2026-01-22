@@ -1,13 +1,16 @@
 import Header from "@/components/layouts/Header";
+import Heading from "@/components/ui/Heading";
 
 export const AboutPage = () => {
   return (
     <>
       <Header />
-      <main className="grow pt-15 bg-gray-100 text-gray-700">
+      <main>
         <section>
           <div className="max-w-7xl mx-auto px-4 py-12">
-            <h1>About page</h1>
+            <Heading tag="h1" size="h1">
+              About Page
+            </Heading>
           </div>
         </section>
       </main>

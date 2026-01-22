@@ -1,7 +1,7 @@
 import type { GeoApi } from "@/@types/api";
 import { classList } from "@/utils/tailwind";
 import { toTitleCase } from "@/utils/text";
-import { useLocalStorage } from "@uidotdev/usehooks";
+import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import FloatingPaymentCta from "./FloatingPaymentCta";
@@ -12,8 +12,6 @@ import Heading from "./ui/Heading";
 
 type ReportSaves = Record<string, { email: string; expiry: number }>;
 
-const geoApi = import.meta.env.VITE_API_URL + "/geo/act-zone?address=";
-
 export const FreeBlockAssessmentReport = () => {
   const [report, setReport] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
@@ -22,7 +20,11 @@ export const FreeBlockAssessmentReport = () => {
   const [email, setEmail] = useState<string>();
 
   const [searchParams] = useSearchParams();
-  const [lsSaves, setLsSaves] = useLocalStorage<ReportSaves>("searches", {});
+  const [savedAddress, setSavedAddress] = useSessionStorage("address", "");
+  const [savedSearches, setSavedSearches] = useLocalStorage<ReportSaves>(
+    "searches",
+    {},
+  );
 
   /****************************************************
     fetch API data
@@ -33,7 +35,10 @@ export const FreeBlockAssessmentReport = () => {
         const address = searchParams.get("address");
         if (!address) throw new Error("Missing query parameter - address");
 
-        const response = await fetch(geoApi + searchParams.get("address"));
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/geo/act-zone?address=${searchParams.get("address")}`,
+        );
+
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
 
@@ -53,21 +58,60 @@ export const FreeBlockAssessmentReport = () => {
     show gated content if it is a saved search
   ****************************************************/
   useEffect(() => {
-    if (!!report && !!Object.keys(lsSaves).length) {
-      let newSaves = { ...lsSaves };
+    if (!!report && !!Object.keys(savedSearches).length) {
+      let newSaves = { ...savedSearches };
 
       // clear expired saves
       const time = new Date().getTime();
-      Object.entries(lsSaves).forEach(([key, value]) => {
-        console.log(`${key}: ${value}`);
+      Object.entries(savedSearches).forEach(([key, value]) => {
         if (value.expiry < time) delete newSaves[key];
       });
-      setLsSaves(newSaves);
+      setSavedSearches(newSaves);
 
       // check for current save
-      if (lsSaves[report.formattedAddress]) setIsGated(false);
+      if (savedSearches[report.formattedAddress]) {
+        setEmail(savedSearches[report.formattedAddress].email);
+        setIsGated(false);
+      }
+
+      // save current address for checkout
+      setSavedAddress(report.formattedAddress);
     }
-  }, [lsSaves, report]);
+  }, [savedSearches, report]);
+
+  /****************************************************
+    page loading or page error
+  ****************************************************/
+  if (isLoading) return null;
+
+  if (error)
+    return (
+      <section className="mt-12">
+        <Heading tag="h1" size="h1">
+          Your block assessment
+        </Heading>
+        <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
+          <div className={classList(["bg-white p-10 md:px-16 md:pb-16"])}>
+            <div className="grid place-items-center min-h-100 text-xl">
+              <div className="grid place-items-center min-h-100 text-xl">
+                <div className="text-center">
+                  <p>
+                    Unfortunately there was a error fetching this block
+                    assessment.
+                  </p>
+                  <p className="mt-4 text-base">
+                    Error:{" "}
+                    {error
+                      ?.replace("(did you import the GeoJSON datasets?)", "")
+                      .trim()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
 
   /****************************************************
     page content
@@ -106,21 +150,18 @@ export const FreeBlockAssessmentReport = () => {
     handle form
   ****************************************************/
   const handleGatedContent = (formData: GatedContentFormValues) => {
-    console.log("onSubmit: ", formData);
-
     // handle email queue
     // ...do stuff here
 
-    // save the search to localstorage
-    const address = report?.formattedAddress;
-    if (address) {
-      let newSaves = { ...lsSaves };
-      newSaves[address] = {
+    // display gated content
+    if (savedAddress) {
+      // save the search to localstorage
+      let newSaves = { ...savedSearches };
+      newSaves[savedAddress] = {
         email: formData.email,
         expiry: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
       };
-      console.log("newSaves: ", newSaves);
-      setLsSaves(newSaves);
+      setSavedSearches(newSaves);
 
       // save email for payment form
       setEmail(formData.email);
@@ -129,37 +170,6 @@ export const FreeBlockAssessmentReport = () => {
       setIsGated(false);
     }
   };
-
-  if (isLoading) return null;
-
-  if (error)
-    return (
-      <section className="mt-12">
-        <Heading tag="h1" size="h1">
-          Your block assessment
-        </Heading>
-        <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
-          <div className={classList(["bg-white p-10 md:px-16"])}>
-            <div className="grid place-items-center min-h-100 text-xl">
-              <div className="grid place-items-center min-h-100 text-xl">
-                <div className="text-center">
-                  <p>
-                    Unfortunately there was a error fetching this block
-                    assessment.
-                  </p>
-                  <p className="mt-4 text-base">
-                    Error:{" "}
-                    {error
-                      ?.replace("(did you import the GeoJSON datasets?)", "")
-                      .trim()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
 
   return (
     <>
@@ -170,9 +180,9 @@ export const FreeBlockAssessmentReport = () => {
           Your block assessment
         </Heading>
         <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
-          <div className="bg-white p-10 md:px-16">
+          <div className="bg-white p-10 md:px-16 md:pb-16">
             <Heading tag="h2" size="h2" className="">
-              {report?.formattedAddress.replace(", Australia", "")}
+              {savedAddress.replace(", Australia", "")}
             </Heading>
 
             <div className="text-lg">
@@ -280,7 +290,11 @@ export const FreeBlockAssessmentReport = () => {
         RZ1/RZ2. This version assesses blank-site rules only.
       </section>
 
-      <FloatingPaymentCta showButton={!isGated || undefined} email={email} />
+      <FloatingPaymentCta
+        email={email}
+        address={savedAddress}
+        showButton={!isGated || undefined}
+      />
     </>
   );
 };

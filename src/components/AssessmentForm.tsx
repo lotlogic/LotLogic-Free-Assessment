@@ -17,8 +17,7 @@ export const FreeBlockAssessment = () => {
   };
 
   const onSearch = () => {
-    console.log("Handle search for: ", address);
-    navigate("/assessment?address=" + address);
+    if (address) navigate("/assessment?address=" + encodeURIComponent(address));
   };
 
   return (

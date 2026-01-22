@@ -8,7 +8,7 @@ export const AboutPage = () => {
       <main>
         <section>
           <div className="relative max-w-260 mx-auto rounded-md shadow-lg">
-            <div className="bg-white p-10 md:px-16">
+            <div className="bg-white p-10 md:px-16 md:pb-16">
               <Heading tag="h1" size="h1">
                 Privacy Policy – LotLogic (operated by BlockPlanner Pty Ltd)
               </Heading>

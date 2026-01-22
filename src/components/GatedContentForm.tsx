@@ -8,7 +8,9 @@ import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
 
 const gatedContentFormSchema = z.object({
-  email: z.email({ message: "Invalid email format" }),
+  email: z
+    .email({ pattern: z.regexes.rfc5322Email, message: "Invalid email format" })
+    .trim(),
   terms: z.literal(true),
 });
 

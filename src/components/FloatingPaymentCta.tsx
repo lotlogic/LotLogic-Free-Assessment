@@ -9,14 +9,17 @@ import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
 
 const paymentFormSchema = z.object({
-  email: z.email({ message: "Invalid email format" }),
+  email: z
+    .email({ pattern: z.regexes.rfc5322Email, message: "Invalid email format" })
+    .trim(),
 });
 
 export type PaymentFormValues = z.infer<typeof paymentFormSchema>;
 
 type Props = {
-  showButton?: boolean;
   email?: string;
+  address?: string;
+  showButton?: boolean;
 };
 
 export const FloatingPaymentCta = (props: Props) => {
@@ -33,8 +36,28 @@ export const FloatingPaymentCta = (props: Props) => {
   });
 
   const onSubmit: SubmitHandler<PaymentFormValues> = async (formData) => {
-    console.log("Paid assessment form submit: ", formData);
+    // create a Stripe checkout
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/stripe/create-checkout-session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          address: props.address,
+          site: location.origin,
+        }),
+      },
+    );
+
+    // redirect the user to the Stripe-hosted URL
+    const { url } = await response.json();
+    if (url) window.location.href = url;
   };
+
+  if (!props.address) return null;
 
   return (
     <div className="fixed bottom-3 right-2">
