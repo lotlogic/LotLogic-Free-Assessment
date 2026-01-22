@@ -36,25 +36,37 @@ export const FloatingPaymentCta = (props: Props) => {
   });
 
   const onSubmit: SubmitHandler<PaymentFormValues> = async (formData) => {
-    // create a Stripe checkout
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/stripe/create-checkout-session`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          address: props.address,
-          site: location.origin,
-        }),
-      },
-    );
+    try {
+      if (!formData.email) throw new Error("Missing query parameter - email");
+      if (!props.address) throw new Error("Missing query parameter - address");
+      if (!location.origin) throw new Error("Missing query parameter - site");
 
-    // redirect the user to the Stripe-hosted URL
-    const { url } = await response.json();
-    if (url) window.location.href = url;
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/stripe/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            address: props.address,
+            site: location.origin,
+          }),
+        },
+      );
+
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+
+      // redirect the user to the Stripe-hosted URL
+      const { url } = await response.json();
+
+      if (url) window.location.href = url;
+      else throw new Error("Stripe error! No checkout URL returned");
+    } catch (error: any) {
+      console.log("Error: " + error.message);
+    }
   };
 
   if (!props.address) return null;
