@@ -28,7 +28,6 @@ Copy `.env.example` to `.env` (or create a `.env` file) in the repo root:
 ```env
 VITE_API_URL="https://your-api.example.com"
 VITE_GOOGLE_MAPS_API_KEY="your_google_maps_api_key"
-VITE_COMMENCEMENT_DATE="2026-01-01" # optional (ISO-8601 date)
 ```
 
 Then open `http://localhost:5173`.
@@ -69,9 +68,7 @@ Required GitHub secrets:
 
 - `VITE_API_URL`
 - `VITE_GOOGLE_MAPS_API_KEY`
-- `VITE_COMMENCEMENT_DATE` (optional)
 - `AZURE_CREDENTIALS` (service principal JSON for `azure/login`)
-- `AZURE_STORAGE_ACCOUNT`
 
 Notes:
 

@@ -34,7 +34,7 @@ jobs:
         run: |
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env
           echo "VITE_GOOGLE_MAPS_API_KEY=${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}" >> .env
-          echo "VITE_COMMENCEMENT_DATE=${{ secrets.VITE_COMMENCEMENT_DATE }}" >> .env
+          echo "VITE_COMMENCEMENT_DATE=2026-01-01" >> .env
 
       - name: Build
         run: npm run build
@@ -47,13 +47,13 @@ jobs:
       - name: Deploy to Azure Storage ($web)
         run: |
           az storage blob delete-batch \
-            --account-name "${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+            --account-name "bpassessmentprod" \
             --auth-mode login \
             --source '$web' \
             --pattern '*'
 
           az storage blob upload-batch \
-            --account-name "${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+            --account-name "bpassessmentprod" \
             --auth-mode login \
             --destination '$web' \
             --source ./dist \
