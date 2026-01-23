@@ -1,6 +1,6 @@
-# LotLogic Free Assessment (React + Vite)
+# Blockplanner Free Assessment (React + Vite)
 
-This repo is the **LotLogic “free block assessment”** frontend. The user flow is:
+This repo is the **Blockplanner “free block assessment”** frontend. The user flow is:
 
 1. Search/select an ACT address (Google Places Autocomplete)
 2. View a free summary assessment (fetched from the LotLogic API)

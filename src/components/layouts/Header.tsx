@@ -33,14 +33,21 @@ export const Header = () => {
               className="flex items-center rounded-md hover:opacity-80 transition-opacity"
               aria-label="Meals on Wheels NSW - Go to homepage"
             >
-              <img
-                src="/images/logos/logo.png"
-                alt="LotLogic logo"
-                width={40}
-                height={40}
-              />
-              <span className="font-bold text-2xl  text-primary tracking-tight ml-3">
-                LOTLOGIC
+              <svg
+                width={50}
+                height={50}
+                viewBox="0 0 100 100"
+                className="text-primary"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M68.58 48.31C69.48 47.76 70.36 47.13 71.17 46.43C75.89 42.26 78.33 36.28 77.8 29.98C77 19.88 68.11 12 57.61 12H17V87.11H64.21C69.46 87.11 74.41 85.08 78.1 81.36C81.82 77.64 83.85 72.72 83.85 67.47C83.85 58.18 77.42 50.32 68.58 48.31ZM58.23 47.83H37.54V66.69L20.44 81.38V15.44H58.23C67.14 15.44 74.43 22.7 74.43 31.64C74.43 35.96 72.75 40.03 69.68 43.09C66.62 46.15 62.55 47.84 58.23 47.84V47.83ZM64.21 83.67H23.38L40.98 68.53V51.28H64.21C73.15 51.28 80.41 58.56 80.41 67.48C80.41 71.8 78.73 75.87 75.66 78.93C72.6 81.99 68.55 83.68 64.21 83.68V83.67Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span className="font-bold text-2xl  text-primary tracking-tight ml-1">
+                BlockPlanner
               </span>
             </Link>
             <div>

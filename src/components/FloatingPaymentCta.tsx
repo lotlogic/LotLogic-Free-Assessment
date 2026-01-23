@@ -42,7 +42,7 @@ export const FloatingPaymentCta = (props: Props) => {
       if (!location.origin) throw new Error("Missing query parameter - site");
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/stripe/create-checkout-session`,
+        `${import.meta.env.VITE_API_URL}/api/stripe/create-checkout-session`,
         {
           method: "POST",
           headers: {

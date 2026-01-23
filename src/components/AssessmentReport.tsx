@@ -36,7 +36,7 @@ export const FreeBlockAssessmentReport = () => {
         if (!address) throw new Error("Missing query parameter - address");
 
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/geo/act-zone?address=${address}`,
+          `${import.meta.env.VITE_API_URL}/api/geo/act-zone?address=${address}`,
         );
 
         if (!response.ok)
