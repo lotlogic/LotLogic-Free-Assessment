@@ -185,131 +185,177 @@ export const FreeBlockAssessmentReport = () => {
     <>
       {isGated && <GatedContentForm onSubmit={handleGatedContent} />}
 
-      <section className={classList(["mt-12", { "blur-xs": isGated }])}>
-        <Heading tag="h1" size="h1">
-          Your block assessment
-        </Heading>
-        <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
-          <div className="bg-white p-10 md:px-16 md:pb-16">
-            <Heading tag="h2" size="h2" className="">
-              {(report?.formattedAddress || savedAddress).replace(
-                ", Australia",
-                "",
-              )}
+      <section
+        className={classList([
+          "mt-12 container mx-auto px-4 pb-32 lg:pb-12",
+          { "blur-xs": isGated },
+        ])}
+      >
+        <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
+          <div className="flex-1 w-full lg:max-w-260">
+            <Heading tag="h1" size="h1">
+              Your block assessment
             </Heading>
+            <div className="relative mt-10 rounded-md shadow-lg">
+              <div className="bg-white p-10 md:px-16 md:pb-16">
+                <Heading tag="h2" size="h2" className="">
+                  {(report?.formattedAddress || savedAddress).replace(
+                    ", Australia",
+                    "",
+                  )}
+                </Heading>
 
-            <div className="text-lg">
-              {!!zoneText && <p>Zone: {zoneText}</p>}
-              {!!report?.lotCheckRules.blockAreaSqm && (
-                <p>Block size: {report?.lotCheckRules.blockAreaSqm} m&sup2;</p>
-              )}
-            </div>
+                <div className="text-lg">
+                  {!!zoneText && <p>Zone: {zoneText}</p>}
+                  {!!report?.lotCheckRules.blockAreaSqm && (
+                    <p>
+                      Block size: {report?.lotCheckRules.blockAreaSqm} m&sup2;
+                    </p>
+                  )}
+                </div>
 
-            <hr className="my-6 border-gray-300" />
+                <hr className="my-6 border-gray-300" />
 
-            <Heading tag="h3" size="h4" className="font-bold mb-4">
-              What the new rules allow on a block this size
-            </Heading>
-            {commencementDate && today < commencementDate && (
-              <p className="text-lg -mt-3 mb-5">
-                Based on draft rules. Final rules expected on{" "}
-                {commencementDate
-                  .toLocaleDateString("en-AU", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                  })
-                  .replace(/\//g, " ")}
-              </p>
-            )}
-
-            {!isLoading && !error && (
-              <>
-                {!!ruleMatches.length && (
-                  <ul className="block space-y-6 [&>li]:pl-6 [&_strong]:block [&_strong]:text-lg">
-                    {ruleMatches.map((rule, i) => (
-                      <li key={"rule_" + i} className="relative">
-                        <div
-                          className={classList([
-                            "absolute top-2 left-0.5 size-3",
-                            "bg-gray-300 rounded-full",
-                            {
-                              "bg-success": rule[1][0].confidence === "High",
-                            },
-                            {
-                              "bg-warning": rule[1][0].confidence === "Medium",
-                            },
-                            {
-                              "bg-error": rule[1][0].confidence === "Low",
-                            },
-                          ])}
-                        ></div>
-                        <strong className="[&:first-letter]:capitalize [&+p]:mt-1">
-                          {rule[0]}
-                        </strong>
-                        {rule[1].map((item, i) => (
-                          <p key={"p_" + i} className="mt-2">
-                            {item.explanation}
-                          </p>
-                        ))}
-                      </li>
-                    ))}
-                  </ul>
+                <Heading tag="h3" size="h4" className="font-bold mb-4">
+                  What the new rules allow on a block this size
+                </Heading>
+                {commencementDate && today < commencementDate && (
+                  <p className="text-lg -mt-3 mb-5">
+                    Based on draft rules. Final rules expected on{" "}
+                    {commencementDate
+                      .toLocaleDateString("en-AU", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                      .replace(/\//g, " ")}
+                  </p>
                 )}
 
-                {!ruleMatches.length && (
+                {!isLoading && !error && (
                   <>
-                    <div className="grid place-items-center min-h-100 text-xl">
-                      <div className="text-center">
-                        <p>
-                          The Missing Middle changes do not materially apply to
-                          this zone.
-                        </p>
-                      </div>
-                    </div>
+                    {!!ruleMatches.length && (
+                      <ul className="block space-y-6 [&>li]:pl-6 [&_strong]:block [&_strong]:text-lg">
+                        {ruleMatches.map((rule, i) => (
+                          <li key={"rule_" + i} className="relative">
+                            <div
+                              className={classList([
+                                "absolute top-2 left-0.5 size-3",
+                                "bg-gray-300 rounded-full",
+                                {
+                                  "bg-success":
+                                    rule[1][0].confidence === "High",
+                                },
+                                {
+                                  "bg-warning":
+                                    rule[1][0].confidence === "Medium",
+                                },
+                                {
+                                  "bg-error": rule[1][0].confidence === "Low",
+                                },
+                              ])}
+                            ></div>
+                            <strong className="[&:first-letter]:capitalize [&+p]:mt-1">
+                              {rule[0]}
+                            </strong>
+                            {rule[1].map((item, i) => (
+                              <p key={"p_" + i} className="mt-2">
+                                {item.explanation}
+                              </p>
+                            ))}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {!ruleMatches.length && (
+                      <>
+                        <div className="grid place-items-center min-h-100 text-xl">
+                          <div className="text-center">
+                            <p>
+                              The Missing Middle changes do not materially apply
+                              to this zone.
+                            </p>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
-              </>
-            )}
 
-            <hr className="my-6 border-gray-300" />
+                <hr className="my-6 border-gray-300" />
 
-            <div className="text-gray-400">
-              <ul className="block space-y-2 [&>li]:pl-6">
-                <li className="relative">
-                  <div
-                    className={classList([
-                      "absolute top-1 left-0.5 size-3.5",
-                      "flex items-center justify-center",
-                      "text-xs text-white",
-                      "bg-gray-400 rounded-full",
-                    ])}
-                  >
-                    i
-                  </div>
-                  No major overlays checked in this version
-                </li>
-                <li>
-                  Height, setbacks and detailed design rules not assessed here
-                </li>
-              </ul>
+                <div className="text-gray-400">
+                  <ul className="block space-y-2 [&>li]:pl-6">
+                    <li className="relative">
+                      <div
+                        className={classList([
+                          "absolute top-1 left-0.5 size-3.5",
+                          "flex items-center justify-center",
+                          "text-xs text-white",
+                          "bg-gray-400 rounded-full",
+                        ])}
+                      >
+                        i
+                      </div>
+                      No major overlays checked in this version
+                    </li>
+                    <li>
+                      Height, setbacks and detailed design rules not assessed
+                      here
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <section className="text-gray-400 text-center mt-8">
+              LotCheck is an informational tool based on ACT planning changes
+              for RZ1/RZ2. This version assesses blank-site rules only.
+            </section>
+          </div>
+
+          <div className="hidden lg:block w-80 shrink-0 sticky top-8 pt-20">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+              <Heading tag="h3" size="h4" className="mb-3 text-center">
+                Unlock your block's full potential
+              </Heading>
+              <p className="text-gray-600 text-sm text-center mb-6">
+                Get a detailed PDF report with constraints, opportunities, and
+                plain-English guidance for this block.
+              </p>
+              <FloatingPaymentCta
+                email={email}
+                address={savedAddress}
+                showButton={!isGated || undefined}
+                className="w-full"
+              />
             </div>
           </div>
         </div>
       </section>
 
-      <section className="text-gray-400 text-center">
-        LotCheck is an informational tool based on ACT planning changes for
-        RZ1/RZ2. This version assesses blank-site rules only.
-      </section>
-
-      <FloatingPaymentCta
-        email={email}
-        address={savedAddress}
-        showButton={!isGated || undefined}
-      />
+      <div
+        className={classList([
+          "fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-50 lg:hidden transition-transform duration-500",
+          { "translate-y-full": isGated },
+        ])}
+      >
+        <Heading tag="h3" size="h4" className="mb-3 text-center">
+          Unlock your block's full potential
+        </Heading>
+        <p className="text-gray-600 text-sm text-center mb-6">
+          Get a detailed PDF report with constraints, opportunities, and
+          plain-English guidance for this block.
+        </p>
+        <FloatingPaymentCta
+          className="w-full"
+          email={email}
+          address={savedAddress}
+          showButton={!isGated || undefined}
+        />
+      </div>
     </>
   );
 };
-
 export default FreeBlockAssessmentReport;

@@ -1,6 +1,6 @@
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Mail } from "lucide-react";
+import { FileText, Mail } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -20,6 +20,7 @@ type Props = {
   email?: string;
   address?: string;
   showButton?: boolean;
+  className?: string;
 };
 
 export const FloatingPaymentCta = (props: Props) => {
@@ -72,13 +73,14 @@ export const FloatingPaymentCta = (props: Props) => {
   if (!props.address) return null;
 
   return (
-    <div className="fixed top-5 right-2">
+    <div className={props.className}>
       <Button
         label="Purchase full report"
+        leftIcon={<FileText className="size-5" />}
         className={classList([
-          "px-6 py-4 shadow-lg",
-          "translate-y-full opacity-0 transition-all duration-300",
-          "data-show:translate-y-0 data-show:opacity-100",
+          "px-6 py-4 shadow-lg w-full justify-center",
+          "translate-y-4 opacity-0 transition-all duration-300 pointer-events-none",
+          "data-show:translate-y-0 data-show:opacity-100 data-show:pointer-events-auto",
         ])}
         onClick={openModal}
         data-show={props.showButton}
