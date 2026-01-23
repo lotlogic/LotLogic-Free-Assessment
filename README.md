@@ -1,265 +1,85 @@
-# 🧱 LotLogic React Frontend
+# LotLogic Free Assessment (React + Vite)
 
-A modern React + Vite frontend for visualizing zoning and lot data using Mapbox, built with **React 19**, **Vite**, **Tailwind CSS 4**, and **TanStack Query**.
+This repo is the **LotLogic “free block assessment”** frontend. The user flow is:
 
----
+1. Search/select an ACT address (Google Places Autocomplete)
+2. View a free summary assessment (fetched from the LotLogic API)
+3. Optionally purchase the full PDF report via Stripe Checkout
 
-## 🚀 Features
+## Tech stack
 
-- **Interactive Mapbox Map** - Visualize zoning and lot data with real-time interactions
-- **Lot Selection & Details** - Click lots to view detailed information (block, section, zoning, overlays)
-- **House Design Integration** - Browse and save house designs for selected lots
-- **Dynamic Zoning Colors** - Visual zoning classification with custom color coding
-- **Saved Properties** - Save favorite lots and house designs to localStorage
-- **Responsive Design** - Modern UI with custom fonts and brand colors
-- **Performance Optimized** - Code splitting and lazy loading for better performance
+- React 19 + Vite + TypeScript
+- Tailwind CSS
+- React Router
+- Google Maps JavaScript API (Places) via `@vis.gl/react-google-maps`
+- React Hook Form + Zod
 
----
+## Local development
 
-## 🛠️ Tech Stack
-
-- **React 19** - Latest React with concurrent features
-- **Vite** - Fast build tool and dev server
-- **TypeScript** - Type-safe development
-- **Tailwind CSS 4** - Utility-first CSS framework
-- **Mapbox GL JS** - Interactive maps and geospatial data
-- **TanStack Query** - Data fetching and caching
-- **Zustand** - Lightweight state management
-- **React Hook Form + Zod** - Form validation
-- **Lucide React** - Beautiful icons
-- **Radix UI** - Accessible UI components
-
----
-
-## 📦 Installation
+Prereqs: Node.js 20+.
 
 ```bash
-# Navigate to the project directory
-cd lotlogic-react
-
-# Install dependencies
 npm install
-
-# Start development server
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
----
-
-## 🌍 Environment Setup
-
-Create a `.env` file in the project root:
+Copy `.env.example` to `.env` (or create a `.env` file) in the repo root:
 
 ```env
-VITE_MAPBOX_TOKEN=your_mapbox_token_here
+VITE_API_URL="https://your-api.example.com"
+VITE_GOOGLE_MAPS_API_KEY="your_google_maps_api_key"
+VITE_COMMENCEMENT_DATE="2026-01-01" # optional (ISO-8601 date)
 ```
 
-Get your Mapbox token from [Mapbox](https://account.mapbox.com/access-tokens/).
+Then open `http://localhost:5173`.
 
----
-
-## 🏗️ Build & Deploy
+## Build
 
 ```bash
-# Build for production
 npm run build
-
-# Preview production build
 npm run preview
-
 ```
 
----
+The production build output is written to `dist/`.
 
-## 🎯 Performance Optimizations
+## Routes
 
-This project implements several performance optimizations to handle large bundle sizes:
+- `/` – address search
+- `/assessment?address=...` – free block assessment (gated by email)
+- `/checkout?success=1` or `/checkout?cancel=1` – return page after Stripe Checkout
+- `/privacy` – privacy policy
 
-### 1. **Code Splitting**
-- Lazy loading of heavy components
-- Dynamic imports for Mapbox GL JS
-- Vendor chunk separation
+## Backend/API contract
 
-### 2. **Bundle Optimization**
-- Manual chunk configuration in `vite.config.ts`
-- Separate vendor libraries (React, Mapbox, UI components)
-- Optimized dependency pre-bundling
+The frontend expects a backend at `VITE_API_URL` that exposes:
 
-### 3. **Mapbox GL JS Optimization**
-- Dynamic import to reduce initial bundle size
-- CSS loaded only when needed
-- Access token configuration
+- `GET /geo/act-zone?address=<urlencoded>`
+  - Returns JSON compatible with `src/@types/api.ts` (zone + `lotCheckRules`)
+- `POST /stripe/create-checkout-session`
+  - Request body: `{ "email": string, "address": string, "site": string }`
+  - Response body: `{ "url": string }` where `url` is the Stripe-hosted Checkout URL
 
-### 4. **Component Architecture**
-- Modular component structure
-- Efficient re-rendering with React.memo
-- Optimized state management
+## Deployment (Azure Storage Static Website)
 
----
+This repo deploys as a static site (upload `dist/` to the storage account `$web` container).
 
-## 📁 Project Structure
+GitHub Actions workflow: `.github/workflows/deploy-azure-storage.yml`
 
-```
-lotlogic-react/
-├── src/
-│   ├── components/
-│   │   ├── features/
-│   │   │   ├── map/           # Map-related components
-│   │   │   ├── lots/          # Lot selection and details
-│   │   │   ├── facades/       # House design components
-│   │   │   └── zoning/        # Zoning layer components
-│   │   ├── layouts/           # Layout components
-│   │   └── ui/               # Reusable UI components
-│   ├── hooks/                # Custom React hooks
-│   ├── lib/                  # Utilities and API
-│   ├── types/                # TypeScript type definitions
-│   ├── constants/            # App constants
-│   └── styles/              # Global styles
-├── public/                  # Static assets
-└── dist/                   # Build output
-```
+Required GitHub secrets:
 
----
+- `VITE_API_URL`
+- `VITE_GOOGLE_MAPS_API_KEY`
+- `VITE_COMMENCEMENT_DATE` (optional)
+- `AZURE_CREDENTIALS` (service principal JSON for `azure/login`)
+- `AZURE_STORAGE_ACCOUNT`
 
-## 🗺️ Core Components
+Notes:
 
-### ZoneMap (`src/components/features/map/MapLayer.tsx`)
-The main map component that:
-- Renders interactive Mapbox map
-- Handles lot selection and highlighting
-- Manages map layers and controls
-- Integrates with lot calculation API
+- The service principal should have **Storage Blob Data Contributor** access to the storage account.
+- Enable **Static website** on the storage account and set:
+  - Index document: `index.html`
+  - Error document: `index.html` (recommended for SPA routing)
 
-### LotSidebar (`src/components/features/lots/LotSidebar.tsx`)
-Displays detailed lot information:
-- Lot identification and measurements
-- Zoning and overlay information
-- House design selection
-- Quote request flow
+## License
 
-### HouseDesignList (`src/components/features/facades/HouseDesignList.tsx`)
-Shows available house designs:
-- Filterable design gallery
-- Save to favorites functionality
-- Integration with lot selection
-
----
-
-## 🎨 Customization
-
-### Colors & Branding
-- **Primary Color**: `#2F5D62` (brand green)
-- **Font**: DM Sans (Google Fonts)
-- **Map Style**: Mapbox Streets v12
-
-### CSS Variables
-```css
---color-primary: #2F5D62;
---font-dm-sans: 'DM Sans', sans-serif;
-```
-
----
-
-## 🔧 Development
-
-### Adding New Features
-1. Create components in appropriate feature folders
-2. Add TypeScript types in `src/types/`
-3. Update constants in `src/constants/`
-4. Test with `npm run dev`
-
-### Performance Monitoring
-- Use browser dev tools to monitor bundle sizes
-- Check Network tab for chunk loading
-- Monitor memory usage in React DevTools
-
----
-
-## 🐳 Docker Support
-
-### Development
-```bash
-docker-compose --profile dev up
-```
-
-### Production
-```bash
-docker-compose --profile prod up
-```
-
-See `DOCKER.md` for detailed Docker instructions.
-
----
-
-## 📊 Bundle Analysis
-
-The build process creates optimized chunks:
-- **vendor-react**: React and React DOM
-- **vendor-mapbox**: Mapbox GL JS library
-- **vendor-ui**: UI component libraries
-- **vendor-utils**: Utility libraries
-- **main**: Application code
-
-### Bundle Size Targets
-- Initial JS: < 500KB
-- Total JS: < 2MB
-- CSS: < 100KB
-
----
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-**Map not loading:**
-- Check `VITE_MAPBOX_TOKEN` in `.env`
-- Verify Mapbox token is valid
-- Check browser console for errors
-
-**Large bundle size:**
-- Run `npm run build` to see chunk analysis
-- Check for duplicate dependencies
-- Verify code splitting is working
-
-**Performance issues:**
-- Use React DevTools Profiler
-- Check for unnecessary re-renders
-- Monitor network requests
-
----
-
-## 📝 Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
----
-
-## 📄 License
-
-This project is proprietary software. All rights reserved.
-
----
-
-## 🔗 Related Projects
-
-- **LotLogic Backend** - API services
-- **LotLogic Next.js** - Original Next.js version
-- **LotLogic Mobile** - React Native app
-
----
-
-*Built with ❤️ using modern web technologies*
+Proprietary software. All rights reserved.
