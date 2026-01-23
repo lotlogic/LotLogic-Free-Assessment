@@ -72,7 +72,7 @@ export const FloatingPaymentCta = (props: Props) => {
   if (!props.address) return null;
 
   return (
-    <div className="fixed bottom-3 right-2">
+    <div className="fixed top-5 right-2">
       <Button
         label="Purchase full report"
         className={classList([
@@ -90,11 +90,10 @@ export const FloatingPaymentCta = (props: Props) => {
         </Heading>
 
         <Heading tag="p" size="h4">
-          {/* We can look at the real footprint and shape of your block.  */}
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, natus ab?
-          Vero, sit. Necessitatibus doloremque accusantium modi aut dignissimos,
-          est eius magni illum corrupti suscipit ducimus. Non exercitationem
-          dignissimos maiores.
+          Upgrade to the full PDF report and see what changes are possible when
+          your existing dwelling is taken into account. You’ll get clearer,
+          plain-English guidance on likely constraints, opportunities, and next
+          steps for your property, delivered straight to your inbox.
         </Heading>
 
         <form
