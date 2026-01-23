@@ -1,6 +1,6 @@
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileText, Mail } from "lucide-react";
+import { ChevronDown, FileText, Mail, Phone, Target, User } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
@@ -12,6 +12,14 @@ const paymentFormSchema = z.object({
   email: z
     .email({ pattern: z.regexes.rfc5322Email, message: "Invalid email format" })
     .trim(),
+  intention: z.enum(["Develop", "Joint venture", "Sell", "Exploring"], {
+    message: "Please select from above",
+  }),
+  clientName: z.string().trim().min(2, "Please enter a name"),
+  clientPhone: z
+    .string()
+    .trim()
+    .regex(/^[0-9+().\-\s]{7,}$/i, "Please enter a valid phone number"),
 });
 
 export type PaymentFormValues = z.infer<typeof paymentFormSchema>;
@@ -19,6 +27,13 @@ export type PaymentFormValues = z.infer<typeof paymentFormSchema>;
 type Props = {
   email?: string;
   address?: string;
+  reportId?: string;
+  clientName?: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  suburb?: string;
+  blockSizeM2?: string | number;
+  zone?: string;
   showButton?: boolean;
   className?: string;
 };
@@ -50,9 +65,21 @@ export const FloatingPaymentCta = (props: Props) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: formData.email,
-            address: props.address,
             site: location.origin,
+
+            intention: formData.intention,
+
+            // Backwards-compatible alias
+            email: formData.email,
+
+            reportId: props.reportId,
+            clientName: formData.clientName ?? props.clientName,
+            clientEmail: props.clientEmail ?? formData.email,
+            clientPhone: formData.clientPhone ?? props.clientPhone,
+            address: props.address,
+            suburb: props.suburb,
+            blockSizeM2: props.blockSizeM2,
+            zone: props.zone,
           }),
         },
       );
@@ -103,6 +130,97 @@ export const FloatingPaymentCta = (props: Props) => {
           className="flex flex-col gap-4 w-full max-w-91 mx-auto mt-6"
           noValidate
         >
+          <div>
+            <label>
+              <span className="sr-only">What is your primary intention?</span>
+              <span className="relative">
+                <Target className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300 pointer-events-none" />
+                <ChevronDown className="absolute top-1/2 right-4 size-5 -translate-y-1/2 text-gray-500 pointer-events-none" />
+                <select
+                  defaultValue=""
+                  {...register("intention")}
+                  aria-invalid={errors.intention ? "true" : "false"}
+                  className={classList(
+                    "w-full px-4 py-3 pl-12 pr-10 appearance-none",
+                    "bg-white text-gray-700",
+                    "border border-gray-300 rounded-md",
+                    "focus-visible:border-transparent",
+                    "invalid:text-gray-500",
+                  )}
+                >
+                  <option value="" disabled>
+                    What&apos;s your primary intention?
+                  </option>
+                  <option value="Develop">Develop</option>
+                  <option value="Joint venture">Joint venture</option>
+                  <option value="Sell">Sell</option>
+                  <option value="Exploring">Exploring</option>
+                </select>
+              </span>
+            </label>
+            {errors.intention && (
+              <p className="text-xs text-error pl-1 mt-1" role="alert">
+                {errors.intention.message as string}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label>
+              <span className="sr-only">Your name</span>
+              <span className="relative">
+                <User className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
+                <input
+                  type="text"
+                  defaultValue={props.clientName}
+                  {...register("clientName")}
+                  aria-invalid={errors.clientName ? "true" : "false"}
+                  placeholder="Your name"
+                  className={classList(
+                    "w-full px-4 py-3 pl-12",
+                    "bg-white placeholder-gray-500",
+                    "border border-gray-300 rounded-md",
+                    "focus-visible:border-transparent",
+                  )}
+                  autoComplete="name"
+                />
+              </span>
+            </label>
+            {errors.clientName && (
+              <p className="text-xs text-error pl-1 mt-1" role="alert">
+                {errors.clientName.message as string}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label>
+              <span className="sr-only">Your phone number</span>
+              <span className="relative">
+                <Phone className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300" />
+                <input
+                  type="tel"
+                  defaultValue={props.clientPhone}
+                  {...register("clientPhone")}
+                  aria-invalid={errors.clientPhone ? "true" : "false"}
+                  placeholder="Your phone number"
+                  className={classList(
+                    "w-full px-4 py-3 pl-12",
+                    "bg-white placeholder-gray-500",
+                    "border border-gray-300 rounded-md",
+                    "focus-visible:border-transparent",
+                  )}
+                  autoComplete="tel"
+                />
+              </span>
+            </label>
+            {errors.clientPhone && (
+              <p className="text-xs text-error pl-1 mt-1" role="alert">
+                {errors.clientPhone.message as string}
+              </p>
+            )}
+          </div>
+
           <div>
             <label>
               <span className="sr-only">Enter your email address</span>

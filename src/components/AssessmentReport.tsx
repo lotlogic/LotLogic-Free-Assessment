@@ -152,6 +152,15 @@ export const FreeBlockAssessmentReport = () => {
     ? new Date(import.meta.env.VITE_COMMENCEMENT_DATE)
     : undefined;
 
+  // data used for checkout payload
+  const checkoutAddress = report?.formattedAddress || savedAddress;
+  const reportId =
+    report?.block?.blockKey ||
+    (report?.block?.objectId != null ? String(report.block.objectId) : undefined);
+  const suburb = report?.block?.properties?.DIVISION_NAME || undefined;
+  const zone = report?.lotCheckRules?.zoneCode || report?.zone?.zoneCode || "";
+  const blockSizeM2 = report?.lotCheckRules?.blockAreaSqm;
+
   /****************************************************
     handle form
   ****************************************************/
@@ -326,7 +335,11 @@ export const FreeBlockAssessmentReport = () => {
               </p>
               <FloatingPaymentCta
                 email={email}
-                address={savedAddress}
+                address={checkoutAddress}
+                reportId={reportId}
+                suburb={suburb}
+                blockSizeM2={blockSizeM2}
+                zone={zone}
                 showButton={!isGated || undefined}
                 className="w-full"
               />
@@ -351,7 +364,11 @@ export const FreeBlockAssessmentReport = () => {
         <FloatingPaymentCta
           className="w-full"
           email={email}
-          address={savedAddress}
+          address={checkoutAddress}
+          reportId={reportId}
+          suburb={suburb}
+          blockSizeM2={blockSizeM2}
+          zone={zone}
           showButton={!isGated || undefined}
         />
       </div>

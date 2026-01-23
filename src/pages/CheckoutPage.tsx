@@ -30,41 +30,59 @@ export const CheckoutPage = () => {
             <div className="relative max-w-260 mx-auto rounded-md shadow-lg">
               <div className="bg-white p-10 md:px-16 md:pb-16">
                 <Heading tag="h1" size="h1">
-                  Checkout
+                  Thank you
                 </Heading>
 
                 <hr className="my-6 border-gray-300" />
 
                 {status === "success" && (
-                  <div className="mt-15 mb-10">
+                  <div className="mt-15 mb-10 space-y-4">
                     <Heading tag="h2" size="h3">
-                      Success
+                      Order confirmed!
                     </Heading>
                     <Heading tag="p" size="h4">
-                      Order placed! You will receive an email confirmation.
+                      Thank you for your purchase. We have received your order
+                      and our team is getting started on your custom assessment.
                     </Heading>
+                    <p className="text-lg text-gray-600">
+                      You will receive an email confirmation shortly, and your
+                      comprehensive PDF report will be delivered directly to
+                      your inbox within <strong>48 hours</strong>.
+                    </p>
                   </div>
                 )}
 
                 {status === "cancel" && (
-                  <div className="mt-15 mb-10">
+                  <div className="mt-15 mb-10 space-y-4">
                     <Heading tag="h2" size="h3">
-                      Order Cancelled
+                      Order cancelled
                     </Heading>
                     <Heading tag="p" size="h4">
-                      Please try again when you are ready.
+                      Your payment process was cancelled and you have not been
+                      charged.
                     </Heading>
+                    <p className="text-lg text-gray-600">
+                      If you changed your mind or encountered an issue, you can
+                      return to your free assessment below and try again when
+                      you are ready.
+                    </p>
                   </div>
                 )}
 
                 {status === "error" && (
-                  <div className="mt-15 mb-10">
+                  <div className="mt-15 mb-10 space-y-4">
                     <Heading tag="h2" size="h3">
-                      Order Error
+                      Something went wrong
                     </Heading>
                     <Heading tag="p" size="h4">
-                      Please contact us to confirm your order status.
+                      We were unable to automatically verify your order status.
                     </Heading>
+                    <p className="text-lg text-gray-600">
+                      Please check your email for a receipt from Stripe. If you
+                      have been charged but have not received an order
+                      confirmation from us, please contact support for
+                      assistance.
+                    </p>
                   </div>
                 )}
 

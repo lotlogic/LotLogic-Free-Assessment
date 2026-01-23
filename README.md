@@ -52,10 +52,10 @@ The production build output is written to `dist/`.
 
 The frontend expects a backend at `VITE_API_URL` that exposes:
 
-- `GET /geo/act-zone?address=<urlencoded>`
+- `GET /api/geo/act-zone?address=<urlencoded>`
   - Returns JSON compatible with `src/@types/api.ts` (zone + `lotCheckRules`)
-- `POST /stripe/create-checkout-session`
-  - Request body: `{ "email": string, "address": string, "site": string }`
+- `POST /api/stripe/create-checkout-session`
+  - Request body includes (where available): `site`, `intention`, `email` (alias), `clientEmail`, `address`, `suburb`, `blockSizeM2`, `zone`, `reportId`
   - Response body: `{ "url": string }` where `url` is the Stripe-hosted Checkout URL
 
 ## Deployment (Azure Storage Static Website)
@@ -68,7 +68,9 @@ Required GitHub secrets:
 
 - `VITE_API_URL`
 - `VITE_GOOGLE_MAPS_API_KEY`
+- `VITE_COMMENCEMENT_DATE` (optional)
 - `AZURE_CREDENTIALS` (service principal JSON for `azure/login`)
+- `AZURE_STORAGE_ACCOUNT`
 
 Notes:
 
