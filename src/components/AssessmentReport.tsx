@@ -58,24 +58,30 @@ export const FreeBlockAssessmentReport = () => {
     show gated content if it is a saved search
   ****************************************************/
   useEffect(() => {
-    if (!!report && !!Object.keys(savedSearches).length) {
-      let newSaves = { ...savedSearches };
+    if (!report?.formattedAddress) return;
 
-      // clear expired saves
-      const time = new Date().getTime();
-      Object.entries(savedSearches).forEach(([key, value]) => {
-        if (value.expiry < time) delete newSaves[key];
-      });
+    // save current address for checkout (and for gating key)
+    setSavedAddress(report.formattedAddress);
+
+    // clear expired saves
+    const time = new Date().getTime();
+    let newSaves = { ...savedSearches };
+    Object.entries(savedSearches).forEach(([key, value]) => {
+      if (value.expiry < time) delete newSaves[key];
+    });
+
+    // persist if we removed anything
+    if (Object.keys(newSaves).length !== Object.keys(savedSearches).length) {
       setSavedSearches(newSaves);
+    }
 
-      // check for current save
-      if (savedSearches[report.formattedAddress]) {
-        setEmail(savedSearches[report.formattedAddress].email);
-        setIsGated(false);
-      }
-
-      // save current address for checkout
-      setSavedAddress(report.formattedAddress);
+    // check for current save (using de-expired saves)
+    const currentSave = newSaves[report.formattedAddress];
+    if (currentSave) {
+      setEmail(currentSave.email);
+      setIsGated(false);
+    } else {
+      setIsGated(true);
     }
   }, [savedSearches, report]);
 
@@ -154,10 +160,11 @@ export const FreeBlockAssessmentReport = () => {
     // ...do stuff here
 
     // display gated content
-    if (savedAddress) {
+    const addressKey = report?.formattedAddress || savedAddress;
+    if (addressKey) {
       // save the search to localstorage
       let newSaves = { ...savedSearches };
-      newSaves[savedAddress] = {
+      newSaves[addressKey] = {
         email: formData.email,
         expiry: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
       };
@@ -165,6 +172,9 @@ export const FreeBlockAssessmentReport = () => {
 
       // save email for payment form
       setEmail(formData.email);
+
+      // keep session address in sync (used for checkout return link)
+      setSavedAddress(addressKey);
 
       // show content
       setIsGated(false);
@@ -182,7 +192,10 @@ export const FreeBlockAssessmentReport = () => {
         <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
           <div className="bg-white p-10 md:px-16 md:pb-16">
             <Heading tag="h2" size="h2" className="">
-              {savedAddress.replace(", Australia", "")}
+              {(report?.formattedAddress || savedAddress).replace(
+                ", Australia",
+                "",
+              )}
             </Heading>
 
             <div className="text-lg">
