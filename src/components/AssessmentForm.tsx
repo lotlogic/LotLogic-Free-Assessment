@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddressInput from "./ui/AddressInput";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
+import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 
 export const FreeBlockAssessment = () => {
   const [address, setAddress] = useState<string | null | undefined>();
@@ -17,7 +18,11 @@ export const FreeBlockAssessment = () => {
   };
 
   const onSearch = () => {
-    if (address) navigate("/assessment?address=" + encodeURIComponent(address));
+    if (!address) return;
+
+    trackCtaClick("check_my_block", { address });
+    trackLookupStarted(address);
+    navigate("/assessment?address=" + encodeURIComponent(address));
   };
 
   return (

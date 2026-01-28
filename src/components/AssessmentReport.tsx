@@ -1,8 +1,14 @@
 import type { GeoApi } from "@/@types/api";
 import { classList } from "@/utils/tailwind";
 import { toTitleCase } from "@/utils/text";
+import {
+  identifyUser,
+  trackCtaClick,
+  trackEvent,
+  trackLookupPerformed,
+} from "@/utils/analytics";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import FloatingPaymentCta from "./FloatingPaymentCta";
 import GatedContentForm, {
@@ -18,6 +24,7 @@ export const FreeBlockAssessmentReport = () => {
   const [error, setError] = useState<string>();
   const [isGated, setIsGated] = useState(true);
   const [email, setEmail] = useState<string>();
+  const hasTrackedLookup = useRef(false);
 
   const [searchParams] = useSearchParams();
   const [savedAddress, setSavedAddress] = useSessionStorage("address", "");
@@ -53,6 +60,16 @@ export const FreeBlockAssessmentReport = () => {
 
     fetchData();
   }, []);
+
+  /****************************************************
+    tracking for successful lookup
+  ****************************************************/
+  useEffect(() => {
+    if (!report || hasTrackedLookup.current) return;
+
+    trackLookupPerformed(report, { address: report.formattedAddress });
+    hasTrackedLookup.current = true;
+  }, [report]);
 
   /****************************************************
     show gated content if it is a saved search
@@ -171,6 +188,21 @@ export const FreeBlockAssessmentReport = () => {
     // display gated content
     const addressKey = report?.formattedAddress || savedAddress;
     if (addressKey) {
+      identifyUser(formData.email, {
+        address: addressKey,
+        zone: report?.lotCheckRules?.zoneCode ?? report?.zone?.zoneCode ?? null,
+        block_size: report?.lotCheckRules?.blockAreaSqm ?? null,
+        parcel_id:
+          report?.block?.blockKey ??
+          (report?.block?.objectId != null ? String(report.block.objectId) : null),
+      });
+      trackCtaClick("view_report", { address: addressKey });
+      trackEvent("gated_email_submit", {
+        address: addressKey,
+        email: formData.email,
+        timestamp: new Date().toISOString(),
+      });
+
       // save the search to localstorage
       let newSaves = { ...savedSearches };
       newSaves[addressKey] = {
@@ -340,6 +372,7 @@ export const FreeBlockAssessmentReport = () => {
                 suburb={suburb}
                 blockSizeM2={blockSizeM2}
                 zone={zone}
+                ctaLocation="report_sidebar"
                 showButton={!isGated || undefined}
                 className="w-full"
               />
@@ -369,6 +402,7 @@ export const FreeBlockAssessmentReport = () => {
           suburb={suburb}
           blockSizeM2={blockSizeM2}
           zone={zone}
+          ctaLocation="report_sticky"
           showButton={!isGated || undefined}
         />
       </div>

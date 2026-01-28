@@ -5,6 +5,7 @@ import { useSessionStorage } from "@uidotdev/usehooks";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
+import { trackCtaClick, trackEvent } from "@/utils/analytics";
 
 export const CheckoutPage = () => {
   const [status, setStatus] = useState<"success" | "cancel" | "error">();
@@ -20,6 +21,16 @@ export const CheckoutPage = () => {
     else if (cancel && !success) setStatus("cancel");
     else setStatus("error");
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!status) return;
+
+    trackEvent("checkout_status_view", {
+      status,
+      address: savedAddress || undefined,
+      timestamp: new Date().toISOString(),
+    });
+  }, [status, savedAddress]);
 
   return (
     <>
@@ -90,6 +101,11 @@ export const CheckoutPage = () => {
                   <Link
                     to={
                       "/assessment?address=" + encodeURIComponent(savedAddress)
+                    }
+                    onClick={() =>
+                      trackCtaClick("back_to_free_report", {
+                        address: savedAddress,
+                      })
                     }
                     className={classList([
                       "inline-flex items-center gap-1",

@@ -4,6 +4,7 @@ import { ChevronDown, FileText, Mail, Phone, Target, User } from "lucide-react";
 import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
+import { trackCtaClick, trackEvent } from "@/utils/analytics";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
 import TextModal from "./ui/TextModal";
@@ -36,11 +37,20 @@ type Props = {
   zone?: string;
   showButton?: boolean;
   className?: string;
+  ctaLocation?: string;
 };
 
 export const FloatingPaymentCta = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
+  const openModal = () => {
+    trackCtaClick("purchase_full_report", {
+      address: props.address,
+      zone: props.zone,
+      block_size: props.blockSizeM2,
+      location: props.ctaLocation,
+    });
+    setIsOpen(true);
+  };
   const closeModal = () => setIsOpen(false);
 
   const {
@@ -56,6 +66,22 @@ export const FloatingPaymentCta = (props: Props) => {
       if (!formData.email) throw new Error("Missing query parameter - email");
       if (!props.address) throw new Error("Missing query parameter - address");
       if (!location.origin) throw new Error("Missing query parameter - site");
+
+      trackCtaClick("purchase_report_submit", {
+        address: props.address,
+        zone: props.zone,
+        block_size: props.blockSizeM2,
+        location: props.ctaLocation,
+      });
+
+      trackEvent("checkout_form_submit", {
+        address: props.address,
+        zone: props.zone,
+        block_size: props.blockSizeM2,
+        suburb: props.suburb,
+        intention: formData.intention,
+        timestamp: new Date().toISOString(),
+      });
 
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/stripe/create-checkout-session`,
@@ -90,9 +116,28 @@ export const FloatingPaymentCta = (props: Props) => {
       // redirect the user to the Stripe-hosted URL
       const { url } = await response.json();
 
-      if (url) window.location.href = url;
-      else throw new Error("Stripe error! No checkout URL returned");
+      if (url) {
+        trackEvent("checkout_redirect", {
+          address: props.address,
+          zone: props.zone,
+          block_size: props.blockSizeM2,
+          suburb: props.suburb,
+          intention: formData.intention,
+          timestamp: new Date().toISOString(),
+        });
+        window.location.href = url;
+      } else {
+        throw new Error("Stripe error! No checkout URL returned");
+      }
     } catch (error: any) {
+      trackEvent("checkout_error", {
+        address: props.address,
+        zone: props.zone,
+        block_size: props.blockSizeM2,
+        suburb: props.suburb,
+        message: error?.message,
+        timestamp: new Date().toISOString(),
+      });
       console.log("Error: " + error.message);
     }
   };

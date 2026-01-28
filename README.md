@@ -58,6 +58,20 @@ The frontend expects a backend at `VITE_API_URL` that exposes:
   - Request body includes (where available): `site`, `intention`, `email` (alias), `clientEmail`, `address`, `suburb`, `blockSizeM2`, `zone`, `reportId`
   - Response body: `{ "url": string }` where `url` is the Stripe-hosted Checkout URL
 
+## Analytics (Mixpanel)
+
+The app uses Mixpanel (EU project host) with autocapture enabled. Add the project token to `VITE_MIXPANEL_TOKEN` (optional: a default token is embedded for convenience).
+
+Tracked events (key ones):
+
+- `lookup_performed` — fields: `address`, `parcel_id`, `block_size`, `zone`, `rule_outputs`, `timestamp`
+- `lookup_started`, `cta_click`, `gated_email_submit`, `checkout_form_submit`, `checkout_redirect`, `checkout_error`, `checkout_status_view`
+
+Analytics review path:
+
+- Mixpanel → Dashboards → create/view **“LotLogic Free Assessment”** (use `lookup_performed` and `cta_click` as primary cards)
+- For exports: Mixpanel → Events → select `lookup_performed` → Export → CSV
+
 ## Deployment (Azure Storage Static Website)
 
 This repo deploys as a static site (upload `dist/` to the storage account `$web` container).
