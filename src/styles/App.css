@@ -5,9 +5,14 @@
 ****************************************************/
 
 /****************************************************
-    Fonts
+	Fonts
 ****************************************************/
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+@font-face {
+  font-family: "Lexend";
+  src: url("/fonts/Lexend.woff2") format("woff2-variations");
+  font-weight: 0 1000;
+  font-display: swap;
+}
 
 /****************************************************
     Tailwind
@@ -36,6 +41,10 @@ main {
   flex-grow: 1;
   padding-top: 60px;
   padding-bottom: 120px;
+
+  @media (width >= 48rem) {
+    padding-top: 90px;
+  }
 }
 
 section {

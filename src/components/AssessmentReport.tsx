@@ -1,12 +1,12 @@
 import type { GeoApi } from "@/@types/api";
-import { classList } from "@/utils/tailwind";
-import { toTitleCase } from "@/utils/text";
 import {
   identifyUser,
   trackCtaClick,
   trackEvent,
   trackLookupPerformed,
 } from "@/utils/analytics";
+import { classList } from "@/utils/tailwind";
+import { toTitleCase } from "@/utils/text";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -22,7 +22,7 @@ export const FreeBlockAssessmentReport = () => {
   const [report, setReport] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
-  const [isGated, setIsGated] = useState(true);
+  const [isGated, setIsGated] = useState(false);
   const [email, setEmail] = useState<string>();
   const hasTrackedLookup = useRef(false);
 
@@ -66,7 +66,6 @@ export const FreeBlockAssessmentReport = () => {
   ****************************************************/
   useEffect(() => {
     if (!report || hasTrackedLookup.current) return;
-
     trackLookupPerformed(report, { address: report.formattedAddress });
     hasTrackedLookup.current = true;
   }, [report]);
@@ -93,13 +92,13 @@ export const FreeBlockAssessmentReport = () => {
     }
 
     // check for current save (using de-expired saves)
-    const currentSave = newSaves[report.formattedAddress];
-    if (currentSave) {
-      setEmail(currentSave.email);
-      setIsGated(false);
-    } else {
-      setIsGated(true);
-    }
+    // const currentSave = newSaves[report.formattedAddress];
+    // if (currentSave) {
+    //   setEmail(currentSave.email);
+    //   setIsGated(false);
+    // } else {
+    //   setIsGated(true);
+    // }
   }, [savedSearches, report]);
 
   /****************************************************
@@ -113,8 +112,8 @@ export const FreeBlockAssessmentReport = () => {
         <Heading tag="h1" size="h1">
           Your block assessment
         </Heading>
-        <div className="relative max-w-260  mt-10 mx-auto rounded-md shadow-lg">
-          <div className={classList(["bg-white p-10 md:px-16 md:pb-16"])}>
+        <div className="relative max-w-260 mt-10 mx-auto">
+          <div className="bg-white p-10 md:px-16 md:pb-16 rounded-md shadow-lg">
             <div className="grid place-items-center min-h-100 text-xl">
               <div className="grid place-items-center min-h-100 text-xl">
                 <div className="text-center">
@@ -173,7 +172,9 @@ export const FreeBlockAssessmentReport = () => {
   const checkoutAddress = report?.formattedAddress || savedAddress;
   const reportId =
     report?.block?.blockKey ||
-    (report?.block?.objectId != null ? String(report.block.objectId) : undefined);
+    (report?.block?.objectId != null
+      ? String(report.block.objectId)
+      : undefined);
   const suburb = report?.block?.properties?.DIVISION_NAME || undefined;
   const zone = report?.lotCheckRules?.zoneCode || report?.zone?.zoneCode || "";
   const blockSizeM2 = report?.lotCheckRules?.blockAreaSqm;
@@ -194,8 +195,11 @@ export const FreeBlockAssessmentReport = () => {
         block_size: report?.lotCheckRules?.blockAreaSqm ?? null,
         parcel_id:
           report?.block?.blockKey ??
-          (report?.block?.objectId != null ? String(report.block.objectId) : null),
+          (report?.block?.objectId != null
+            ? String(report.block.objectId)
+            : null),
       });
+
       trackCtaClick("view_report", { address: addressKey });
       trackEvent("gated_email_submit", {
         address: addressKey,
@@ -237,8 +241,8 @@ export const FreeBlockAssessmentReport = () => {
             <Heading tag="h1" size="h1">
               Your block assessment
             </Heading>
-            <div className="relative mt-10 rounded-md shadow-lg">
-              <div className="bg-white p-10 md:px-16 md:pb-16">
+            <div className="relative mt-10">
+              <div className="bg-white p-10 md:px-16 md:pb-16 rounded-md shadow-lg">
                 <Heading tag="h2" size="h2" className="">
                   {(report?.formattedAddress || savedAddress).replace(
                     ", Australia",

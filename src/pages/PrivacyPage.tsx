@@ -1,14 +1,29 @@
 import Header from "@/components/layouts/Header";
 import Heading from "@/components/ui/Heading";
+import { ArrowBack } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export const AboutPage = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   return (
     <>
       <Header />
       <main>
         <section>
-          <div className="relative max-w-260 mx-auto rounded-md shadow-lg">
-            <div className="bg-white p-10 md:px-16 md:pb-16">
+          <div className="relative max-w-260 mx-auto">
+            <button
+              className="flex align-middle gap-1 text-sm"
+              onClick={handleGoBack}
+            >
+              <ArrowBack fontSize="small" />
+              Go Back
+            </button>
+
+            <div className="bg-white p-10 mt-4 md:px-16 md:pb-16 rounded-md shadow-lg">
               <Heading tag="h1" size="h1">
                 Privacy Policy – LotLogic (operated by BlockPlanner Pty Ltd)
               </Heading>

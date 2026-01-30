@@ -50,6 +50,7 @@ export const Button = (props: ButtonProps) => {
 
   const buttonClasses: Record<ButtonVariant, string[]> = {
     primary: [
+      // "text-bp-sand",
       "text-white",
       "bg-primary",
       "outline-primary",

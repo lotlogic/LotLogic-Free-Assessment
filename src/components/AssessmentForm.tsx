@@ -24,7 +24,7 @@ export const FreeBlockAssessment = () => {
   };
 
   const onSearch = () => {
-    if (!address) return;
+    if (disabled || !address) return;
 
     trackCtaClick("check_my_block", { address });
     trackLookupStarted(address);
