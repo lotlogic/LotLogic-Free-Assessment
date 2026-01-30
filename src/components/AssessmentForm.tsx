@@ -1,20 +1,26 @@
+import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddressInput from "./ui/AddressInput";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
-import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 
 export const FreeBlockAssessment = () => {
   const [address, setAddress] = useState<string | null | undefined>();
+  const [disabled, setDisabled] = useState(true);
 
   const navigate = useNavigate();
 
-  const onPlaceSelect = (place: google.maps.places.Place | null) => {
+  const handlePlaceSelect = (place: google.maps.places.Place | null) => {
     if (place) {
       const address = place.formattedAddress;
       setAddress(address);
+      setDisabled(false);
     }
+  };
+
+  const handleInputChange = () => {
+    if (address) setDisabled(true);
   };
 
   const onSearch = () => {
@@ -44,13 +50,14 @@ export const FreeBlockAssessment = () => {
                 <AddressInput
                   name="search"
                   placeholder="Enter your ACT address"
-                  onPlaceSelect={onPlaceSelect}
+                  handlePlaceSelect={handlePlaceSelect}
+                  handleInputChange={handleInputChange}
                 />
               </label>
             </div>
             <Button
               label="Check my block"
-              disabled={!address}
+              disabled={disabled}
               onClick={onSearch}
             />
           </div>

@@ -12,7 +12,8 @@ import {
 export type AddressInputProps = ComponentProps<"input"> & {
   name: string;
   placeholder?: string;
-  onPlaceSelect: (place: google.maps.places.Place | null) => void;
+  handlePlaceSelect: (place: google.maps.places.Place | null) => void;
+  handleInputChange: () => void;
 };
 
 // hard coded bound for Canberra
@@ -26,7 +27,8 @@ const canberraBounds = {
 export const AddressInput = ({
   name,
   placeholder,
-  onPlaceSelect,
+  handlePlaceSelect,
+  handleInputChange,
 }: AddressInputProps) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [showListing, setShowListing] = useState(false);
@@ -37,10 +39,11 @@ export const AddressInput = ({
     // region: "au",
   });
 
-  const handleInput = useCallback((event: FormEvent<HTMLInputElement>) => {
+  const handleInput = (event: FormEvent<HTMLInputElement>) => {
     setShowListing(true);
     setInputValue((event.target as HTMLInputElement).value);
-  }, []);
+    handleInputChange();
+  };
 
   const handleSuggestionClick = useCallback(
     async (suggestion: google.maps.places.AutocompleteSuggestion) => {
@@ -59,9 +62,9 @@ export const AddressInput = ({
       // setInputValue("");
       setInputValue(suggestion.placePrediction.text.text);
       setShowListing(false);
-      onPlaceSelect(place);
+      handlePlaceSelect(place);
     },
-    [places, onPlaceSelect],
+    [places, handlePlaceSelect],
   );
 
   return (
