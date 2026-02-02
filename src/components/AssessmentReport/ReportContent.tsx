@@ -121,7 +121,7 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
           <li className="relative">
             <div
               className={classList([
-                "absolute top-1 left-0.5 size-3.5",
+                "absolute top-1.25 left-0.5 size-3.5",
                 "flex items-center justify-center",
                 "text-xs text-white",
                 "bg-gray-400 rounded-full",

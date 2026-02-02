@@ -1,8 +1,8 @@
+import Logomark from "@/images/BlockPlanner-Logomark.svg?react";
 import { trackCtaClick } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
-import { FileText } from "lucide-react";
+import { ArrowUp, FileText } from "lucide-react";
 import { useMemo, useState } from "react";
-import AnimatedLogo from "../ui/AnimatedLogo";
 import Button from "../ui/Button";
 import Heading from "../ui/Heading";
 import { PaymentModal, type CheckoutData } from "./PaymentModal";
@@ -22,7 +22,8 @@ export const FullReportCta = ({
   error,
   location,
 }: Props) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isDisabled = useMemo(() => {
     return !!error || isLoading || isGated;
@@ -34,6 +35,7 @@ export const FullReportCta = ({
   const ctaClasses =
     location === "mobile"
       ? classList([
+          "bg-white",
           "lg:hidden",
           "fixed bottom-0 left-0 right-0 z-50",
           "border-t border-gray-200",
@@ -44,8 +46,8 @@ export const FullReportCta = ({
 
   const bodyClasses =
     location === "mobile"
-      ? "bg-white p-4 "
-      : "bg-white border border-gray-200 rounded-xl p-6 shadow-sm";
+      ? "flex flex-col gap-4 px-4 pb-8 mx-auto max-w-[80ch]"
+      : "border border-gray-200 rounded-lg p-5 shadow-sm flex flex-col gap-4";
 
   const openModal = () => {
     if (!isDisabled) {
@@ -55,18 +57,58 @@ export const FullReportCta = ({
         block_size: data?.blockSizeM2,
         location: ctaLocation,
       });
-      setIsOpen(true);
+      setModalOpen(true);
     }
   };
 
   return (
     <div className={ctaClasses}>
-      <div className={classList([bodyClasses, "text-center"])}>
-        <AnimatedLogo className="mx-auto" />
+      <div
+        className={classList([
+          // "relative",
+          "group",
+          bodyClasses,
+          "bg-white",
+          "text-center",
+          "text-sm",
+          "text-gray-600",
+          "rte",
+        ])}
+        data-state={drawerOpen ? "open" : "closed"}
+      >
+        <Button
+          variant="outline"
+          label="toggle drawer"
+          leftIcon={<ArrowUp />}
+          iconOnly
+          className={classList([
+            "absolute top-4 right-4 border-none lg:hidden",
+            "group-data-[state=open]:transform-[scaleY(-1)]",
+            "transition-all",
+            "duration-500",
+          ])}
+          onClick={() => setDrawerOpen(!drawerOpen)}
+        />
+
+        <Logomark width={100} className="mx-auto" />
+
         <Heading tag="h3" size="h4" className="-mt-4 mb-0">
           <span>Is there something here worth exploring?</span>
         </Heading>
 
+        <div
+          className={classList([
+            "flex flex-col gap-4",
+            "max-lg:max-h-54",
+            "max-sm:max-h-40",
+            "opacity-100",
+            "overflow-hidden",
+            "max-lg:transition-all",
+            "duration-500",
+            "max-lg:group-data-[state=closed]:max-h-0",
+            "max-lg:group-data-[state=closed]:opacity-0",
+          ])}
+        >
           <p className="">
             The free results show what the rules allow. The full report looks at
             what's actually on your site &mdash; your home, trees, setbacks,
@@ -82,6 +124,8 @@ export const FullReportCta = ({
           <p>
             <strong className="text-base">$299</strong>
           </p>
+        </div>
+
         <Button
           label="Request your report"
           leftIcon={<FileText className="size-5" />}
@@ -93,6 +137,19 @@ export const FullReportCta = ({
         <div className="text-xs">
           Based on publicly available spatial data at time of preparation.
         </div>
+
+        <div
+          className={classList([
+            "max-lg:max-h-20",
+            "max-sm:max-h-10",
+            "opacity-100",
+            "overflow-hidden",
+            "max-lg:transition-all",
+            "duration-500",
+            "max-lg:group-data-[state=closed]:max-h-0",
+            "max-lg:group-data-[state=closed]:opacity-0",
+          ])}
+        >
           <p className="mt-4">
             Want to go straight to a full feasibility assessment with a town
             planner?
@@ -100,9 +157,11 @@ export const FullReportCta = ({
             <a href="mailto: ">Get in touch</a> &mdash; we'll reach out to
             discuss your options.
           </p>
+        </div>
+
         <PaymentModal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          isOpen={modalOpen}
+          setIsOpen={setModalOpen}
           ctaLocation={ctaLocation}
           //
           email={data?.email}

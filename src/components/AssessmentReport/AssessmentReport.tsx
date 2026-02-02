@@ -169,7 +169,7 @@ export const FreeBlockAssessmentReport = () => {
 
       <section
         className={classList([
-          "mt-12 container mx-auto px-4 pb-80 lg:pb-12",
+          "mt-12 container mx-auto px-4 pb-60 lg:pb-12",
           { "blur-xs": isGated },
         ])}
       >

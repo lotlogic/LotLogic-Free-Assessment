@@ -156,7 +156,7 @@ export const PaymentModal = (props: Props) => {
       >
         <div>
           <label>
-            <span className="sr-only">What is your primary intention?</span>
+            <span className="sr-only">What's your primary intention?</span>
             <span className="relative">
               <Target className="absolute top-1/2 left-3 size-6 -translate-y-1/2 text-gray-300 pointer-events-none" />
               <ChevronDown className="absolute top-1/2 right-4 size-5 -translate-y-1/2 text-gray-500 pointer-events-none" />
@@ -165,7 +165,7 @@ export const PaymentModal = (props: Props) => {
                 {...register("intention")}
                 aria-invalid={errors.intention ? "true" : "false"}
                 className={classList(
-                  "w-full px-4 py-3 pl-12 pr-10 appearance-none",
+                  "w-full py-3 pl-12 pr-10 appearance-none",
                   "bg-white text-gray-700",
                   "border border-gray-300 rounded-md",
                   "focus-visible:border-transparent",
