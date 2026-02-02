@@ -63,21 +63,43 @@ export const FullReportCta = ({
     <div className={ctaClasses}>
       <div className={classList([bodyClasses, "text-center"])}>
         <AnimatedLogo className="mx-auto" />
-        <Heading tag="h3" size="h4" className="mb-3">
-          Unlock your block's full potential
+        <Heading tag="h3" size="h4" className="-mt-4 mb-0">
+          <span>Is there something here worth exploring?</span>
         </Heading>
-        <p className="text-gray-600 text-sm mb-6">
-          Get a detailed PDF report with constraints, opportunities, and
-          plain-English guidance for this block.
-        </p>
 
+          <p className="">
+            The free results show what the rules allow. The full report looks at
+            what's actually on your site &mdash; your home, trees, setbacks,
+            access &mdash; so you can see whether it's worth taking the next
+            step.
+          </p>
+
+          <p className="">
+            A practical next step, not a planning assessment.Prepared by our
+            team. Delivered within 48 hours.
+          </p>
+
+          <p>
+            <strong className="text-base">$299</strong>
+          </p>
         <Button
-          label="Purchase full report"
+          label="Request your report"
           leftIcon={<FileText className="size-5" />}
           className={classList(["w-full px-6 py-4 shadow-lg"])}
           onClick={openModal}
           disabled={isDisabled}
         />
+
+        <div className="text-xs">
+          Based on publicly available spatial data at time of preparation.
+        </div>
+          <p className="mt-4">
+            Want to go straight to a full feasibility assessment with a town
+            planner?
+            <br />
+            <a href="mailto: ">Get in touch</a> &mdash; we'll reach out to
+            discuss your options.
+          </p>
         <PaymentModal
           isOpen={isOpen}
           setIsOpen={setIsOpen}

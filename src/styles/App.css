@@ -80,6 +80,17 @@ button {
   }
 }
 
+.rte {
+  a {
+    &:not(.button) {
+      color: var(--color-blue-500);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      outline-offset: 2px;
+    }
+  }
+}
+
 /****************************************************
 	Remove Search Reset Button
 ****************************************************/

@@ -129,9 +129,12 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
             >
               i
             </div>
-            No major overlays checked in this version
+            This guide is based on block size and zoning only.
           </li>
-          <li>Height, setbacks and detailed design rules not assessed here</li>
+          <li>
+            It doesn't account for overlays, setbacks, trees, or what's already
+            on your site. Our full report takes these into account.
+          </li>
         </ul>
       </div>
     </>

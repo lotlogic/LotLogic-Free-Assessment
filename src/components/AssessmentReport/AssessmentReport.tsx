@@ -191,8 +191,8 @@ export const FreeBlockAssessmentReport = () => {
             </div>
 
             <section className="text-gray-400 text-center mt-8">
-              BlockPlanner is an informational tool based on ACT planning
-              changes for RZ1/RZ2. This version assesses blank-site rules only.
+              This free tool provides general information only, not professional
+              advice. Covers RZ1 (Suburban) and RZ2 (Suburban Core) zones.
             </section>
           </div>
 

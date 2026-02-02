@@ -138,16 +138,16 @@ export const PaymentModal = (props: Props) => {
 
   return (
     <TextModal open={props.isOpen} onClose={closeModal}>
-      <Heading tag="h2" size="h2">
+      <Heading tag="h2" size="h2" className="text-center">
         Want an assessment that considers your current house?
       </Heading>
 
-      <Heading tag="p" size="h4">
+      <p className="text-center text-lg">
         Upgrade to the full PDF report and see what changes are possible when
-        your existing dwelling is taken into account. You’ll get clearer,
+        your existing dwelling is taken into account. You'll get clearer,
         plain-English guidance on likely constraints, opportunities, and next
         steps for your property, delivered straight to your inbox.
-      </Heading>
+      </p>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -173,12 +173,18 @@ export const PaymentModal = (props: Props) => {
                 )}
               >
                 <option value="" disabled>
-                  What&apos;s your primary intention?
+                  What's your primary intention?
                 </option>
-                <option value="Develop">Develop</option>
-                <option value="Joint venture">Joint venture</option>
-                <option value="Sell">Sell</option>
-                <option value="Exploring">Exploring</option>
+                <option value="Sell">
+                  I want to sell and understand what it's worth
+                </option>
+                <option value="Develop">I want to develop it myself</option>
+                <option value="Joint venture">
+                  I want someone to develop it for me
+                </option>
+                <option value="Just looking">
+                  I'm open to options &mdash; help me figure it out
+                </option>
               </select>
             </span>
           </label>
