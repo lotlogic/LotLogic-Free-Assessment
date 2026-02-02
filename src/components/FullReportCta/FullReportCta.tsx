@@ -129,7 +129,9 @@ export const FullReportCta = ({
         <Button
           label="Request your report"
           leftIcon={<FileText className="size-5" />}
-          className={classList(["w-full px-6 py-4 shadow-lg"])}
+          className={classList([
+            "w-full px-6 py-4 shadow-lg animate-attention",
+          ])}
           onClick={openModal}
           disabled={isDisabled}
         />

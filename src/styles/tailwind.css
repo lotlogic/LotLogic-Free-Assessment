@@ -45,6 +45,24 @@
       stroke-dashoffset: 0;
     }
   }
+
+  --animate-attention: attention 10s infinite;
+  @keyframes attention {
+    0%,
+    10%,
+    20%,
+    30%,
+    100% {
+      transform: none;
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+    5%,
+    15%,
+    25% {
+      transform: translateY(-8px);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+  }
 }
 
 :root {
