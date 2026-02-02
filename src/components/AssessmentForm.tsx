@@ -76,8 +76,8 @@ export const FreeBlockAssessment = () => {
           <hr className="mt-10 mb-20 border-gray-300" />
 
           <p className="text-base text-balance">
-            LotCheck is an informational tool. Not professional advice. Based on
-            ACT planning changes.
+            BlockPlanner is an informational tool. Not professional advice.
+            Based on ACT planning changes.
           </p>
         </div>
       </div>

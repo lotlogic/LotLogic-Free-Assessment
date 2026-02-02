@@ -25,14 +25,28 @@
   --color-warning: #f59e0b;
   --color-error: #ef4444;
 
-  /* LotLogic colors */
+  /* LotCheck colors */
   /* --color-lot-green: #2d8b85; */
 
   /* --color-primary: #2d8b85; */
   /* --color-primary-hover: #1a3d42; */
 }
 
-/* CSS Variables for fonts */
+@theme {
+  --animate-draw: draw 1s ease-in-out alternate infinite;
+  /* --animate-draw: draw 1s linear alternate infinite; */
+  @keyframes draw {
+    0%,
+    10% {
+      stroke-dashoffset: 300;
+    }
+    90%,
+    100% {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
 :root {
 }
 

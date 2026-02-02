@@ -95,6 +95,7 @@ export const AddressInput = ({
             "border border-gray-300 rounded-md",
             "divide-y divide-gray-300",
             "overflow-hidden",
+            "z-10",
           )}
         >
           {suggestions.map((suggestion, index) => {
