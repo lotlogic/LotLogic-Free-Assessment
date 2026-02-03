@@ -117,7 +117,7 @@ export const FullReportCta = ({
           </p>
 
           <p className="">
-            A practical next step, not a planning assessment.Prepared by our
+            A practical next step, not a planning assessment. Prepared by our
             team. Delivered within 48 hours.
           </p>
 

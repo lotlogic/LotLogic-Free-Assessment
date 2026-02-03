@@ -48,7 +48,7 @@ const GatedContentForm = (props: GatedContentProps) => {
           Enter your email to view your development assessment.
         </Heading>
 
-        <p className="pt-2">
+        <p className="pt-2 text-balance">
           We'll also send you a copy and notify you if ACT planning rules change
           for your property.
         </p>
