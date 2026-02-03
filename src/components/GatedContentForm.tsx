@@ -41,7 +41,7 @@ const GatedContentForm = (props: GatedContentProps) => {
     <TextModal open={true}>
       <div className="text-center">
         <Heading tag="h2" size="h2">
-          Your LotCheck report is ready
+          Your BlockPlanner report is ready
         </Heading>
 
         <Heading tag="p" size="h4">
@@ -106,8 +106,8 @@ const GatedContentForm = (props: GatedContentProps) => {
                 ])}
               />
               <span className="text-sm text-left">
-                I agree to LotCheck's Privacy Policy and to receive occasional
-                updates (you can unsubscribe anytime)
+                I agree to BlockPlanner's Privacy Policy and to receive
+                occasional updates (you can unsubscribe anytime)
               </span>
             </label>
             {errors.terms && (

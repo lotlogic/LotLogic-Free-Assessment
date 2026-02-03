@@ -27,6 +27,7 @@ export const Button = (props: ButtonProps) => {
   } = props;
 
   const baseClasses = [
+    "button",
     "relative",
     "inline-flex",
     "items-center",
@@ -50,6 +51,7 @@ export const Button = (props: ButtonProps) => {
 
   const buttonClasses: Record<ButtonVariant, string[]> = {
     primary: [
+      // "text-bp-sand",
       "text-white",
       "bg-primary",
       "outline-primary",
@@ -97,6 +99,7 @@ export const Button = (props: ButtonProps) => {
       disabled={loading || disabled}
       data-loading={loading || undefined}
       {...rest}
+      aria-label={props.iconOnly ? props.label : undefined}
     >
       {loading && (
         <span
@@ -111,7 +114,7 @@ export const Button = (props: ButtonProps) => {
         />
       )}
       {leftIcon}
-      {label}
+      {!props.iconOnly && <>{label}</>}
       {rightIcon}
     </button>
   );

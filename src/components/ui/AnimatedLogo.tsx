@@ -1,0 +1,26 @@
+type Props = {
+  width?: number;
+  className?: string;
+};
+
+const AnimatedLogo = (props: Props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    version="1.1"
+    viewBox="0 0 135.3 142.69"
+    fill="none"
+    stroke="#494f4a"
+    strokeWidth="1.5"
+    width={props.width || 100}
+    className={props.className || ""}
+  >
+    <path
+      className="animate-draw"
+      strokeDasharray={299}
+      strokeDashoffset={299}
+      d="M84.2,70.19c.84-.51,1.66-1.1,2.41-1.75,4.39-3.88,6.66-9.44,6.17-15.3-.75-9.39-9.02-16.73-18.78-16.73h-37.77v69.87h43.92c4.88,0,9.48-1.89,12.92-5.35,3.46-3.46,5.35-8.04,5.35-12.92,0-8.64-5.98-15.96-14.2-17.82ZM74.57,69.75h-19.25v17.54l-15.91,13.67v-61.35h35.16c8.29,0,15.07,6.75,15.07,15.07,0,4.02-1.57,7.8-4.42,10.65-2.85,2.85-6.63,4.42-10.65,4.42ZM80.13,103.08h-37.99l16.38-14.09v-16.05h21.61c8.32,0,15.07,6.77,15.07,15.07,0,4.02-1.57,7.8-4.42,10.65-2.85,2.85-6.61,4.42-10.65,4.42Z"
+    />
+  </svg>
+);
+
+export default AnimatedLogo;

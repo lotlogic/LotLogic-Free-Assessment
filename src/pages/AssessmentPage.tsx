@@ -1,4 +1,4 @@
-import AssessmentReport from "@/components/AssessmentReport";
+import AssessmentReport from "@/components/AssessmentReport/AssessmentReport";
 import Header from "@/components/layouts/Header";
 
 export const AssessmentPage = () => {

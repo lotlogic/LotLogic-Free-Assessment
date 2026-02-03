@@ -1,24 +1,30 @@
+import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddressInput from "./ui/AddressInput";
 import Button from "./ui/Button";
 import Heading from "./ui/Heading";
-import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 
 export const FreeBlockAssessment = () => {
   const [address, setAddress] = useState<string | null | undefined>();
+  const [disabled, setDisabled] = useState(true);
 
   const navigate = useNavigate();
 
-  const onPlaceSelect = (place: google.maps.places.Place | null) => {
+  const handlePlaceSelect = (place: google.maps.places.Place | null) => {
     if (place) {
       const address = place.formattedAddress;
       setAddress(address);
+      setDisabled(false);
     }
   };
 
+  const handleInputChange = () => {
+    if (address) setDisabled(true);
+  };
+
   const onSearch = () => {
-    if (!address) return;
+    if (disabled || !address) return;
 
     trackCtaClick("check_my_block", { address });
     trackLookupStarted(address);
@@ -30,11 +36,12 @@ export const FreeBlockAssessment = () => {
       <div className="text-center text-lg">
         <div className="max-w-4xl mx-auto">
           <Heading tag="h1" size="h1">
-            See what the new ACT planning rules allow on your block.
+            What could you do with your land?
           </Heading>
 
           <Heading tag="p" size="h4" className="mt-6">
-            Fast, plain-English results for RZ1 and RZ2 residential land.
+            Check what housing types the new ACT planning rules allow on your
+            block.
           </Heading>
 
           <div className="flex flex-col md:flex-row gap-4 w-full max-w-lg md:max-w-2xl mt-10 md:mt-20 mx-auto">
@@ -43,34 +50,31 @@ export const FreeBlockAssessment = () => {
                 <span className="sr-only">Enter your ACT address</span>
                 <AddressInput
                   name="search"
-                  placeholder="Enter your ACT address"
-                  onPlaceSelect={onPlaceSelect}
+                  placeholder="88 Prospect Lane, Curtin"
+                  handlePlaceSelect={handlePlaceSelect}
+                  handleInputChange={handleInputChange}
                 />
               </label>
             </div>
             <Button
               label="Check my block"
-              disabled={!address}
+              disabled={disabled}
               onClick={onSearch}
             />
           </div>
 
-          <ul className="flex flex-wrap justify-center gap-x-10 gap-y-2 mt-10">
-            <li className="flex items-start gap-2">
-              <span className="block min-w-1.5 h-1.5 bg-gray-700 rounded-full mt-2.5" />
-              Based on new Territory Plan rules
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="block min-w-1.5 h-1.5 bg-gray-700 rounded-full mt-2.5" />
-              Free assessment
-            </li>
-          </ul>
+          <p className="mt-10">
+            Free instant lookup from BlockPlanner - property development
+            specialists.
+          </p>
 
           <hr className="mt-10 mb-20 border-gray-300" />
 
           <p className="text-base text-balance">
-            LotCheck is an informational tool. Not professional advice. Based on
-            ACT planning changes.
+            This free tool provides general information only, not professional
+            advice. Results are based on publicly available data and may not
+            reflect current site conditions.{" "}
+            <a href="#">Read full disclaimer</a>
           </p>
         </div>
       </div>

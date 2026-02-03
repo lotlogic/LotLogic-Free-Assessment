@@ -1,11 +1,11 @@
 import Header from "@/components/layouts/Header";
 import Heading from "@/components/ui/Heading";
+import { trackCtaClick, trackEvent } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { useSessionStorage } from "@uidotdev/usehooks";
 import { ArrowLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { trackCtaClick, trackEvent } from "@/utils/analytics";
 
 export const CheckoutPage = () => {
   const [status, setStatus] = useState<"success" | "cancel" | "error">();
@@ -38,8 +38,8 @@ export const CheckoutPage = () => {
       <main>
         {!!status && (
           <section>
-            <div className="relative max-w-260 mx-auto rounded-md shadow-lg">
-              <div className="bg-white p-10 md:px-16 md:pb-16">
+            <div className="relative max-w-260 mx-auto">
+              <div className="bg-white p-10 md:px-16 md:pb-16 rounded-md shadow-lg">
                 <Heading tag="h1" size="h1">
                   Thank you
                 </Heading>

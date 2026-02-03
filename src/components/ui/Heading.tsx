@@ -34,7 +34,7 @@ export const Heading = ({
 
   const classes = classList([
     getHeadingClass(size),
-    "last:mb-0 first:mt-0 text-balance",
+    "text-bp-blueGum last:mb-0 first:mt-0 text-balance",
     className,
   ]);
 
