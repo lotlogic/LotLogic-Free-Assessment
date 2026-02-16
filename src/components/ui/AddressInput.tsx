@@ -102,7 +102,7 @@ export const AddressInput = ({
             return (
               <li
                 key={index}
-                className="p-2 transition-colors cursor-pointer hover:bg-gray-100"
+                className="p-2 transition-colors cursor-pointer hover:bg-bp-eucalypt hover:text-white"
                 onClick={() => handleSuggestionClick(suggestion)}
               >
                 {suggestion.placePrediction?.text.text}

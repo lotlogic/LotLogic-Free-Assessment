@@ -39,21 +39,26 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
     ? new Date(import.meta.env.VITE_COMMENCEMENT_DATE)
     : undefined;
 
+  // report map
+  const address = report?.formattedAddress || savedAddress;
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
   return (
     <>
       <Heading tag="h2" size="h2" className="">
-        {(report?.formattedAddress || savedAddress).replace(", Australia", "")}
+        {address.replace(", Australia", "")}
       </Heading>
-
       <div className="text-lg">
         {!!zoneText && <p>Zone: {zoneText}</p>}
         {!!report?.lotCheckRules.blockAreaSqm && (
           <p>Block size: {report?.lotCheckRules.blockAreaSqm} m&sup2;</p>
         )}
       </div>
-
       <hr className="my-6 border-gray-300" />
-
+      <img
+        src={`https://maps.googleapis.com/maps/api/staticmap?size=550x225&scale=2&zoom=17&maptype=satellite&markers=${encodeURIComponent(address)}&key=${apiKey}`}
+      />
+      <hr className="my-6 border-gray-300" />
       <Heading tag="h3" size="h4" className="font-bold mb-4">
         What the new rules allow on a block this size
       </Heading>
@@ -69,7 +74,6 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
             .replace(/\//g, " ")}
         </p>
       )}
-
       {!!ruleMatches.length && (
         <ul className="block space-y-6 [&>li]:pl-6 [&_strong]:block [&_strong]:text-lg">
           {ruleMatches.map((rule, i) => (
@@ -101,7 +105,6 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
           ))}
         </ul>
       )}
-
       {!ruleMatches.length && (
         <>
           <div className="grid place-items-center min-h-100 text-xl">
@@ -113,9 +116,7 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
           </div>
         </>
       )}
-
       <hr className="my-6 border-gray-300" />
-
       <div className="text-gray-400">
         <ul className="block space-y-2 [&>li]:pl-6">
           <li className="relative">
