@@ -179,7 +179,7 @@ export const FreeBlockAssessmentReport = () => {
               Your block assessment
             </Heading>
             <div className="relative mt-10">
-              <div className="bg-white p-10 md:px-16 md:pb-16 rounded-md shadow-lg">
+              <div className="bg-white p-10 md:px-16 md:pb-16 shadow-lg aspect-[1/1.414]">
                 {isLoading ? (
                   <LoadingMessage />
                 ) : error ? (

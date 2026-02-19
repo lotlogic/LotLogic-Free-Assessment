@@ -5,7 +5,7 @@ export const HomePage = () => {
   return (
     <>
       <Header />
-      <main>
+      <main className="home">
         <AssessmentForm />
       </main>
     </>

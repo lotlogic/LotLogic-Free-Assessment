@@ -36,7 +36,7 @@ export const FreeBlockAssessment = () => {
       <div className="text-center text-lg">
         <div className="max-w-4xl mx-auto">
           <Heading tag="h1" size="h1">
-            What could you do with your land?
+            The rules have changed. Find out what that means for your block.
           </Heading>
 
           <Heading tag="p" size="h4" className="mt-6">
@@ -63,9 +63,9 @@ export const FreeBlockAssessment = () => {
             />
           </div>
 
-          <p className="mt-10">
-            Free instant lookup from BlockPlanner - property development
-            specialists.
+          <p className="max-w-lg md:max-w-2xl mx-auto mt-10">
+            Enter your residential address and see what the new planning rules
+            mean for your property: free, instant, no sign-up.
           </p>
 
           <hr className="mt-10 mb-20 border-gray-300" />
@@ -73,8 +73,13 @@ export const FreeBlockAssessment = () => {
           <p className="text-base text-balance">
             This free tool provides general information only, not professional
             advice. Results are based on publicly available data and may not
-            reflect current site conditions.{" "}
-            <a href="#">Read full disclaimer</a>
+            reflect current site conditions. Read full disclaimer.{" "}
+            <a
+              href="/disclaimer"
+              className="font-medium italic underline decoration-transparent underline-offset-2 hover:decoration-gray-700 transition-colors duration-200"
+            >
+              Read full disclaimer
+            </a>
           </p>
         </div>
       </div>

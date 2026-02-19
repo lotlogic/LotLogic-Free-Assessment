@@ -1,6 +1,8 @@
 import type { GeoApi } from "@/@types/api";
+import Logo from "@/images/BlockPlanner-Inline.svg?react";
 import { classList } from "@/utils/tailwind";
 import { toTitleCase } from "@/utils/text";
+import { CircleCheck } from "lucide-react";
 import Heading from "../ui/Heading";
 
 type Props = {
@@ -45,6 +47,10 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
 
   return (
     <>
+      <Logo
+        width={200}
+        className="w-40 lg:w-50 ml-auto -mr-5 -mt-6 lg:-mr-10"
+      />
       <Heading tag="h2" size="h2" className="">
         {address.replace(", Australia", "")}
       </Heading>
@@ -54,16 +60,15 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
           <p>Block size: {report?.lotCheckRules.blockAreaSqm} m&sup2;</p>
         )}
       </div>
-      <hr className="my-6 border-gray-300" />
       <img
         src={`https://maps.googleapis.com/maps/api/staticmap?size=550x225&scale=2&zoom=17&maptype=satellite&markers=${encodeURIComponent(address)}&key=${apiKey}`}
+        className="my-4"
       />
-      <hr className="my-6 border-gray-300" />
       <Heading tag="h3" size="h4" className="font-bold mb-4">
         What the new rules allow on a block this size
       </Heading>
       {commencementDate && today < commencementDate && (
-        <p className="text-lg -mt-3 mb-5">
+        <p className="text-base -mt-4 mb-5">
           Based on draft rules. Final rules expected on{" "}
           {commencementDate
             .toLocaleDateString("en-AU", {
@@ -75,34 +80,57 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
         </p>
       )}
       {!!ruleMatches.length && (
-        <ul className="block space-y-6 [&>li]:pl-6 [&_strong]:block [&_strong]:text-lg">
-          {ruleMatches.map((rule, i) => (
-            <li key={"rule_" + i} className="relative">
-              <div
-                className={classList([
-                  "absolute top-2 left-0.5 size-3",
-                  "bg-gray-300 rounded-full",
-                  {
-                    "bg-success": rule[1][0].confidence === "High",
-                  },
-                  {
-                    "bg-warning": rule[1][0].confidence === "Medium",
-                  },
-                  {
-                    "bg-error": rule[1][0].confidence === "Low",
-                  },
-                ])}
-              ></div>
-              <strong className="[&:first-letter]:capitalize [&+p]:mt-1">
-                {rule[0]}
-              </strong>
-              {rule[1].map((item, i) => (
-                <p key={"p_" + i} className="mt-2">
-                  {item.explanation}
-                </p>
-              ))}
-            </li>
-          ))}
+        <ul className="block space-y-3 text-sm">
+          {ruleMatches.map((rule, i) => {
+            const iconClass =
+              rule[1][0].confidence === "Low"
+                ? "text-error"
+                : rule[1][0].confidence === "Medium"
+                  ? "text-warning"
+                  : "text-success";
+            const badgeClass =
+              rule[1][0].confidence === "Low"
+                ? "bg-red-50 text-error border-red-200"
+                : rule[1][0].confidence === "Medium"
+                  ? "bg-amber-50 text-warning border-amber-200"
+                  : "bg-green-50 text-success border-green-200";
+            const badgeLabel =
+              rule[1][0].confidence === "Low"
+                ? "???"
+                : rule[1][0].confidence === "Medium"
+                  ? "???"
+                  : "Allowed";
+
+            return (
+              <li
+                key={"rule_" + i}
+                className="relative rounded-lg border border-gray-200 bg-card p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              >
+                <div className="flex gap-3">
+                  <div className={`mt-0.5 text-300 rounded-full ${iconClass}`}>
+                    <CircleCheck width="20" height="20" className="" />
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                      <strong className="block text-base font-bold [&:first-letter]:capitalize [&+p]:mt-1">
+                        {rule[0]}
+                      </strong>
+                      <span
+                        className={`text-xs font-medium px-2 py-0.5 rounded-full border ${badgeClass}`}
+                      >
+                        {badgeLabel}
+                      </span>
+                    </div>
+                    {rule[1].map((item, i) => (
+                      <p key={"p_" + i} className="mt-2">
+                        {item.explanation}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
       {!ruleMatches.length && (
@@ -116,28 +144,26 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
           </div>
         </>
       )}
-      <hr className="my-6 border-gray-300" />
-      <div className="text-gray-400">
-        <ul className="block space-y-2 [&>li]:pl-6">
-          <li className="relative">
-            <div
-              className={classList([
-                "absolute top-1.25 left-0.5 size-3.5",
-                "flex items-center justify-center",
-                "text-xs text-white",
-                "bg-gray-400 rounded-full",
-              ])}
-            >
-              i
-            </div>
-            This guide is based on block size and zoning only.
-          </li>
-          <li>
-            It doesn't account for overlays, setbacks, trees, or what's already
-            on your site. Our full report takes these into account.
-          </li>
-        </ul>
-      </div>
+      <hr className="mt-8 mb-6 border-gray-300" />
+      <ul className="block space-y-1 [&>li]:pl-6 text-sm text-gray-400">
+        <li className="relative">
+          <div
+            className={classList([
+              "absolute top-0.75 left-0.5 size-3.5",
+              "flex items-center justify-center",
+              "text-xs text-white",
+              "bg-gray-400 rounded-full",
+            ])}
+          >
+            i
+          </div>
+          This guide is based on block size and zoning only.
+        </li>
+        <li>
+          It doesn't account for overlays, setbacks, trees, or what's already on
+          your site. Our full report takes these into account.
+        </li>
+      </ul>
     </>
   );
 };

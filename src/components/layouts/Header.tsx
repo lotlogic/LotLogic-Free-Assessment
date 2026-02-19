@@ -30,7 +30,7 @@ export const Header = () => {
               className="flex items-center rounded-md hover:opacity-80 transition-opacity"
               aria-label="Meals on Wheels NSW - Go to homepage"
             >
-              <Logo fill="#f8f6e4" height={90} />
+              <Logo fill="#f8f6e4" height={80} />
             </Link>
             <div>
               <nav className="block" role="menubar">

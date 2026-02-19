@@ -1,10 +1,12 @@
-import Logomark from "@/images/BlockPlanner-Logomark.svg?react";
+import InfoGraphic from "@/images/blueprint.svg?react";
+// import InfoGraphic from "@/images/house.svg?react";
 import { trackCtaClick } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { ArrowUp, FileText } from "lucide-react";
 import { useMemo, useState } from "react";
 import Button from "../ui/Button";
 import Heading from "../ui/Heading";
+import ContactModal from "./ContactModal";
 import { PaymentModal, type CheckoutData } from "./PaymentModal";
 
 type Props = {
@@ -22,8 +24,9 @@ export const FullReportCta = ({
   error,
   location,
 }: Props) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [payModalOpen, setPayModalOpen] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
 
   const isDisabled = useMemo(() => {
     return !!error || isLoading || isGated;
@@ -47,9 +50,9 @@ export const FullReportCta = ({
   const bodyClasses =
     location === "mobile"
       ? "flex flex-col gap-4 px-4 pb-8 mx-auto max-w-[80ch]"
-      : "border border-gray-200 rounded-lg p-5 shadow-sm flex flex-col gap-4";
+      : "border border-gray-200 rounded-lg px-5 py-10 shadow-sm flex flex-col gap-4";
 
-  const openModal = () => {
+  const openPaymentModal = () => {
     if (!isDisabled) {
       trackCtaClick("purchase_full_report", {
         address: data?.address,
@@ -57,7 +60,7 @@ export const FullReportCta = ({
         block_size: data?.blockSizeM2,
         location: ctaLocation,
       });
-      setModalOpen(true);
+      setPayModalOpen(true);
     }
   };
 
@@ -90,10 +93,13 @@ export const FullReportCta = ({
           onClick={() => setDrawerOpen(!drawerOpen)}
         />
 
-        <Logomark width={100} className="mx-auto" />
+        <InfoGraphic width={70} className="mx-auto" fill="#494f4a" />
 
-        <Heading tag="h3" size="h4" className="-mt-4 mb-0">
-          <span>Is there something here worth exploring?</span>
+        <Heading tag="h3" size="h4" className="mt-0! mb-0">
+          <span>
+            Take the next step - a detailed report that considers what's already
+            on your block.
+          </span>
         </Heading>
 
         <div
@@ -111,19 +117,16 @@ export const FullReportCta = ({
         >
           <p className="">
             The free results show what the rules allow. The full report looks at
-            what's actually on your site &mdash; your home, trees, setbacks,
-            access &mdash; so you can see whether it's worth taking the next
-            step.
+            what's actually on your property &mdash; your home, trees,
+            easements, setbacks, access &mdash; so you get a clearer picture of
+            what's realistic.
           </p>
 
-          <p className="">
-            A practical next step, not a planning assessment. Prepared by our
-            team. Delivered within 48 hours.
-          </p>
+          <hr className="my-4 border-gray-300" />
 
-          <p>
-            <strong className="text-base">$299</strong>
-          </p>
+          <p className="text-base font-normal">Delivered within 48 hours.</p>
+
+          <p className="font-bold text-2xl">$299</p>
         </div>
 
         <Button
@@ -132,12 +135,13 @@ export const FullReportCta = ({
           className={classList([
             "w-full px-6 py-4 shadow-lg animate-attention",
           ])}
-          onClick={openModal}
+          onClick={openPaymentModal}
           disabled={isDisabled}
         />
 
         <div className="text-xs">
-          Based on publicly available spatial data at time of preparation.
+          Based on current satellite imagery and publicly available spatial
+          data. Site conditions may have changed.
         </div>
 
         <div
@@ -153,17 +157,22 @@ export const FullReportCta = ({
           ])}
         >
           <p className="mt-4">
-            Want to go straight to a full feasibility assessment with a town
-            planner?
+            Already know it's worth pursuing? Skip ahead - talk to us directly
+            about a professional feasibility assessment covering your planning
+            options, design and whether it's financially viable.
             <br />
-            <a href="mailto: ">Get in touch</a> &mdash; we'll reach out to
-            discuss your options.
+            <button
+              className="font-medium text-bp-blueGum! underline decoration-transparent! underline-offset-2 hover:decoration-bp-blueGum! transition-colors duration-200"
+              onClick={() => setContactModalOpen(true)}
+            >
+              Get in touch
+            </button>
           </p>
         </div>
 
         <PaymentModal
-          isOpen={modalOpen}
-          setIsOpen={setModalOpen}
+          isOpen={payModalOpen}
+          setIsOpen={setPayModalOpen}
           ctaLocation={ctaLocation}
           //
           email={data?.email}
@@ -172,6 +181,13 @@ export const FullReportCta = ({
           suburb={data?.suburb}
           blockSizeM2={data?.blockSizeM2}
           zone={data?.zone}
+        />
+
+        <ContactModal
+          isOpen={contactModalOpen}
+          setIsOpen={setContactModalOpen}
+          email={data?.email}
+          address={data?.address}
         />
       </div>
     </div>
