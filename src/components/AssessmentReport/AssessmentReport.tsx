@@ -1,4 +1,5 @@
 import type { GeoApi } from "@/@types/api";
+import Logo from "@/images/BlockPlanner-Inline.svg?react";
 import {
   identifyUser,
   trackCtaClick,
@@ -179,7 +180,11 @@ export const FreeBlockAssessmentReport = () => {
               Your block assessment
             </Heading>
             <div className="relative mt-10">
-              <div className="bg-white p-10 md:px-16 md:pb-16 shadow-lg aspect-[1/1.414]">
+              <div className="bg-white p-10 md:px-16 md:pb-16 shadow-lg aspect-[1/1.414] animate-report">
+                <Logo
+                  width={200}
+                  className="w-40 lg:w-50 ml-auto -mr-5 -mt-6 lg:-mr-10"
+                />
                 {isLoading ? (
                   <LoadingMessage />
                 ) : error ? (

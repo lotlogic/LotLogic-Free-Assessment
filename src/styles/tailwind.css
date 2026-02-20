@@ -46,8 +46,8 @@
     }
   }
 
-  --animate-attention: attention 10s infinite;
-  @keyframes attention {
+  --animate-attention: button-bounce 10s infinite;
+  @keyframes button-bounce {
     0%,
     10%,
     20%,
@@ -63,10 +63,42 @@
       animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
     }
   }
-}
 
-:root {
-}
+  --animate-report: slide-up 0.4s ease-out;
+  --animate-report-content: slide-up 0.3s ease-out;
+  --animate-aside: slide-left 0.4s ease-out;
+  --animate-drawer: slide-up 0.4s ease-out;
 
-.dark {
+  @keyframes scale-in {
+    0% {
+      transform: scale(0.8);
+      opacity: 0;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    0% {
+      transform: translateY(100px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-left {
+    0% {
+      transform: translateX(100px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
 }

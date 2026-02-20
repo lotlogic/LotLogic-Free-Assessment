@@ -44,12 +44,13 @@ export const FullReportCta = ({
           "border-t border-gray-200",
           "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transition-transform duration-500",
           { "translate-y-full": isGated },
+          "animate-drawer",
         ])
-      : classList(["hidden lg:block w-80 sticky top-8 pt-20"]);
+      : classList(["hidden lg:block w-80 sticky top-8 pt-20 animate-aside"]);
 
   const bodyClasses =
     location === "mobile"
-      ? "flex flex-col gap-4 px-4 pb-8 mx-auto max-w-[80ch]"
+      ? "flex flex-col gap-4 px-4 py-8 mx-auto max-w-[80ch]"
       : "border border-gray-200 rounded-lg px-5 py-10 shadow-sm flex flex-col gap-4";
 
   const openPaymentModal = () => {
@@ -124,9 +125,12 @@ export const FullReportCta = ({
 
           <hr className="my-4 border-gray-300" />
 
-          <p className="text-base font-normal">Delivered within 48 hours.</p>
-
-          <p className="font-bold text-2xl">$299</p>
+          <div className="mb-4">
+            <p className="text-base font-normal mb-2">
+              Delivered within 48 hours
+            </p>
+            <p className="font-bold text-2xl">$299</p>
+          </div>
         </div>
 
         <Button
@@ -174,7 +178,7 @@ export const FullReportCta = ({
           isOpen={payModalOpen}
           setIsOpen={setPayModalOpen}
           ctaLocation={ctaLocation}
-          //
+          // data
           email={data?.email}
           address={data?.address}
           reportId={data?.reportId}
