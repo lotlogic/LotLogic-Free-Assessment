@@ -17,6 +17,7 @@ function App() {
     <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
       <Router>
         <Header />
+        <div className="home_bg"></div>
         <main>
           <Routes>
             <Route path="/" element={<HomePage />} />
