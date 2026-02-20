@@ -50,34 +50,24 @@ main {
   }
 }
 
-body.home .home_bg {
-  opacity: 1;
-}
-
-.home_bg {
-  opacity: 0;
-  transition: opacity 0.5s ease-in-out;
-}
-
-.home_bg:before,
-.home_bg:after {
+.homeBg:before,
+.homeBg:after {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 0;
 }
 
-.home_bg:before {
+.homeBg:before {
   background-image: url("/images/backgrounds/home_bg.jpg");
   background-position: center;
   background-size: cover;
   filter: blur(4px);
 }
 
-.home_bg:after {
+.homeBg:after {
   background-color: #fff;
   opacity: 0.75;
 }

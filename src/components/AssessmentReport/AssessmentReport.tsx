@@ -8,6 +8,7 @@ import {
 } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { useLocalStorage, useSessionStorage } from "@uidotdev/usehooks";
+import { motion as m } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FullReportCta } from "../FullReportCta/FullReportCta";
@@ -168,11 +169,14 @@ export const FreeBlockAssessmentReport = () => {
     <>
       {isGated && <GatedContentForm onSubmit={handleGatedContent} />}
 
-      <section
+      <m.section
         className={classList([
           "mt-12 container mx-auto px-4 pb-60 lg:pb-12",
           { "blur-xs": isGated },
         ])}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, ease: "easeOut" }}
       >
         <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
           <div className="flex-1 w-full lg:max-w-260">
@@ -211,7 +215,7 @@ export const FreeBlockAssessmentReport = () => {
             location="desktop"
           />
         </div>
-      </section>
+      </m.section>
 
       <FullReportCta
         data={{

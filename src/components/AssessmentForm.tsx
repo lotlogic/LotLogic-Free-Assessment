@@ -1,4 +1,5 @@
 import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
+import { motion as m } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddressInput from "./ui/AddressInput";
@@ -32,7 +33,12 @@ export const FreeBlockAssessment = () => {
   };
 
   return (
-    <section className="mt-[5vh]! md:mt-[10vh]! z-5">
+    <m.section
+      className="mt-[5vh]! md:mt-[10vh]! z-5"
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
       <div className="text-center text-lg">
         <div className="max-w-4xl mx-auto">
           <Heading tag="h1" size="h1">
@@ -83,7 +89,7 @@ export const FreeBlockAssessment = () => {
           </p>
         </div>
       </div>
-    </section>
+    </m.section>
   );
 };
 
