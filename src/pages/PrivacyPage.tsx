@@ -6,10 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 export const AboutPage = () => {
   const navigate = useNavigate();
+  const handleGoBack = () => navigate(-1);
 
-  const handleGoBack = () => {
-    navigate(-1);
-  };
   return (
     <>
       <Header />
