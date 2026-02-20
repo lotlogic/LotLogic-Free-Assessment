@@ -1,15 +1,7 @@
 import AssessmentReport from "@/components/AssessmentReport/AssessmentReport";
-import Header from "@/components/layouts/Header";
 
 export const AssessmentPage = () => {
-  return (
-    <>
-      <Header />
-      <main>
-        <AssessmentReport />
-      </main>
-    </>
-  );
+  return <AssessmentReport />;
 };
 
 export default AssessmentPage;

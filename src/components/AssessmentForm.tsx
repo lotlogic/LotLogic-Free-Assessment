@@ -32,7 +32,7 @@ export const FreeBlockAssessment = () => {
   };
 
   return (
-    <section className="mt-[5vh]! md:mt-[10vh]!">
+    <section className="mt-[5vh]! md:mt-[10vh]! z-5">
       <div className="text-center text-lg">
         <div className="max-w-4xl mx-auto">
           <Heading tag="h1" size="h1">
@@ -68,7 +68,7 @@ export const FreeBlockAssessment = () => {
             mean for your property: free, instant, no sign-up.
           </p>
 
-          <hr className="mt-10 mb-20 border-gray-300" />
+          <hr className="mt-10 mb-20 border-bp-blueGum" />
 
           <p className="text-base text-balance">
             This free tool provides general information only, not professional
