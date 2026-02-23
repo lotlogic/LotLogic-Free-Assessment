@@ -38,10 +38,8 @@ export const AddressInput = ({
     locationRestriction: canberraBounds,
     // region: "au",
   });
-  console.log("suggestions: ", suggestions);
 
   const handleInput = (event: FormEvent<HTMLInputElement>) => {
-    console.log("handleInput");
     setShowListing(true);
     setInputValue((event.target as HTMLInputElement).value);
     handleInputChange();

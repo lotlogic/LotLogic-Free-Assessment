@@ -1,11 +1,16 @@
 import Main from "@/components/layouts/Main";
 import Heading from "@/components/ui/Heading";
+import { motion as m } from "framer-motion";
 import { Link } from "react-router-dom";
 
 export const NotFound = () => {
   return (
     <Main>
-      <section>
+      <m.section
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
         <div className="max-w-7xl mx-auto text-lg px-4 py-12 text-center prose">
           <Heading tag="h1" size="h1">
             404 - Page Not Found
@@ -16,7 +21,7 @@ export const NotFound = () => {
           </p>
           <Link to="/">Go to Home Page</Link>
         </div>
-      </section>
+      </m.section>
     </Main>
   );
 };

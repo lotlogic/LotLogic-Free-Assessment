@@ -7,7 +7,7 @@ export const Header = () => {
 
   return (
     <>
-      <header className="fixed w-full top-0 bg-bp-blueGum text-bp-sand z-10 shadow">
+      <header className="fixed w-full top-0 bg-bp-blueGum text-bp-sand z-[1400] shadow">
         <a
           href="#main-content"
           className={classList(

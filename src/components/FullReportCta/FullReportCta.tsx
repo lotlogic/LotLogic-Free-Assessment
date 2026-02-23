@@ -2,6 +2,7 @@ import InfoGraphic from "@/images/blueprint.svg?react";
 // import InfoGraphic from "@/images/house.svg?react";
 import { trackCtaClick } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
+import { motion as m } from "framer-motion";
 import { ArrowUp, FileText } from "lucide-react";
 import { useMemo, useState } from "react";
 import Button from "../ui/Button";
@@ -44,14 +45,13 @@ export const FullReportCta = ({
           "border-t border-gray-200",
           "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transition-transform duration-500",
           { "translate-y-full": isGated },
-          "animate-drawer",
         ])
-      : classList(["hidden lg:block w-80 sticky top-8 pt-20 animate-aside"]);
+      : classList(["hidden lg:block w-80 sticky top-8 pt-20 "]);
 
   const bodyClasses =
     location === "mobile"
       ? "flex flex-col gap-4 px-4 py-8 mx-auto max-w-[80ch]"
-      : "border border-gray-200 rounded-lg px-5 py-10 shadow-sm flex flex-col gap-4";
+      : "border border-gray-200 rounded-md px-5 py-10 shadow-sm flex flex-col gap-4";
 
   const openPaymentModal = () => {
     if (!isDisabled) {
@@ -65,8 +65,19 @@ export const FullReportCta = ({
     }
   };
 
+  // animation
+  const initial =
+    location === "desktop" ? { opacity: 0, x: 100 } : { opacity: 0, y: 100 };
+  const animate =
+    location === "desktop" ? { opacity: 1, x: 0 } : { opacity: 1, y: 0 };
+
   return (
-    <div className={ctaClasses}>
+    <m.div
+      initial={initial}
+      animate={animate}
+      transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
+      className={ctaClasses}
+    >
       <div
         className={classList([
           // "relative",
@@ -195,7 +206,7 @@ export const FullReportCta = ({
           address={data?.address}
         />
       </div>
-    </div>
+    </m.div>
   );
 };
 

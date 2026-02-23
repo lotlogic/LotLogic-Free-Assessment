@@ -46,7 +46,7 @@ export const ReportContent = ({ report, savedAddress }: Props) => {
 
   return (
     <>
-      <div className="animate-report-content">
+      <div>
         <Heading tag="h2" size="h2" className="">
           {address.replace(", Australia", "")}
         </Heading>

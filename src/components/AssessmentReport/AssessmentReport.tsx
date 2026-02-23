@@ -169,22 +169,30 @@ export const FreeBlockAssessmentReport = () => {
     <>
       {isGated && <GatedContentForm onSubmit={handleGatedContent} />}
 
-      <m.section
+      <section
         className={classList([
           "mt-12 container mx-auto px-4 pb-60 lg:pb-12",
           { "blur-xs": isGated },
         ])}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, ease: "easeOut" }}
       >
         <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
           <div className="flex-1 w-full lg:max-w-260">
-            <Heading tag="h1" size="h1">
-              Your block assessment
-            </Heading>
-            <div className="relative mt-10">
-              <div className="bg-white p-10 md:px-16 md:pb-16 shadow-lg aspect-[1/1.414] animate-report">
+            <m.div
+              initial={{ opacity: 0, y: -40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
+            >
+              <Heading tag="h1" size="h1">
+                Your block assessment
+              </Heading>
+            </m.div>
+            <m.div
+              initial={{ y: 100 }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="relative mt-10"
+            >
+              <div className="bg-white p-10 md:px-16 md:pb-16 shadow-lg aspect-[1/1.414]">
                 <Logo
                   width={200}
                   className="w-40 lg:w-50 ml-auto -mr-5 -mt-6 lg:-mr-10"
@@ -197,7 +205,7 @@ export const FreeBlockAssessmentReport = () => {
                   <ReportContent report={report} savedAddress={savedAddress} />
                 )}
               </div>
-            </div>
+            </m.div>
 
             <section className="text-gray-400 text-center mt-8">
               This free tool provides general information only, not professional
@@ -215,7 +223,7 @@ export const FreeBlockAssessmentReport = () => {
             location="desktop"
           />
         </div>
-      </m.section>
+      </section>
 
       <FullReportCta
         data={{

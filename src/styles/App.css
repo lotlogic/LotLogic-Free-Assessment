@@ -45,7 +45,7 @@ main {
   padding-bottom: 120px;
   z-index: 1;
 
-  @media (width >= 48rem) {
+  @media (width >= 64rem) {
     padding-top: 90px;
   }
 }
@@ -80,7 +80,7 @@ section {
   margin-inline: auto;
   margin-top: calc(var(--spacing) * 10);
 
-  @media (width >= 48rem) {
+  @media (width >= 64rem) {
     padding-inline: calc(var(--spacing) * 8);
     margin-top: calc(var(--spacing) * 15);
   }
@@ -89,11 +89,6 @@ section {
 /****************************************************
 	Generic Styles
 ****************************************************/
-.preload * {
-  transition: none !important;
-  animation-duration: 0s !important;
-}
-
 svg {
   pointer-events: none;
 }

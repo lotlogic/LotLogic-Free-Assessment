@@ -2,6 +2,7 @@ import Main from "@/components/layouts/Main";
 import Heading from "@/components/ui/Heading";
 import { classList } from "@/utils/tailwind";
 import { ArrowBack } from "@mui/icons-material";
+import { motion as m } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 export const AboutPage = () => {
@@ -12,7 +13,10 @@ export const AboutPage = () => {
     <Main>
       <section>
         <div className="relative max-w-260 mx-auto">
-          <button
+          <m.button
+            initial={{ opacity: 0, y: -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
             className={classList([
               "flex align-middle gap-1",
               "text-sm font-medium",
@@ -26,9 +30,14 @@ export const AboutPage = () => {
           >
             <ArrowBack fontSize="small" />
             Go Back
-          </button>
+          </m.button>
 
-          <div className="bg-white p-10 mt-4 md:px-16 md:pb-16 rounded-md shadow-lg">
+          <m.div
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="bg-white p-10 mt-4 md:px-16 md:pb-16 rounded-md shadow-lg"
+          >
             <Heading tag="h1" size="h1">
               Privacy Policy – BlockPlanner
             </Heading>
@@ -336,7 +345,7 @@ export const AboutPage = () => {
                 <strong>Last updated:</strong> 18 September 2025
               </p>
             </div>
-          </div>
+          </m.div>
         </div>
       </section>
     </Main>
