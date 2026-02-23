@@ -1,37 +1,25 @@
 import InfoGraphic from "@/images/blueprint.svg?react";
 // import InfoGraphic from "@/images/house.svg?react";
+import Button from "@/components//ui/Button";
+import Heading from "@/components//ui/Heading";
 import { trackCtaClick } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { motion as m } from "framer-motion";
 import { ArrowUp, FileText } from "lucide-react";
-import { useMemo, useState } from "react";
-import Button from "../ui/Button";
-import Heading from "../ui/Heading";
+import { useState } from "react";
 import ContactModal from "./ContactModal";
 import { PaymentModal, type CheckoutData } from "./PaymentModal";
 
 type Props = {
   data?: CheckoutData;
-  isLoading?: boolean;
-  isGated?: boolean;
-  error?: string;
+  isDisabled: boolean;
   location: "mobile" | "desktop";
 };
 
-export const FullReportCta = ({
-  data,
-  isLoading,
-  isGated,
-  error,
-  location,
-}: Props) => {
+export const FullReportCta = ({ data, isDisabled, location }: Props) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [payModalOpen, setPayModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
-
-  const isDisabled = useMemo(() => {
-    return !!error || isLoading || isGated;
-  }, [error, isLoading, isGated]);
 
   const ctaLocation =
     location === "mobile" ? "report_sticky" : "report_sidebar";
@@ -44,7 +32,7 @@ export const FullReportCta = ({
           "fixed bottom-0 left-0 right-0 z-50",
           "border-t border-gray-200",
           "shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] transition-transform duration-500",
-          { "translate-y-full": isGated },
+          { "translate-y-full": isDisabled },
         ])
       : classList(["hidden lg:block w-80 sticky top-8 pt-20 "]);
 

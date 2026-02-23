@@ -1,17 +1,22 @@
+import Button from "@/components//ui/Button";
+import Heading from "@/components//ui/Heading";
+import TextModal from "@/components//ui/TextModal";
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, Mail } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import Button from "./ui/Button";
-import Heading from "./ui/Heading";
-import TextModal from "./ui/TextModal";
 
 const gatedContentFormSchema = z.object({
   email: z
-    .email({ pattern: z.regexes.rfc5322Email, message: "Invalid email format" })
+    .email({
+      pattern: z.regexes.rfc5322Email,
+      message: "Invalid email format",
+    })
     .trim(),
-  terms: z.literal(true),
+  terms: z.literal(true, {
+    error: "You must agree to proceed",
+  }),
 });
 
 export type GatedContentFormValues = z.infer<typeof gatedContentFormSchema>;
@@ -21,10 +26,6 @@ type GatedContentProps = {
 };
 
 const GatedContentForm = (props: GatedContentProps) => {
-  // const [isOpen, setIsOpen] = useState(true);
-  // const openModal = () => setIsOpen(true);
-  // const closeModal = () => setIsOpen(false);
-
   const {
     register,
     handleSubmit,
@@ -106,8 +107,11 @@ const GatedContentForm = (props: GatedContentProps) => {
                 ])}
               />
               <span className="text-sm text-left">
-                I agree to BlockPlanner's Privacy Policy and to receive
-                occasional updates (you can unsubscribe anytime)
+                I agree to BlockPlanner's
+                <a href="/privacy" className="font-semibold" target="_blank">
+                  Privacy Policy
+                </a>{" "}
+                and to receive occasional updates (you can unsubscribe anytime)
               </span>
             </label>
             {errors.terms && (

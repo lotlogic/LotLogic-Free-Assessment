@@ -1,11 +1,11 @@
+import Button from "@/components//ui/Button";
+import Heading from "@/components//ui/Heading";
+import TextModal from "@/components//ui/TextModal";
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Phone, User } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import Button from "../ui/Button";
-import Heading from "../ui/Heading";
-import TextModal from "../ui/TextModal";
 
 const contactFormSchema = z.object({
   email: z

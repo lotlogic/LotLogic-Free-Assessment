@@ -1,12 +1,12 @@
+import Button from "@/components//ui/Button";
+import Heading from "@/components//ui/Heading";
+import TextModal from "@/components//ui/TextModal";
 import { trackCtaClick, trackEvent } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ChevronDown, Mail, Phone, Target, User } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
-import Button from "../ui/Button";
-import Heading from "../ui/Heading";
-import TextModal from "../ui/TextModal";
 
 const paymentFormSchema = z.object({
   email: z

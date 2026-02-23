@@ -1,4 +1,4 @@
-import AssessmentForm from "@/components/AssessmentForm";
+import AssessmentForm from "@/components/AssessmentForm/AssessmentForm";
 import Main from "@/components/layouts/Main";
 import { motion as m } from "framer-motion";
 

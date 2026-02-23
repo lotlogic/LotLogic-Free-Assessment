@@ -1,4 +1,5 @@
 import type { GeoApi } from "@/@types/api";
+import Heading from "@/components/ui/Heading";
 import Logo from "@/images/BlockPlanner-Inline.svg?react";
 import {
   identifyUser,
@@ -12,12 +13,12 @@ import { motion as m } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FullReportCta } from "../FullReportCta/FullReportCta";
+import ErrorMessage from "./ErrorMessage";
 import GatedContentForm, {
   type GatedContentFormValues,
-} from "../GatedContentForm";
-import Heading from "../ui/Heading";
-import ErrorMessage from "./ErrorMessage";
+} from "./GatedContentForm";
 import LoadingMessage from "./LoadingMessage";
+import OffZoneForm, { type OffZoneFormValues } from "./OffZoneForm";
 import ReportContent from "./ReportContent";
 
 type ReportSaves = Record<string, { email: string; expiry: number }>;
@@ -25,9 +26,12 @@ type ReportSaves = Record<string, { email: string; expiry: number }>;
 export const FreeBlockAssessmentReport = () => {
   const [report, setReport] = useState<GeoApi>();
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string>();
+  const [isOffZone, setIsOffZone] = useState(false);
+  const [showOffZone, setShowOffZone] = useState(false);
   const [isGated, setIsGated] = useState(false);
+  const [error, setError] = useState<string>();
   const [email, setEmail] = useState<string>();
+
   const hasTrackedLookup = useRef(false);
 
   const [searchParams] = useSearchParams();
@@ -80,7 +84,7 @@ export const FreeBlockAssessmentReport = () => {
   useEffect(() => {
     if (!report?.formattedAddress) return;
 
-    // save current address for checkout (and for gating key)
+    // save current address for checkout (and key for gated content)
     setSavedAddress(report.formattedAddress);
 
     // clear expired saves
@@ -91,19 +95,22 @@ export const FreeBlockAssessmentReport = () => {
     });
 
     // persist if we removed anything
-    if (Object.keys(newSaves).length !== Object.keys(savedSearches).length) {
+    if (Object.keys(newSaves).length !== Object.keys(savedSearches).length)
       setSavedSearches(newSaves);
-    }
 
     // check for current save (using de-expired saves)
     const currentSave = newSaves[report.formattedAddress];
-    if (currentSave) {
-      setEmail(currentSave.email);
-      setIsGated(false);
-    } else {
-      setIsGated(true);
+    if (currentSave) setEmail(currentSave.email);
+
+    // check property zoning
+    if (!["RZ1", "RZ2"].includes(report.zone.zoneCode || "")) {
+      setIsOffZone(true);
+      setShowOffZone(!currentSave);
     }
-  }, [savedSearches, report]);
+
+    // check gated content
+    setIsGated(!currentSave);
+  }, [report]);
 
   /****************************************************
     checkout data for payload
@@ -122,10 +129,9 @@ export const FreeBlockAssessmentReport = () => {
   };
 
   /****************************************************
-    handle form
+    handle forms
   ****************************************************/
   const handleGatedContent = (formData: GatedContentFormValues) => {
-    // display gated content
     const addressKey = report?.formattedAddress || savedAddress;
     if (addressKey) {
       identifyUser(formData.email, {
@@ -165,20 +171,62 @@ export const FreeBlockAssessmentReport = () => {
     }
   };
 
+  const handleOffZone = (formData: OffZoneFormValues) => {
+    const addressKey = report?.formattedAddress || savedAddress;
+    if (addressKey) {
+      // identifyUser(formData.email, {
+      //   address: addressKey,
+      //   zone: report?.lotCheckRules?.zoneCode ?? report?.zone?.zoneCode ?? null,
+      //   block_size: report?.lotCheckRules?.blockAreaSqm ?? null,
+      //   parcel_id:
+      //     report?.block?.blockKey ??
+      //     (report?.block?.objectId != null
+      //       ? String(report.block.objectId)
+      //       : null),
+      // });
+
+      //   trackCtaClick("view_report", { address: addressKey });
+      //   trackEvent("gated_email_submit", {
+      //     address: addressKey,
+      //     email: formData.email,
+      //     timestamp: new Date().toISOString(),
+      //   });
+
+      // save the search to localstorage
+      let newSaves = { ...savedSearches };
+      newSaves[addressKey] = {
+        email: formData.email,
+        expiry: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+      };
+      setSavedSearches(newSaves);
+      setSavedAddress(addressKey);
+      setShowOffZone(false);
+    }
+  };
+
   return (
     <>
-      {isGated && <GatedContentForm onSubmit={handleGatedContent} />}
+      <OffZoneForm
+        isOpen={showOffZone}
+        setIsOpen={setShowOffZone}
+        address={savedAddress}
+        onSubmit={handleOffZone}
+      />
+
+      {!isOffZone && isGated && (
+        <GatedContentForm onSubmit={handleGatedContent} />
+      )}
 
       <section
         className={classList([
           "mt-12 container mx-auto px-4 pb-60 lg:pb-12",
-          { "blur-xs": isGated },
+          { "blur-xs": showOffZone || isGated },
         ])}
       >
         <div className="flex flex-col lg:flex-row gap-8 items-start justify-center">
           <div className="flex-1 w-full lg:max-w-260">
             <m.div
-              initial={{ opacity: 0, y: -40 }}
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
             >
@@ -217,9 +265,7 @@ export const FreeBlockAssessmentReport = () => {
             data={{
               ...checkoutData,
             }}
-            isLoading={isLoading}
-            isGated={isGated}
-            error={error}
+            isDisabled={isLoading || isGated || isOffZone || !!error}
             location="desktop"
           />
         </div>
@@ -229,9 +275,7 @@ export const FreeBlockAssessmentReport = () => {
         data={{
           ...checkoutData,
         }}
-        isLoading={isLoading}
-        isGated={isGated}
-        error={error}
+        isDisabled={isLoading || isGated || isOffZone || !!error}
         location="mobile"
       />
     </>

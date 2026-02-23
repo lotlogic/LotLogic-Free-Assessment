@@ -14,7 +14,7 @@ export const AboutPage = () => {
       <section>
         <div className="relative max-w-260 mx-auto">
           <m.button
-            initial={{ opacity: 0, y: -40 }}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.25, ease: "easeOut" }}
             className={classList([

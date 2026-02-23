@@ -1,10 +1,10 @@
+import AddressInput from "@/components/ui/AddressInput";
+import Button from "@/components/ui/Button";
+import Heading from "@/components/ui/Heading";
 import { trackCtaClick, trackLookupStarted } from "@/utils/analytics";
 import { motion as m } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AddressInput from "./ui/AddressInput";
-import Button from "./ui/Button";
-import Heading from "./ui/Heading";
 
 export const FreeBlockAssessment = () => {
   const [address, setAddress] = useState<string | null | undefined>();

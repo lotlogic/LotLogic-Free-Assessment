@@ -1,4 +1,4 @@
-import AnimatedLogo from "../ui/AnimatedLogo";
+import AnimatedLogo from "@/components//ui/AnimatedLogo";
 
 const LoadingMessage = () => (
   <div className="text-center">
