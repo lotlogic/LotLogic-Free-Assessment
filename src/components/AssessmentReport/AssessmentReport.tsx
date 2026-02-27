@@ -171,26 +171,49 @@ export const FreeBlockAssessmentReport = () => {
     }
   };
 
-  const handleOffZone = (formData: OffZoneFormValues) => {
+  const handleOffZone = async (formData: OffZoneFormValues) => {
     const addressKey = report?.formattedAddress || savedAddress;
     if (addressKey) {
-      // identifyUser(formData.email, {
-      //   address: addressKey,
-      //   zone: report?.lotCheckRules?.zoneCode ?? report?.zone?.zoneCode ?? null,
-      //   block_size: report?.lotCheckRules?.blockAreaSqm ?? null,
-      //   parcel_id:
-      //     report?.block?.blockKey ??
-      //     (report?.block?.objectId != null
-      //       ? String(report.block.objectId)
-      //       : null),
-      // });
+      const userData = {
+        address: addressKey,
+        name: formData.clientName,
+        email: formData.email,
+        phone: formData.clientPhone,
+      };
 
-      //   trackCtaClick("view_report", { address: addressKey });
-      //   trackEvent("gated_email_submit", {
-      //     address: addressKey,
-      //     email: formData.email,
-      //     timestamp: new Date().toISOString(),
-      //   });
+      try {
+        if (!formData.email) throw new Error("Missing query parameter - email");
+        if (!addressKey) throw new Error("Missing query parameter - address");
+        if (!location.origin) throw new Error("Missing query parameter - site");
+
+        trackEvent("feasibility_form_submit", {
+          ...userData,
+          message: "This is an off zone enquiry",
+          timestamp: new Date().toISOString(),
+        });
+
+        // send email
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/enquiry/get-in-touch`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...userData, company: formData.company }),
+          },
+        );
+
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+      } catch (error: any) {
+        trackEvent("feasibility_form_error", {
+          ...userData,
+          message: error?.message,
+          timestamp: new Date().toISOString(),
+        });
+        console.log("Error: " + error.message);
+      }
 
       // save the search to localstorage
       let newSaves = { ...savedSearches };

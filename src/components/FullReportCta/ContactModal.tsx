@@ -1,6 +1,7 @@
 import Button from "@/components//ui/Button";
 import Heading from "@/components//ui/Heading";
 import TextModal from "@/components//ui/TextModal";
+import { trackEvent } from "@/utils/analytics";
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Mail, Phone, User } from "lucide-react";
@@ -17,6 +18,7 @@ const contactFormSchema = z.object({
     .string()
     .trim()
     .regex(/^[0-9+().\-\s]{7,}$/i, "Please enter a valid phone number"),
+  company: z.string(),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -43,46 +45,45 @@ export const ContactModal = (props: Props) => {
   });
 
   const onSubmit: SubmitHandler<ContactFormValues> = async (formData) => {
+    const userData = {
+      address: props.address,
+      name: formData.clientName ?? props.clientName,
+      email: props.clientEmail ?? formData.email,
+      phone: formData.clientPhone ?? props.clientPhone,
+    };
+
     try {
       if (!formData.email) throw new Error("Missing query parameter - email");
       if (!props.address) throw new Error("Missing query parameter - address");
       if (!location.origin) throw new Error("Missing query parameter - site");
 
-      // trackEvent("checkout_form_submit", {
-      //   address: props.address,
-      //   zone: props.zone,
-      //   block_size: props.blockSizeM2,
-      //   suburb: props.suburb,
-      //   timestamp: new Date().toISOString(),
-      // });
+      trackEvent("feasibility_form_submit", {
+        ...userData,
+        message: "",
+        timestamp: new Date().toISOString(),
+      });
 
       // send email
-      const response = await fetch(`contact-us-api`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/enquiry/get-in-touch`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...userData, company: formData.company }),
         },
-        body: JSON.stringify({
-          site: location.origin,
-          address: props.address,
-          clientName: formData.clientName ?? props.clientName,
-          clientEmail: props.clientEmail ?? formData.email,
-          clientPhone: formData.clientPhone ?? props.clientPhone,
-        }),
-      });
+      );
 
       if (!response.ok)
         throw new Error(`HTTP error! status: ${response.status}`);
     } catch (error: any) {
-      // trackEvent("checkout_error", {
-      //   address: props.address,
-      //   zone: props.zone,
-      //   block_size: props.blockSizeM2,
-      //   suburb: props.suburb,
-      //   message: error?.message,
-      //   timestamp: new Date().toISOString(),
-      // });
-      // console.log("Error: " + error.message);
+      trackEvent("feasibility_form_error", {
+        ...userData,
+        message: error?.message,
+        timestamp: new Date().toISOString(),
+      });
+      console.log("Error: " + error.message);
     }
   };
 
@@ -185,6 +186,7 @@ export const ContactModal = (props: Props) => {
             </p>
           )}
         </div>
+        <input type="hidden" name="company" />
         <Button label="Get in touch" type="submit" />
       </form>
     </TextModal>

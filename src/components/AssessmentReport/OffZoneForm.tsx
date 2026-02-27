@@ -3,7 +3,7 @@ import Heading from "@/components//ui/Heading";
 import TextModal from "@/components//ui/TextModal";
 import { classList } from "@/utils/tailwind";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, Mail, Phone, User } from "lucide-react";
+import { Mail, Phone, User } from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,9 +20,7 @@ const offZoneFormSchema = z.object({
     .trim()
     .regex(/^[0-9+().\-\s]{7,}$/i, "Please enter a valid phone number"),
   address: z.string().trim(),
-  terms: z.literal(true, {
-    error: "You must agree to proceed",
-  }),
+  company: z.string(),
 });
 
 export type OffZoneFormValues = z.infer<typeof offZoneFormSchema>;
@@ -155,44 +153,7 @@ const OffZoneForm = (props: Props) => {
               </p>
             )}
           </div>
-
-          <div>
-            <label className="flex items-start gap-3 cursor-pointer">
-              <input
-                type="checkbox"
-                {...register("terms")}
-                aria-invalid={errors.terms ? "true" : "false"}
-                className={classList(
-                  "peer",
-                  "relative",
-                  "appearance-none",
-                  "shrink-0 size-4.5 mt-0.5",
-                  "border border-gray-300 rounded-sm",
-                  "focus-visible:border-transparent",
-                )}
-                required
-              />
-              <Check
-                className={classList([
-                  "absolute size-4 p-px mt-0.75 ml-px",
-                  "hidden outline-none",
-                  "peer-checked:block",
-                ])}
-              />
-              <span className="text-sm text-left">
-                I agree to BlockPlanner's{" "}
-                <a href="/privacy" className="font-semibold" target="_blank">
-                  Privacy Policy
-                </a>{" "}
-                and to receive occasional updates (you can unsubscribe anytime)
-              </span>
-            </label>
-            {errors.terms && (
-              <p className="text-xs text-error pl-1 mt-1" role="alert">
-                {errors.terms.message}
-              </p>
-            )}
-          </div>
+          <input type="hidden" name="company" />
           <Button className="mt-4" label="Send my details" type="submit" />
         </form>
       </div>
